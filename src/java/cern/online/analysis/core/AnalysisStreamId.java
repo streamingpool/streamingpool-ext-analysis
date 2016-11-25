@@ -4,6 +4,7 @@
 
 package cern.online.analysis.core;
 
+import org.tensorics.core.tree.domain.Contexts;
 import org.tensorics.core.tree.domain.ResolvingContext;
 import org.tensorics.expression.EvaluationStatus;
 
@@ -17,7 +18,7 @@ import cern.streaming.pool.ext.tensorics.streamid.DetailedExpressionStreamId;
 public class AnalysisStreamId extends DetailedExpressionStreamId<EvaluationStatus, AnalysisExpression> {
 
     public AnalysisStreamId(AnalysisDefinition analysisDefinition) {
-        super(analysisDefinition.expression(), analysisDefinition.evaluationStrategy());
+        super(analysisDefinition.expression(), analysisDefinition.evaluationStrategy(), Contexts.newResolvingContext());
     }
 
     public AnalysisStreamId(AnalysisDefinition analysisDefinition, ResolvingContext initialCtxForAnalysis) {
