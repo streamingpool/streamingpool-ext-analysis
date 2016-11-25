@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <products>
-	<product name="online-analyis-core" version="0.0.1" directory="org/online-analysis/online-analyis-core">
-		<jar>online-analyis-core.jar</jar>
+	<product name="online-analysis-core" version="0.0.1" directory="org/online-analysis/online-analysis-core">
+		<jar>online-analysis-core.jar</jar>
 		<desc />
 		<dependencies>
 
