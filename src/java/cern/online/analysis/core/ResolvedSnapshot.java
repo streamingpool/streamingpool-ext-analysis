@@ -4,83 +4,95 @@
 
 package cern.online.analysis.core;
 
+import static cern.online.analysis.core.names.ExpressionNames.FROM_ASSERTION_EXPRESSION;
+import static cern.online.analysis.core.names.ExpressionNames.FROM_BINARY_PREDICATE_EXPRESSION;
+import static cern.online.analysis.core.names.ExpressionNames.FROM_CONVERSION_EXPRESSION;
+import static cern.online.analysis.core.names.ExpressionNames.FROM_PREDICATE_EXPRESSION;
+import static cern.online.analysis.core.names.ExpressionNames.FROM_RESOLVED_EXPRESSION;
+import static cern.streaming.pool.core.names.resolve.Names.FROM_NAME_METHOD;
+
+import java.util.function.Function;
+
 import org.tensorics.core.expressions.BinaryPredicateExpression;
-import org.tensorics.core.math.predicates.BinaryPredicate;
+import org.tensorics.core.expressions.ConversionOperationExpression;
 import org.tensorics.core.tree.domain.Expression;
 import org.tensorics.core.tree.domain.Node;
+import org.tensorics.core.tree.domain.ResolvedExpression;
 import org.tensorics.core.tree.domain.ResolvingContext;
 import org.tensorics.core.tree.walking.Trees;
 import org.tensorics.expression.PredicateExpression;
 
 import cern.online.analysis.core.expression.AssertionExpression;
-import cern.streaming.pool.core.names.NameRepository;
+import cern.online.analysis.core.names.ExpressionNames;
+import cern.streaming.pool.core.names.resolve.Chains;
+import cern.streaming.pool.core.names.resolve.Names;
+import cern.streaming.pool.core.service.streamid.DerivedStreamId;
+import cern.streaming.pool.core.service.streamid.OverlapBufferStreamId;
+import cern.streaming.pool.ext.tensorics.expression.StreamIdBasedExpression;
+import cern.streaming.pool.ext.tensorics.streamid.ExpressionBasedStreamId;
 
 public class ResolvedSnapshot<R, E extends Expression<R>> {
 
     private final ResolvingContext context;
-    private final NameRepository nameRepository;
+    private final Function<Object, String> nameRepository;
+    private final Function<Object, String> nameResolving;
     private final E root;
 
-    public ResolvedSnapshot(E rootExpression, ResolvingContext context, NameRepository nameRepository) {
+    public ResolvedSnapshot(E rootExpression, ResolvingContext context, Function<Object, String> nameRepository) {
         super();
         this.root = rootExpression;
         this.context = context;
         this.nameRepository = nameRepository;
+        this.nameResolving = createFullNameResolving(nameRepository);
+    }
+
+    private final Function<Object, String> createFullNameResolving(Function<Object, String> nameRepository) {
+        // @formatter:off
+        return Chains.<String>chain()
+                .or(nameRepository)
+                .or(FROM_NAME_METHOD)
+                .or(Names::fromGetNameMethod)
+                .branchCase(AssertionExpression.class, FROM_NAME_METHOD).or(FROM_ASSERTION_EXPRESSION).orElseNull()
+                .branchCase(BinaryPredicateExpression.class, FROM_BINARY_PREDICATE_EXPRESSION).orElseNull()
+                .branchCase(ResolvedExpression.class, FROM_RESOLVED_EXPRESSION).orElseNull()
+                .branchCase(PredicateExpression.class, FROM_PREDICATE_EXPRESSION).orElseNull()
+                .branchCase(ConversionOperationExpression.class, FROM_NAME_METHOD).or(FROM_CONVERSION_EXPRESSION).orElseNull()
+                .branchCase(StreamIdBasedExpression.class, ExpressionNames::fromStreambasedExpression).orElseNull()
+                .branchCase(OverlapBufferStreamId.class, (id,f) -> f.apply(id.sourceId())).orElseNull()
+                .branchCase(ExpressionBasedStreamId.class, (id, f) -> f.apply(id.getDetailedId())).orElseNull()
+                .branchCase(DerivedStreamId.class, (id,f) -> f.apply(id.conversion()) + "(" + f.apply(id.sourceStreamId()) + ")").orElseNull()
+                .or(Names::fromSimpleClassName)
+                .orElseNull();
+        // @formatter:on
     }
 
     public String detailedStringFor(Node exp) {
         StringBuffer detailedResult = new StringBuffer();
         for (Node child : Trees.findBottomNodes(exp)) {
             // if (child.equals(INJECTION_ATTEMPT)) {
-            // import static cern.lhc.filling.core.expressions.InjectionExpressions.INJECTION_ATTEMPT;
             // continue;
             // }
             // if (child instanceof ResolvedExpression) {
             // continue;
             // }
             String childResult = context.resolvedValueOf((Expression<?>) child).toString();
-            String childName = recursiveNameFor(child);
-            detailedResult.append(childName).append("=").append(childResult).append("; ");
+            // String childName = recursiveNameFor(child);
+            return "DETAIL String not resolved";
+            // detailedResult.append(childName).append("=").append(childResult).append("; ");
         }
         return detailedResult.toString();
     }
 
     /*
-     * XXX MAKE THIS NICER!? Visitor?
+     * XXX Remove unnecessary stuff
      */
 
     public String nameFor(AssertionExpression exp) {
-        if (exp.name() != null) {
-            return exp.name();
-        }
-
-        return recursiveNameFor(exp.condition());
+        return nameResolving.apply(exp);
     }
 
     public String nameFor(Node exp) {
-        return recursiveNameFor(exp);
-    }
-
-    private String recursiveNameFor(Node exp) {
-        if (exp instanceof BinaryPredicateExpression) {
-            BinaryPredicateExpression<?> binaryPredicateExpression = (BinaryPredicateExpression<?>) exp;
-            BinaryPredicate<?> predicate = binaryPredicateExpression.getPredicate();
-            String operatorName = predicate.getClass().getSimpleName();
-
-            String leftName = recursiveNameFor(binaryPredicateExpression.getLeft());
-            String rightName = recursiveNameFor(binaryPredicateExpression.getRight());
-
-            return leftName + " " + operatorName + " " + rightName;
-        }
-        // if (exp instanceof ResolvedExpression) {
-        // return "" + ((ResolvedExpression<?>) exp).get();
-        // }
-        if (exp instanceof PredicateExpression) {
-            String leftName = recursiveNameFor(((PredicateExpression<?>) exp).source());
-            String rightName = recursiveNameFor(((PredicateExpression<?>) exp).predicate());
-            return leftName + " is " + rightName;
-        }
-        return nameRepository.nameFor(exp);
+        return nameResolving.apply(exp);
     }
 
     public ResolvingContext context() {
@@ -91,7 +103,7 @@ public class ResolvedSnapshot<R, E extends Expression<R>> {
         return root;
     }
 
-    public NameRepository nameRepository() {
+    public Function<Object, String> nameRepository() {
         return this.nameRepository;
     }
 
