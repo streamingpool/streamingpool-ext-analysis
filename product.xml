@@ -10,7 +10,7 @@
 			<dep product="streaming-pool-ext-tensorics" version="DEV" />
 
 			<dep product="tensorics-core-pro" version="PRO" />
-			<dep product="tensorics-expression" version="DEV" />
+			<dep product="tensorics-expression-pro" version="PRO" />
 
 			<dep product="rxjava" version="1.1.8" />
 
