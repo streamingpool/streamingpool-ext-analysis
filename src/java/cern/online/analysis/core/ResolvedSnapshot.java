@@ -43,10 +43,10 @@ public class ResolvedSnapshot<R, E extends Expression<R>> {
         this.root = rootExpression;
         this.context = context;
         this.nameRepository = nameRepository;
-        this.nameResolving = createFullNameResolving(nameRepository);
+        this.nameResolving = createFullNameResolving();
     }
 
-    private final Function<Object, String> createFullNameResolving(Function<Object, String> nameRepository) {
+    private final Function<Object, String> createFullNameResolving() {
         // @formatter:off
         return Chains.<String>chain()
                 .or(nameRepository)
@@ -75,6 +75,7 @@ public class ResolvedSnapshot<R, E extends Expression<R>> {
             // if (child instanceof ResolvedExpression) {
             // continue;
             // }
+            @SuppressWarnings("unused")
             String childResult = context.resolvedValueOf((Expression<?>) child).toString();
             // String childName = recursiveNameFor(child);
             return "DETAIL String not resolved";

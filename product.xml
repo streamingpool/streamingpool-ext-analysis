@@ -4,26 +4,24 @@
 		<jar>online-analysis-core.jar</jar>
 		<desc />
 		<dependencies>
-
 			<dep product="streaming-pool-core" version="DEV" />
-
 			<dep product="streaming-pool-ext-tensorics" version="DEV" />
 
-			<dep product="tensorics-core-pro" version="PRO" />
-			<dep product="tensorics-expression-pro" version="PRO" />
-
-			<dep product="rxjava" version="1.1.8" />
+			<dep product="tensorics-core-pro" />
+			<dep product="tensorics-expression-pro" />
 
 			<dep product="cmw-log-log4j" />
+			<dep product="slf4j-log4j12" />
+
+			<dep product="guava" />
 
 			<dep product="spring-core" />
 			<dep product="spring-context" />
-			<dep product="spring-test" />
-			<dep product="guava" />
+			<dep product="spring-test" local="true" excluded="true" />
 
 			<dep product="junit" local="true" excluded="true" />
-			<dep product="mockito-core" local="true" exluded="true" />
 			<dep product="assertj-core" local="true" excluded="true" />
+			<dep product="mockito-core" local="true" />
 		</dependencies>
 	</product>
 </products>
