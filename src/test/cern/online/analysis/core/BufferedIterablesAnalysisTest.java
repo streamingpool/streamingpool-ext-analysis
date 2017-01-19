@@ -16,6 +16,7 @@ import static rx.Observable.just;
 import java.time.Duration;
 
 import org.junit.Test;
+import org.junit.Ignore;
 import org.tensorics.core.iterable.expressions.PickExpression;
 import org.tensorics.core.resolve.domain.DetailedExpressionResult;
 import org.tensorics.expression.EvaluationStatus;
@@ -65,6 +66,7 @@ public class BufferedIterablesAnalysisTest extends AbstractAnalysisTest implemen
         assertThat(statusesOfAssertion(subscriber, label)).containsOnly(SUCCESSFUL);
     }
 
+    @Ignore
     @Test
     public void testPickExpressionOutOfBound() throws Exception {
         StreamId<? extends Iterable<Boolean>> sourceId = provide(just(asList(false, true, false))).withUniqueStreamId();
