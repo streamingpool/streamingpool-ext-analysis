@@ -17,31 +17,31 @@ import cern.online.analysis.core.AnalysisModule;
 import cern.online.analysis.core.AssertionStatus;
 import cern.online.analysis.core.expression.AssertionExpression;
 import cern.streaming.pool.core.support.RxStreamSupport;
-import rx.Observable;
-import rx.observers.TestSubscriber;
+import io.reactivex.Flowable;
+import io.reactivex.subscribers.TestSubscriber;
 
 public interface RxAnalysisSupport extends AnalysisTest, RxStreamSupport {
 
-    public default Observable<DetailedExpressionResult<EvaluationStatus, AnalysisExpression>> rxFrom(
+    public default Flowable<DetailedExpressionResult<EvaluationStatus, AnalysisExpression>> rxFrom(
             AnalysisModule analysisModule) {
         return rxFrom(analysisIdOf(analysisModule));
     }
 
     public default List<EvaluationStatus> evaluationStatusesOf(
             TestSubscriber<DetailedExpressionResult<EvaluationStatus, AnalysisExpression>> subscriber) {
-        return subscriber.getOnNextEvents().stream().map(result -> result.value()).collect(toList());
+        return subscriber.values().stream().map(result -> result.value()).collect(toList());
     }
 
     public default List<AssertionStatus> assertionsStatusesOf(
             TestSubscriber<DetailedExpressionResult<EvaluationStatus, AnalysisExpression>> subscriber) {
-        return subscriber.getOnNextEvents().stream()
+        return subscriber.values().stream()
                 .map(result -> result.context().resolvedValueOf(result.rootExpression().targetExpression()))
                 .collect(toList());
     }
 
     public default List<AssertionStatus> statusesOfAssertion(
             TestSubscriber<DetailedExpressionResult<EvaluationStatus, AnalysisExpression>> subscriber, String name) {
-        return subscriber.getOnNextEvents().stream().map(detailedResult -> statusOfAssertion(detailedResult, name))
+        return subscriber.values().stream().map(detailedResult -> statusOfAssertion(detailedResult, name))
                 .collect(toList());
     }
 

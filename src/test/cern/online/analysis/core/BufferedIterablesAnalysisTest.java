@@ -7,16 +7,17 @@ package cern.online.analysis.core;
 import static cern.online.analysis.core.AssertionStatus.ERROR;
 import static cern.online.analysis.core.AssertionStatus.SUCCESSFUL;
 import static cern.streaming.pool.ext.tensorics.expression.StreamIdBasedExpression.of;
+import static io.reactivex.Flowable.interval;
+import static io.reactivex.Flowable.just;
 import static java.lang.Integer.MIN_VALUE;
 import static java.util.Arrays.asList;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
-import static rx.Observable.just;
 
 import java.time.Duration;
 
-import org.junit.Test;
 import org.junit.Ignore;
+import org.junit.Test;
 import org.tensorics.core.iterable.expressions.PickExpression;
 import org.tensorics.core.resolve.domain.DetailedExpressionResult;
 import org.tensorics.expression.EvaluationStatus;
@@ -24,8 +25,7 @@ import org.tensorics.expression.EvaluationStatus;
 import cern.online.analysis.core.util.AbstractAnalysisTest;
 import cern.online.analysis.core.util.RxAnalysisSupport;
 import cern.streaming.pool.core.service.StreamId;
-import rx.Observable;
-import rx.observers.TestSubscriber;
+import io.reactivex.subscribers.TestSubscriber;
 
 public class BufferedIterablesAnalysisTest extends AbstractAnalysisTest implements RxAnalysisSupport {
 
@@ -41,14 +41,14 @@ public class BufferedIterablesAnalysisTest extends AbstractAnalysisTest implemen
         }).take(1).subscribe(subscriber);
 
         subscriber.awaitTerminalEvent(5, SECONDS);
-        subscriber.assertCompleted();
+        subscriber.assertComplete();
         assertThat(assertionsStatusesOf(subscriber)).containsOnly(SUCCESSFUL);
     }
 
     @Test
     public void testPickExpressionOfBufferedLiveStream() throws Exception {
-        StreamId<Long> startBuffer = provide(Observable.interval(1, SECONDS)).withUniqueStreamId();
-        StreamId<Boolean> booleanData = provide(Observable.interval(1, SECONDS).map(v -> true)).withUniqueStreamId();
+        StreamId<Long> startBuffer = provide(interval(1, SECONDS)).withUniqueStreamId();
+        StreamId<Boolean> booleanData = provide(interval(1, SECONDS).map(v -> true)).withUniqueStreamId();
         String label = "any";
 
         TestSubscriber<DetailedExpressionResult<EvaluationStatus, AnalysisExpression>> subscriber = new TestSubscriber<>();
@@ -62,7 +62,7 @@ public class BufferedIterablesAnalysisTest extends AbstractAnalysisTest implemen
         }).take(1).subscribe(subscriber);
 
         subscriber.awaitTerminalEvent();
-        subscriber.assertCompleted();
+        subscriber.assertComplete();
         assertThat(statusesOfAssertion(subscriber, label)).containsOnly(SUCCESSFUL);
     }
 
@@ -80,7 +80,7 @@ public class BufferedIterablesAnalysisTest extends AbstractAnalysisTest implemen
         }).take(1).subscribe(subscriber);
 
         subscriber.awaitTerminalEvent(5, SECONDS);
-        subscriber.assertCompleted();
+        subscriber.assertComplete();
         assertThat(statusesOfAssertion(subscriber, label)).containsOnly(ERROR);
     }
 

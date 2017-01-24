@@ -5,16 +5,16 @@
 package cern.online.analysis.core;
 
 import static cern.streaming.pool.ext.tensorics.expression.StreamIdBasedExpression.of;
+import static io.reactivex.Flowable.empty;
+import static io.reactivex.Flowable.interval;
+import static io.reactivex.Flowable.just;
+import static io.reactivex.Flowable.merge;
+import static io.reactivex.Flowable.never;
 import static java.time.Duration.ofSeconds;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.tensorics.expression.EvaluationStatus.EVALUATED;
-import static rx.Observable.empty;
-import static rx.Observable.interval;
-import static rx.Observable.just;
-import static rx.Observable.merge;
-import static rx.Observable.never;
 
 import java.util.concurrent.TimeUnit;
 
@@ -30,7 +30,7 @@ import cern.online.analysis.core.util.RxAnalysisSupport;
 import cern.streaming.pool.core.service.StreamId;
 import cern.streaming.pool.ext.tensorics.exception.NoBufferedStreamSpecifiedException;
 import cern.streaming.pool.ext.tensorics.expression.StreamIdBasedExpression;
-import rx.observers.TestSubscriber;
+import io.reactivex.subscribers.TestSubscriber;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SuppressWarnings("unchecked")
@@ -61,8 +61,8 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
             }
         }).take(1).subscribe(subscriber);
 
-        subscriber.awaitTerminalEvent(2, SECONDS);
-        subscriber.assertCompleted();
+        subscriber.awaitTerminalEvent(4, SECONDS);
+        subscriber.assertComplete();
         assertThat(evaluationStatusesOf(subscriber)).hasSize(1).containsOnly(EVALUATED);
     }
 
@@ -82,7 +82,7 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
         }).take(1).subscribe(subscriber);
 
         subscriber.awaitTerminalEvent(5, SECONDS);
-        subscriber.assertCompleted();
+        subscriber.assertComplete();
         assertThat(evaluationStatusesOf(subscriber)).hasSize(1).containsOnly(EVALUATED);
     }
 
@@ -103,7 +103,7 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
         }).take(1).subscribe(subscriber);
 
         subscriber.awaitTerminalEvent(5, SECONDS);
-        subscriber.assertCompleted();
+        subscriber.assertComplete();
         assertThat(evaluationStatusesOf(subscriber)).hasSize(1).containsOnly(EVALUATED);
     }
 
@@ -122,7 +122,7 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
         }).subscribe(subscriber);
 
         subscriber.awaitTerminalEvent(5, TimeUnit.SECONDS);
-        subscriber.assertNoTerminalEvent();
+        subscriber.assertNotTerminated();
     }
 
     @Test
@@ -140,7 +140,7 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
         }).subscribe(subscriber);
 
         subscriber.awaitTerminalEvent(2, SECONDS);
-        subscriber.assertNoTerminalEvent();
+        subscriber.assertNotTerminated();
     }
 
     @Test(expected = NoBufferedStreamSpecifiedException.class)

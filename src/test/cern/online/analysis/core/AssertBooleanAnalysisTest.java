@@ -8,10 +8,10 @@ import static cern.online.analysis.core.AssertionStatus.FAILURE;
 import static cern.online.analysis.core.AssertionStatus.SUCCESSFUL;
 import static cern.streaming.pool.ext.tensorics.expression.StreamIdBasedExpression.of;
 import static com.google.common.collect.ImmutableSet.of;
+import static io.reactivex.Flowable.just;
 import static java.util.Arrays.asList;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
-import static rx.Observable.just;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ import org.tensorics.expression.EvaluationStatus;
 import cern.online.analysis.core.util.AbstractAnalysisTest;
 import cern.online.analysis.core.util.RxAnalysisSupport;
 import cern.streaming.pool.core.service.StreamId;
-import rx.observers.TestSubscriber;
+import io.reactivex.subscribers.TestSubscriber;
 
 public class AssertBooleanAnalysisTest extends AbstractAnalysisTest implements RxAnalysisSupport {
 
