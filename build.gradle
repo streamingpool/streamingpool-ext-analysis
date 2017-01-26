@@ -34,8 +34,8 @@ group 'org.streamingpool'
 sourceCompatibility = 1.8
 
 dependencies {
-    compile 'org.streamingpool:streamingpool-core:1.0.0'
-    compile 'org.streamingpool:streamingpool-ext-tensorics:1.0.0'
+    compile 'org.streamingpool:streamingpool-core:1.1.0'
+    compile 'org.streamingpool:streamingpool-ext-tensorics:1.1.0'
     
     compile 'org.springframework:spring-core:4.3.5.RELEASE'
     compile 'org.springframework:spring-context:4.3.5.RELEASE'
