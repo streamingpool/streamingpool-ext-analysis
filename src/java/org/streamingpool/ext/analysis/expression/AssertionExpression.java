@@ -43,7 +43,7 @@ import com.google.common.collect.ImmutableList;
  * {@link AssertionExpression}.
  * 
  * @see AssertionResolver
- * @author acalia, caguiler, kfuchsberger
+ * @author acalia, caguiler, kfuchsbe
  */
 public class AssertionExpression extends AbstractDeferredExpression<AssertionStatus>
         implements ExceptionHandlingNode<AssertionStatus> {
