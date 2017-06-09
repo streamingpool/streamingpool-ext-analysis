@@ -38,13 +38,13 @@ public class AssertionBuilder extends ConditionBuilder {
     private final ImmutableList.Builder<Expression<Boolean>> preConditions = ImmutableList.builder();
     private IterableBooleanConversion preConditionsReducer = DEFAULT_CONDITIONS_REDUCER;
 
-    public AssertionBuilder withPreConditionReducer(IterableBooleanConversion newPreConditionsConversion) {
+    public ConditionBuilder withPreConditionReducer(IterableBooleanConversion newPreConditionsConversion) {
         requireNonNull(newPreConditionsConversion, "preConditionsConversion must not be null");
         this.preConditionsReducer = newPreConditionsConversion;
         return this;
     }
 
-    public AssertionBuilder withPreCondition(Expression<Boolean> preCondition) {
+    public ConditionBuilder withPreCondition(Expression<Boolean> preCondition) {
         requireNonNull(preCondition, "preCondition must not be null");
         this.preConditions.add(preCondition);
         return this;

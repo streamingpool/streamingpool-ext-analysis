@@ -42,4 +42,9 @@ public class OngoingNamedCondition<T> {
         return this;
     }
 
+    public OngoingNamedCondition<T> withKey(String key) {
+        this.builder.withKey(key);
+        return this;
+    }
+
 }

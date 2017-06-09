@@ -50,8 +50,13 @@ public class OngoingAnyBooleanCondition {
         return this;
     }
 
+    public OngoingAnyBooleanCondition withKey(String key) {
+        this.builder.withKey(key);
+        return this;
+    }
+
     public OngoingAnyBooleanCondition isTrue() {
-        
+
         this.builder.withCondition(new ConversionOperationExpression<Iterable<Boolean>, Boolean>(ANY_OF, sources));
 
         return this;

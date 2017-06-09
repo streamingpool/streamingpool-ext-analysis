@@ -49,6 +49,7 @@ public class AssertionExpression extends AbstractDeferredExpression<AssertionSta
         implements ExceptionHandlingNode<AssertionStatus> {
 
     private final String name;
+    private final String key;
     private final Expression<Boolean> condition;
     private final Expression<Boolean> preConditionsExpression;
 
@@ -58,6 +59,7 @@ public class AssertionExpression extends AbstractDeferredExpression<AssertionSta
         requireNonNull(builder.preConditionsReducer(), "preConditionsCollector must not be null");
         this.name = builder.name();
         this.condition = builder.condition();
+        this.key = builder.key();
         this.preConditionsExpression = new CombinedBooleanExpression(builder.preConditionsReducer(),
                 new IterableResolvingExpression<Boolean>(builder.preConditions()));
     }
@@ -89,7 +91,9 @@ public class AssertionExpression extends AbstractDeferredExpression<AssertionSta
         final int prime = 31;
         int result = 1;
         result = prime * result + ((condition == null) ? 0 : condition.hashCode());
+        result = prime * result + ((key() == null) ? 0 : key().hashCode());
         result = prime * result + ((name == null) ? 0 : name.hashCode());
+        result = prime * result + ((preConditionsExpression == null) ? 0 : preConditionsExpression.hashCode());
         return result;
     }
 
@@ -112,6 +116,13 @@ public class AssertionExpression extends AbstractDeferredExpression<AssertionSta
         } else if (!condition.equals(other.condition)) {
             return false;
         }
+        if (key() == null) {
+            if (other.key() != null) {
+                return false;
+            }
+        } else if (!key().equals(other.key())) {
+            return false;
+        }
         if (name == null) {
             if (other.name != null) {
                 return false;
@@ -119,13 +130,24 @@ public class AssertionExpression extends AbstractDeferredExpression<AssertionSta
         } else if (!name.equals(other.name)) {
             return false;
         }
+        if (preConditionsExpression == null) {
+            if (other.preConditionsExpression != null) {
+                return false;
+            }
+        } else if (!preConditionsExpression.equals(other.preConditionsExpression)) {
+            return false;
+        }
         return true;
     }
 
     @Override
     public String toString() {
-        return "AssertionExpression [name=" + name + ", condition=" + condition + ", preConditionsExpression="
-                + preConditionsExpression + "]";
+        return "AssertionExpression [name=" + name + ", key=" + key() + ", condition=" + condition
+                + ", preConditionsExpression=" + preConditionsExpression + "]";
+    }
+
+    public String key() {
+        return key;
     }
 
 }

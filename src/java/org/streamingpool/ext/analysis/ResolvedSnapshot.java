@@ -29,6 +29,7 @@ import static org.streamingpool.ext.analysis.names.ExpressionNames.FROM_CONVERSI
 import static org.streamingpool.ext.analysis.names.ExpressionNames.FROM_PREDICATE_EXPRESSION;
 import static org.streamingpool.ext.analysis.names.ExpressionNames.FROM_RESOLVED_EXPRESSION;
 
+import java.util.Optional;
 import java.util.function.Function;
 
 import org.streamingpool.core.names.resolve.Chains;
@@ -107,6 +108,14 @@ public class ResolvedSnapshot<R, E extends Expression<R>> {
 
     public String nameFor(AssertionExpression exp) {
         return nameResolving.apply(exp);
+    }
+
+    public String keyFor(AssertionExpression exp) {
+        return Optional.ofNullable(exp.key()).orElse(formatAsKey(nameFor(exp)));
+    }
+
+    public static String formatAsKey(String name) {
+        return name.toLowerCase().replaceAll("_", "-").replaceAll("[ ,:;\\[\\(\\]\\)]+", " ").trim().replaceAll(" ", ".") + ".[GENERATED]";
     }
 
     public String nameFor(Node exp) {

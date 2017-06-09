@@ -30,6 +30,7 @@ public class ConditionBuilder {
 
     private String name;
     private Expression<Boolean> condition;
+    private String key;
 
     public ConditionBuilder withName(String newName) {
         this.name = requireNonNull(newName, "name must not be null");
@@ -50,6 +51,15 @@ public class ConditionBuilder {
 
     public Expression<Boolean> condition() {
         return condition;
+    }
+
+    public ConditionBuilder withKey(String newKey) {
+        this.key = requireNonNull(newKey, "key must not be null");
+        return this;
+    }
+
+    public String key() {
+        return key;
     }
 
 }
