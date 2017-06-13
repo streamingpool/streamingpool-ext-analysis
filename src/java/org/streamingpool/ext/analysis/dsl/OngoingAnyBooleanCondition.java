@@ -32,10 +32,6 @@ public class OngoingAnyBooleanCondition {
     private final ConditionBuilder builder;
     private final Expression<Iterable<Boolean>> sources;
 
-    /**
-     * @param builder
-     * @param sources
-     */
     public OngoingAnyBooleanCondition(ConditionBuilder builder, Expression<? extends Iterable<Boolean>> source) {
         super();
         this.builder = builder;
@@ -57,7 +53,7 @@ public class OngoingAnyBooleanCondition {
 
     public OngoingAnyBooleanCondition isTrue() {
 
-        this.builder.withCondition(new ConversionOperationExpression<Iterable<Boolean>, Boolean>(ANY_OF, sources));
+        this.builder.withCondition(new ConversionOperationExpression<>(ANY_OF, sources));
 
         return this;
     }

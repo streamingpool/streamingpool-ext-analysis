@@ -65,7 +65,7 @@ public class OngoingAllBooleanExcludableCondition {
     }
 
     public OngoingAllBooleanExcludableCondition areTrue() {
-        this.builder.withCondition(new ConversionOperationExpression<Iterable<Boolean>, Boolean>(ALL_OF,
+        this.builder.withCondition(new ConversionOperationExpression<>(ALL_OF,
                 new IterableExpressionToIterable<>(sources)));
         return this;
     }

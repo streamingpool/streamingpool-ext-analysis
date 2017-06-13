@@ -32,8 +32,8 @@ import org.tensorics.core.tree.domain.AbstractDeferredExpression;
 import org.tensorics.core.tree.domain.Node;
 
 /**
- * Wrapper for a {@link StreamId} input of the analysis. This will accepts a streamid<T> and declare an
- * Expression<Tensor<T>>. This way we have type checks in the dsl and we can inject the buffering.
+ * Wrapper for a {@link StreamId} input of the analysis. This will accepts a {@code StreamId<T>} and declare an
+ * {@code Expression<Tensor<T>>}. This way we have type checks in the dsl and we can inject the buffering.
  * 
  * @author acalia
  * @param <R>

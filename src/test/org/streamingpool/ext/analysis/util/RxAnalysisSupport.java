@@ -40,30 +40,30 @@ import io.reactivex.subscribers.TestSubscriber;
 
 public interface RxAnalysisSupport extends AnalysisTest, RxStreamSupport {
 
-    public default Flowable<DetailedExpressionResult<EvaluationStatus, AnalysisExpression>> rxFrom(
+    default Flowable<DetailedExpressionResult<EvaluationStatus, AnalysisExpression>> rxFrom(
             AnalysisModule analysisModule) {
         return rxFrom(analysisIdOf(analysisModule));
     }
 
-    public default List<EvaluationStatus> evaluationStatusesOf(
+    default List<EvaluationStatus> evaluationStatusesOf(
             TestSubscriber<DetailedExpressionResult<EvaluationStatus, AnalysisExpression>> subscriber) {
-        return subscriber.values().stream().map(result -> result.value()).collect(toList());
+        return subscriber.values().stream().map(DetailedExpressionResult::value).collect(toList());
     }
 
-    public default List<AssertionStatus> assertionsStatusesOf(
+    default List<AssertionStatus> assertionsStatusesOf(
             TestSubscriber<DetailedExpressionResult<EvaluationStatus, AnalysisExpression>> subscriber) {
         return subscriber.values().stream()
                 .map(result -> result.context().resolvedValueOf(result.rootExpression().targetExpression()))
                 .collect(toList());
     }
 
-    public default List<AssertionStatus> statusesOfAssertion(
+    default List<AssertionStatus> statusesOfAssertion(
             TestSubscriber<DetailedExpressionResult<EvaluationStatus, AnalysisExpression>> subscriber, String name) {
         return subscriber.values().stream().map(detailedResult -> statusOfAssertion(detailedResult, name))
                 .collect(toList());
     }
 
-    public default AssertionStatus statusOfAssertion(
+    default AssertionStatus statusOfAssertion(
             DetailedExpressionResult<EvaluationStatus, AnalysisExpression> detailedResult, String name) {
         List<AssertionExpression> assertionsWithName = detailedResult.rootExpression().targetExpression().getChildren()
                 .stream().filter(assertion -> assertion.name().equals(name)).collect(toList());

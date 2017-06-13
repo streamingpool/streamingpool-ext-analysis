@@ -61,7 +61,7 @@ public class AssertionExpression extends AbstractDeferredExpression<AssertionSta
         this.condition = builder.condition();
         this.key = builder.key();
         this.preConditionsExpression = new CombinedBooleanExpression(builder.preConditionsReducer(),
-                new IterableResolvingExpression<Boolean>(builder.preConditions()));
+                new IterableResolvingExpression<>(builder.preConditions()));
     }
 
     @Override

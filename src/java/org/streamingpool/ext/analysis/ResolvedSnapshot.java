@@ -85,7 +85,7 @@ public class ResolvedSnapshot<R, E extends Expression<R>> {
     }
 
     public String detailedStringFor(Node exp) {
-        StringBuffer detailedResult = new StringBuffer();
+        StringBuilder detailedResult = new StringBuilder();
         for (Node child : Trees.findBottomNodes(exp)) {
             // if (child.equals(INJECTION_ATTEMPT)) {
             // continue;

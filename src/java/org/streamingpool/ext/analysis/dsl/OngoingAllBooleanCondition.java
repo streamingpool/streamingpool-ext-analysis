@@ -47,7 +47,7 @@ public class OngoingAllBooleanCondition {
     }
 
     public OngoingAllBooleanCondition areTrue() {
-        this.builder.withCondition(new ConversionOperationExpression<Iterable<Boolean>, Boolean>(ALL_OF, sources));
+        this.builder.withCondition(new ConversionOperationExpression<>(ALL_OF, sources));
         return this;
     }
 
