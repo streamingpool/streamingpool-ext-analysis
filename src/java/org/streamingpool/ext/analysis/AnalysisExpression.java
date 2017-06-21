@@ -23,8 +23,8 @@
 package org.streamingpool.ext.analysis;
 
 import org.streamingpool.ext.analysis.expression.AssertionGroupExpression;
+import org.tensorics.core.expressions.WindowedExpression;
 import org.tensorics.core.tree.domain.Expression;
-import org.tensorics.expression.WindowedExpression;
 
 public class AnalysisExpression extends WindowedExpression<AssertionGroupExpression> {
 

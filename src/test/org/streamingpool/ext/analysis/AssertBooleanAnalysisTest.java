@@ -39,9 +39,9 @@ import org.streamingpool.ext.analysis.AnalysisExpression;
 import org.streamingpool.ext.analysis.AnalysisModule;
 import org.streamingpool.ext.analysis.util.AbstractAnalysisTest;
 import org.streamingpool.ext.analysis.util.RxAnalysisSupport;
+import org.tensorics.core.expressions.EvaluationStatus;
 import org.tensorics.core.resolve.domain.DetailedExpressionResult;
 import org.tensorics.core.tree.domain.Expression;
-import org.tensorics.expression.EvaluationStatus;
 
 import io.reactivex.subscribers.TestSubscriber;
 

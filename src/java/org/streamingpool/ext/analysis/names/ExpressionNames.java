@@ -29,9 +29,9 @@ import org.streamingpool.ext.analysis.expression.AssertionExpression;
 import org.streamingpool.ext.tensorics.expression.StreamIdBasedExpression;
 import org.tensorics.core.expressions.BinaryPredicateExpression;
 import org.tensorics.core.expressions.ConversionOperationExpression;
+import org.tensorics.core.expressions.PredicateExpression;
 import org.tensorics.core.math.predicates.BinaryPredicate;
 import org.tensorics.core.tree.domain.ResolvedExpression;
-import org.tensorics.expression.PredicateExpression;
 
 public final class ExpressionNames {
 

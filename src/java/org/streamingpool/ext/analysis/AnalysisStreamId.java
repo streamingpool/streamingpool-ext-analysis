@@ -23,9 +23,9 @@
 package org.streamingpool.ext.analysis;
 
 import org.streamingpool.ext.tensorics.streamid.DetailedExpressionStreamId;
+import org.tensorics.core.expressions.EvaluationStatus;
 import org.tensorics.core.tree.domain.Contexts;
 import org.tensorics.core.tree.domain.ResolvingContext;
-import org.tensorics.expression.EvaluationStatus;
 
 /**
  * Specialization of a {@link DetailedExpressionStreamId} specifically for the analysis framework

@@ -32,7 +32,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.streamingpool.ext.tensorics.expression.StreamIdBasedExpression.of;
-import static org.tensorics.expression.EvaluationStatus.EVALUATED;
+import static org.tensorics.core.expressions.EvaluationStatus.EVALUATED;
 
 import java.util.concurrent.TimeUnit;
 
@@ -47,8 +47,8 @@ import org.streamingpool.ext.analysis.util.AbstractAnalysisTest;
 import org.streamingpool.ext.analysis.util.RxAnalysisSupport;
 import org.streamingpool.ext.tensorics.exception.NoBufferedStreamSpecifiedException;
 import org.streamingpool.ext.tensorics.expression.StreamIdBasedExpression;
+import org.tensorics.core.expressions.EvaluationStatus;
 import org.tensorics.core.resolve.domain.DetailedExpressionResult;
-import org.tensorics.expression.EvaluationStatus;
 
 import io.reactivex.subscribers.TestSubscriber;
 

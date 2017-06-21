@@ -27,9 +27,9 @@ import static java.util.Objects.requireNonNull;
 import java.util.Set;
 
 import org.streamingpool.ext.analysis.AssertionBuilder;
+import org.tensorics.core.expressions.IsEqualToExpression;
 import org.tensorics.core.tree.domain.Expression;
 import org.tensorics.core.tree.domain.ResolvedExpression;
-import org.tensorics.expression.IsEqualToExpression;
 
 public class OngoingPrecondition<T> {
 

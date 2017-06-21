@@ -42,12 +42,12 @@ import org.streamingpool.ext.tensorics.expression.StreamIdBasedExpression;
 import org.streamingpool.ext.tensorics.streamid.ExpressionBasedStreamId;
 import org.tensorics.core.expressions.BinaryPredicateExpression;
 import org.tensorics.core.expressions.ConversionOperationExpression;
+import org.tensorics.core.expressions.PredicateExpression;
 import org.tensorics.core.tree.domain.Expression;
 import org.tensorics.core.tree.domain.Node;
 import org.tensorics.core.tree.domain.ResolvedExpression;
 import org.tensorics.core.tree.domain.ResolvingContext;
 import org.tensorics.core.tree.walking.Trees;
-import org.tensorics.expression.PredicateExpression;
 
 public class ResolvedSnapshot<R, E extends Expression<R>> {
 

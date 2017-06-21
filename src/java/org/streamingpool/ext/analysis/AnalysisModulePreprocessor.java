@@ -22,7 +22,7 @@
 
 package org.streamingpool.ext.analysis;
 
-import org.tensorics.expression.WindowedExpression;
+import org.tensorics.core.expressions.WindowedExpression;
 
 /**
  * Transforms an {@link AnalysisModule} into a {@link WindowedExpression}.

@@ -29,11 +29,11 @@ import java.util.List;
 import org.streamingpool.ext.analysis.AssertionBuilder;
 import org.streamingpool.ext.analysis.AssertionStatus;
 import org.streamingpool.ext.analysis.resolver.AssertionResolver;
+import org.tensorics.core.expressions.CombinedBooleanExpression;
+import org.tensorics.core.expressions.IterableResolvingExpression;
 import org.tensorics.core.tree.domain.AbstractDeferredExpression;
 import org.tensorics.core.tree.domain.ExceptionHandlingNode;
 import org.tensorics.core.tree.domain.Expression;
-import org.tensorics.expression.CombinedBooleanExpression;
-import org.tensorics.expression.IterableResolvingExpression;
 
 import com.google.common.collect.ImmutableList;
 

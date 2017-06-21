@@ -25,11 +25,11 @@ package org.streamingpool.ext.analysis.dsl;
 import java.util.function.Predicate;
 
 import org.streamingpool.ext.analysis.ConditionBuilder;
+import org.tensorics.core.expressions.IsEqualToExpression;
+import org.tensorics.core.expressions.IsNotEqualExpression;
+import org.tensorics.core.expressions.PredicateExpression;
 import org.tensorics.core.tree.domain.Expression;
 import org.tensorics.core.tree.domain.ResolvedExpression;
-import org.tensorics.expression.IsEqualToExpression;
-import org.tensorics.expression.IsNotEqualExpression;
-import org.tensorics.expression.PredicateExpression;
 
 public class OngoingCondition<T> extends OngoingNamedCondition<T> {
 
