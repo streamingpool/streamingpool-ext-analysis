@@ -34,6 +34,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.streamingpool.core.service.StreamId;
 import org.streamingpool.core.service.streamid.BufferSpecification;
 import org.streamingpool.core.service.streamid.OverlapBufferStreamId;
+import org.streamingpool.ext.analysis.dsl.AllOf;
 import org.streamingpool.ext.analysis.dsl.OngoingAllBooleanCondition;
 import org.streamingpool.ext.analysis.dsl.OngoingAllBooleanExcludableCondition;
 import org.streamingpool.ext.analysis.dsl.OngoingAnalysisEnabler;
@@ -51,6 +52,8 @@ import org.streamingpool.ext.tensorics.evaluation.TriggeredEvaluation;
 import org.streamingpool.ext.tensorics.evaluation.TriggeredEvaluation.Builder;
 import org.streamingpool.ext.tensorics.expression.StreamIdBasedExpression;
 import org.streamingpool.ext.tensorics.streamid.ExpressionBasedStreamId;
+import org.tensorics.core.iterable.expressions.IterableExpressionToIterable;
+import org.tensorics.core.iterable.expressions.IterableOperationExpression;
 import org.tensorics.core.tree.domain.Expression;
 import org.tensorics.core.tree.domain.ResolvedExpression;
 
@@ -160,6 +163,24 @@ public abstract class AnalysisModule {
     protected final OngoingAnyBooleanCondition assertAtLeastOneBooleanOf(
             StreamId<? extends Iterable<Boolean>> thatSourceId) {
         return assertAtLeastOneBooleanOf(StreamIdBasedExpression.of(thatSourceId));
+    }
+
+    protected final OngoingPrecondition<Boolean> whenTrue(Expression<Boolean> whenSource) {
+        return new OngoingPrecondition<>(newAssertionBuilder(), whenSource).isEqualTo(true);
+    }
+
+    protected final OngoingPrecondition<Boolean> whenFalse(Expression<Boolean> whenSource) {
+        return new OngoingPrecondition<>(newAssertionBuilder(), whenSource).isEqualTo(false);
+    }
+
+    protected final OngoingPrecondition<Boolean> whenNot(Expression<Boolean> whenSource) {
+        return whenFalse(whenSource);
+    }
+
+    protected final OngoingPrecondition<Boolean> whenAllTrue(Iterable<Expression<Boolean>> expressions) {
+        Expression<Iterable<Boolean>> booleans = new IterableExpressionToIterable<>(expressions);
+        Expression<Boolean> combined = new IterableOperationExpression<>(new AllOf(), booleans);
+        return whenTrue(combined);
     }
 
     protected final <T> OngoingPrecondition<T> when(Expression<T> whenSource) {
