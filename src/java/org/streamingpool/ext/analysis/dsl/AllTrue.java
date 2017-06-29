@@ -30,7 +30,7 @@ import static java.util.stream.StreamSupport.stream;
  * 
  * @author acalia, caguiler, kfuchsberger
  */
-public class AllOf implements IterableBooleanConversion {
+public class AllTrue implements IterableBooleanConversion {
 
     @Override
     public Boolean apply(Iterable<Boolean> booleanList) {
@@ -39,7 +39,7 @@ public class AllOf implements IterableBooleanConversion {
 
     @Override
     public String toString() {
-        return "AllOf";
+        return "AllTrue";
     }
 
 }

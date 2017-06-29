@@ -34,7 +34,7 @@ import com.google.common.collect.Sets;
 
 public class OngoingAllBooleanExcludableCondition {
 
-    private static final AllOf ALL_OF = new AllOf();
+    private static final AllTrue ALL_TRUE = new AllTrue();
     private final ConditionBuilder builder;
     private final Set<? extends Expression<Boolean>> sources;
 
@@ -65,7 +65,7 @@ public class OngoingAllBooleanExcludableCondition {
     }
 
     public OngoingAllBooleanExcludableCondition areTrue() {
-        this.builder.withCondition(new ConversionOperationExpression<>(ALL_OF,
+        this.builder.withCondition(new ConversionOperationExpression<>(ALL_TRUE,
                 new IterableExpressionToIterable<>(sources)));
         return this;
     }

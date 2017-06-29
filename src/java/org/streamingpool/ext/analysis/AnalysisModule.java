@@ -34,7 +34,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.streamingpool.core.service.StreamId;
 import org.streamingpool.core.service.streamid.BufferSpecification;
 import org.streamingpool.core.service.streamid.OverlapBufferStreamId;
-import org.streamingpool.ext.analysis.dsl.AllOf;
+import org.streamingpool.ext.analysis.dsl.AllTrue;
 import org.streamingpool.ext.analysis.dsl.OngoingAllBooleanCondition;
 import org.streamingpool.ext.analysis.dsl.OngoingAllBooleanExcludableCondition;
 import org.streamingpool.ext.analysis.dsl.OngoingAnalysisEnabler;
@@ -179,7 +179,7 @@ public abstract class AnalysisModule {
 
     protected final OngoingPrecondition<Boolean> whenAllTrue(Iterable<Expression<Boolean>> expressions) {
         Expression<Iterable<Boolean>> booleans = new IterableExpressionToIterable<>(expressions);
-        Expression<Boolean> combined = new IterableOperationExpression<>(new AllOf(), booleans);
+        Expression<Boolean> combined = new IterableOperationExpression<>(new AllTrue(), booleans);
         return whenTrue(combined);
     }
 

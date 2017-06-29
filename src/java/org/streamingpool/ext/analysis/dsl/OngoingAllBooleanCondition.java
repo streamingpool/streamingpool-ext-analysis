@@ -28,7 +28,7 @@ import org.tensorics.core.tree.domain.Expression;
 
 public class OngoingAllBooleanCondition {
 
-    private static final AllOf ALL_OF = new AllOf();
+    private static final AllTrue ALL_TRUE = new AllTrue();
     private final ConditionBuilder builder;
     private final Expression<Iterable<Boolean>> sources;
 
@@ -47,7 +47,7 @@ public class OngoingAllBooleanCondition {
     }
 
     public OngoingAllBooleanCondition areTrue() {
-        this.builder.withCondition(new ConversionOperationExpression<>(ALL_OF, sources));
+        this.builder.withCondition(new ConversionOperationExpression<>(ALL_TRUE, sources));
         return this;
     }
 
