@@ -52,10 +52,13 @@ import org.streamingpool.ext.tensorics.evaluation.TriggeredEvaluation;
 import org.streamingpool.ext.tensorics.evaluation.TriggeredEvaluation.Builder;
 import org.streamingpool.ext.tensorics.expression.StreamIdBasedExpression;
 import org.streamingpool.ext.tensorics.streamid.ExpressionBasedStreamId;
+import org.tensorics.core.expressions.ConversionOperationExpression;
 import org.tensorics.core.iterable.expressions.IterableExpressionToIterable;
 import org.tensorics.core.iterable.expressions.IterableOperationExpression;
 import org.tensorics.core.tree.domain.Expression;
 import org.tensorics.core.tree.domain.ResolvedExpression;
+
+import com.google.common.collect.Iterables;
 
 /**
  * Abstract base class for analysis modules. Provides fluent API methods to specify assertions.
@@ -112,6 +115,14 @@ public abstract class AnalysisModule {
         return buffered(of(sourceStream));
     }
 
+    /**
+     * It buffers the source {@link Expression} and returns an expression with the latest value from the buffer
+     */
+    protected final <T1> Expression<T1> latestOf(Expression<T1> source) {
+        Expression<List<T1>> bufferedSource = buffered(source);
+        return new ConversionOperationExpression<>(Iterables::getLast, bufferedSource);
+    }
+
     protected final <T> Expression<List<T>> buffered(StreamId<T> sourceStreamId) {
         requireNonNull(sourceStreamId, "sourceStreamId must not be null.");
         if (sourceStreamId instanceof OverlapBufferStreamId) {
@@ -119,7 +130,9 @@ public abstract class AnalysisModule {
                     + "Buffering a buffered stream makes limited sense and is currently not supported.");
             /* Should we allow this? It probably would create more confusion than usefulness */
         }
-        return StreamIdBasedExpression.of(OverlapBufferStreamId.of(sourceStreamId, bufferSpecification()));
+        StreamIdBasedExpression<List<T>> of = StreamIdBasedExpression
+                .of(OverlapBufferStreamId.of(sourceStreamId, bufferSpecification()));
+        return of;
     }
 
     protected final <T> OngoingCondition<T> assertThat(Expression<T> thatSource) {
@@ -163,6 +176,11 @@ public abstract class AnalysisModule {
     protected final OngoingAnyBooleanCondition assertAtLeastOneBooleanOf(
             StreamId<? extends Iterable<Boolean>> thatSourceId) {
         return assertAtLeastOneBooleanOf(StreamIdBasedExpression.of(thatSourceId));
+    }
+
+    public OngoingBooleanCondition assertLatestBooleanOf(Expression<List<Boolean>> buffered) {
+        return new OngoingBooleanCondition(newAssertionBuilder(),
+                new ConversionOperationExpression<>(Iterables::getLast, buffered));
     }
 
     protected final OngoingPrecondition<Boolean> whenTrue(Expression<Boolean> whenSource) {

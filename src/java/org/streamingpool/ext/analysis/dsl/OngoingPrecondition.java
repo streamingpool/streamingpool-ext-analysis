@@ -24,12 +24,16 @@ package org.streamingpool.ext.analysis.dsl;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.List;
 import java.util.Set;
 
 import org.streamingpool.ext.analysis.AssertionBuilder;
+import org.tensorics.core.expressions.ConversionOperationExpression;
 import org.tensorics.core.expressions.IsEqualToExpression;
 import org.tensorics.core.tree.domain.Expression;
 import org.tensorics.core.tree.domain.ResolvedExpression;
+
+import com.google.common.collect.Iterables;
 
 public class OngoingPrecondition<T> {
 
@@ -71,16 +75,22 @@ public class OngoingPrecondition<T> {
         return new OngoingBooleanCondition(builder, thatSource);
     }
 
-    public final OngoingAllBooleanExcludableCondition thenAssertAllBoolean(Set<? extends Expression<Boolean>> thatSource) {
+    public final OngoingAllBooleanExcludableCondition thenAssertAllBoolean(
+            Set<? extends Expression<Boolean>> thatSource) {
         return new OngoingAllBooleanExcludableCondition(builder, thatSource);
     }
-    
-    public final OngoingAnyBooleanCondition thenAssertAtLeastOneBooleanOf(Expression<? extends Iterable<Boolean>> thatSource) {
+
+    public final OngoingAnyBooleanCondition thenAssertAtLeastOneBooleanOf(
+            Expression<? extends Iterable<Boolean>> thatSource) {
         return new OngoingAnyBooleanCondition(builder, thatSource);
     }
 
     public final OngoingBooleanCondition thenAssertBoolean(Boolean thatSource) {
         return thenAssertBoolean(ResolvedExpression.of(thatSource));
+    }
+
+    public OngoingBooleanCondition thenAssertLatestBooleanOf(Expression<List<Boolean>> buffered) {
+        return new OngoingBooleanCondition(builder, new ConversionOperationExpression<>(Iterables::getLast, buffered));
     }
 
 }
