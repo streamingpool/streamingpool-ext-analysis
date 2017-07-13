@@ -24,8 +24,6 @@ package org.streamingpool.ext.analysis;
 
 import org.streamingpool.ext.tensorics.streamid.DetailedExpressionStreamId;
 import org.tensorics.core.expressions.EvaluationStatus;
-import org.tensorics.core.tree.domain.Contexts;
-import org.tensorics.core.tree.domain.ResolvingContext;
 
 /**
  * Specialization of a {@link DetailedExpressionStreamId} specifically for the analysis framework
@@ -35,10 +33,6 @@ import org.tensorics.core.tree.domain.ResolvingContext;
 public class AnalysisStreamId extends DetailedExpressionStreamId<EvaluationStatus, AnalysisExpression> {
 
     public AnalysisStreamId(AnalysisDefinition analysisDefinition) {
-        super(analysisDefinition.expression(), analysisDefinition.evaluationStrategy(), Contexts.newResolvingContext());
-    }
-
-    public AnalysisStreamId(AnalysisDefinition analysisDefinition, ResolvingContext initialCtxForAnalysis) {
-        super(analysisDefinition.expression(), analysisDefinition.evaluationStrategy(), initialCtxForAnalysis);
+        super(analysisDefinition.expression(), analysisDefinition.initalContext());
     }
 }

@@ -24,15 +24,12 @@ package org.streamingpool.ext.analysis;
 
 import static org.mockito.Mockito.mock;
 
-import java.util.List;
-
 import org.assertj.core.api.Assertions;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.streamingpool.core.service.StreamId;
 import org.streamingpool.core.service.streamid.OverlapBufferStreamId;
-import org.streamingpool.ext.analysis.AnalysisModule;
 import org.streamingpool.ext.tensorics.expression.StreamIdBasedExpression;
 import org.streamingpool.ext.tensorics.streamid.ExpressionBasedStreamId;
 import org.tensorics.core.tree.domain.Expression;
@@ -65,7 +62,7 @@ public class AnalysisModuleBufferTest {
         @SuppressWarnings("unused")
         AnalysisModule module = new BufferedAnalysisModule() {
             {
-                Expression<List<Object>> bufferedExpression = buffered(ANY_STREAM_ID);
+                Expression<Iterable<Object>> bufferedExpression = buffered(ANY_STREAM_ID);
                 Assertions.assertThat(bufferedStreamIdFrom(bufferedExpression).sourceId()).isEqualTo(ANY_STREAM_ID);
             }
         };
@@ -76,7 +73,7 @@ public class AnalysisModuleBufferTest {
         @SuppressWarnings("unused")
         AnalysisModule module = new BufferedAnalysisModule() {
             {
-                Expression<List<Object>> bufferedExpression = buffered(ANY_EXPRESSION);
+                Expression<Iterable<Object>> bufferedExpression = buffered(ANY_EXPRESSION);
                 Assertions.assertThat(bufferedStreamIdFrom(bufferedExpression).sourceId())
                         .isEqualTo(ExpressionBasedStreamId.of(ANY_EXPRESSION));
             }
@@ -88,7 +85,7 @@ public class AnalysisModuleBufferTest {
         @SuppressWarnings("unused")
         AnalysisModule module = new BufferedAnalysisModule() {
             {
-                Expression<List<Object>> bufferedExpression = buffered(StreamIdBasedExpression.of(ANY_STREAM_ID));
+                Expression<Iterable<Object>> bufferedExpression = buffered(StreamIdBasedExpression.of(ANY_STREAM_ID));
                 Assertions.assertThat(bufferedStreamIdFrom(bufferedExpression).sourceId()).isEqualTo(ANY_STREAM_ID);
             }
         };
@@ -113,7 +110,7 @@ public class AnalysisModuleBufferTest {
         }
     }
 
-    private static final OverlapBufferStreamId<?> bufferedStreamIdFrom(Expression<List<Object>> bufferedExpression) {
+    private static final OverlapBufferStreamId<?> bufferedStreamIdFrom(Expression<Iterable<Object>> bufferedExpression) {
         return (OverlapBufferStreamId<?>) ((StreamIdBasedExpression<?>) bufferedExpression).streamId();
     }
 

@@ -24,16 +24,13 @@ package org.streamingpool.ext.analysis.dsl;
 
 import static java.util.Objects.requireNonNull;
 
-import java.util.List;
 import java.util.Set;
 
 import org.streamingpool.ext.analysis.AssertionBuilder;
-import org.tensorics.core.expressions.ConversionOperationExpression;
 import org.tensorics.core.expressions.IsEqualToExpression;
+import org.tensorics.core.expressions.LatestOfExpression;
 import org.tensorics.core.tree.domain.Expression;
 import org.tensorics.core.tree.domain.ResolvedExpression;
-
-import com.google.common.collect.Iterables;
 
 public class OngoingPrecondition<T> {
 
@@ -89,8 +86,8 @@ public class OngoingPrecondition<T> {
         return thenAssertBoolean(ResolvedExpression.of(thatSource));
     }
 
-    public OngoingBooleanCondition thenAssertLatestBooleanOf(Expression<List<Boolean>> buffered) {
-        return new OngoingBooleanCondition(builder, new ConversionOperationExpression<>(Iterables::getLast, buffered));
+    public OngoingBooleanCondition thenAssertLatestBooleanOf(Expression<Iterable<Boolean>> buffered) {
+        return new OngoingBooleanCondition(builder, LatestOfExpression.latestOf(buffered));
     }
 
 }
