@@ -22,8 +22,12 @@
 
 package org.streamingpool.ext.analysis;
 
+import static java.util.Arrays.asList;
+import static org.tensorics.core.tree.domain.Contexts.mergeContextsOrdered;
+
 import org.streamingpool.ext.tensorics.streamid.DetailedExpressionStreamId;
 import org.tensorics.core.expressions.EvaluationStatus;
+import org.tensorics.core.tree.domain.ResolvingContext;
 
 /**
  * Specialization of a {@link DetailedExpressionStreamId} specifically for the analysis framework
@@ -34,5 +38,10 @@ public class AnalysisStreamId extends DetailedExpressionStreamId<EvaluationStatu
 
     public AnalysisStreamId(AnalysisDefinition analysisDefinition) {
         super(analysisDefinition.expression(), analysisDefinition.initalContext());
+    }
+
+    public AnalysisStreamId(AnalysisDefinition analysisDefinition, ResolvingContext initialContext) {
+        super(analysisDefinition.expression(),
+                mergeContextsOrdered(asList(initialContext, analysisDefinition.initalContext())));
     }
 }
