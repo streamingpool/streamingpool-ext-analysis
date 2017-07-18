@@ -4,7 +4,7 @@
 
 package org.streamingpool.ext.analysis;
 
-import org.streamingpool.core.testing.SerializableHasUid;
+import org.streamingpool.ext.analysis.testing.SerializableHasUid;
 
 public class AllSerializableHaveUidTest extends SerializableHasUid {
 
