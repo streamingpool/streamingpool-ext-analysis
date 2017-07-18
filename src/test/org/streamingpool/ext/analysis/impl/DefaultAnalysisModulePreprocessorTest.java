@@ -30,7 +30,6 @@ import org.streamingpool.ext.analysis.AnalysisExpression;
 import org.streamingpool.ext.analysis.AnalysisModule;
 import org.streamingpool.ext.analysis.AnalysisModulePreprocessor;
 import org.streamingpool.ext.analysis.expression.AssertionGroupExpression;
-import org.streamingpool.ext.analysis.impl.DefaultAnalysisModulePreprocessor;
 import org.tensorics.core.tree.domain.ResolvedExpression;
 
 public class DefaultAnalysisModulePreprocessorTest {

@@ -2,7 +2,7 @@
 /**
 *
 * This file is part of streaming pool (http://www.streamingpool.org).
-* 
+*
 * Copyright (c) 2017-present, CERN. All rights reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,13 +16,12 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-* 
+*
 */
 // @formatter:on
 
 package org.streamingpool.ext.analysis.util;
 
-import org.junit.Ignore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.streamingpool.core.testing.AbstractStreamTest;
@@ -32,12 +31,11 @@ import org.streamingpool.ext.analysis.AnalysisModulePreprocessor;
 import org.streamingpool.ext.analysis.AnalysisStreamId;
 import org.streamingpool.ext.analysis.conf.AnalysisConfiguration;
 
-@Ignore
 @ContextConfiguration(classes = { AnalysisConfiguration.class, AnalysisTestConfiguration.class })
-public class AbstractAnalysisTest extends AbstractStreamTest implements AnalysisTest {
+public abstract class AbstractAnalysisTest extends AbstractStreamTest implements AnalysisTest {
 
     @Autowired
-    AnalysisModulePreprocessor modulePreprocessor;
+    private AnalysisModulePreprocessor modulePreprocessor;
 
     @Override
     public AnalysisStreamId analysisIdOf(AnalysisModule analysisModule) {

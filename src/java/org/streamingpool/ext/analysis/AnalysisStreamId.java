@@ -2,7 +2,7 @@
 /**
 *
 * This file is part of streaming pool (http://www.streamingpool.org).
-* 
+*
 * Copyright (c) 2017-present, CERN. All rights reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +16,7 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-* 
+*
 */
 // @formatter:on
 
@@ -33,6 +33,7 @@ import org.tensorics.core.tree.domain.ResolvingContext;
  * @author acalia
  */
 public class AnalysisStreamId extends DetailedExpressionStreamId<EvaluationStatus, AnalysisExpression> {
+    private static final long serialVersionUID = 1L;
 
     public AnalysisStreamId(AnalysisDefinition analysisDefinition) {
         super(analysisDefinition.expression(), analysisDefinition.evaluationStrategy(), Contexts.newResolvingContext());

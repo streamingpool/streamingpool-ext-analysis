@@ -2,7 +2,7 @@
 /**
 *
 * This file is part of streaming pool (http://www.streamingpool.org).
-* 
+*
 * Copyright (c) 2017-present, CERN. All rights reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +16,7 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-* 
+*
 */
 // @formatter:on
 
@@ -33,12 +33,13 @@ import com.google.common.collect.ImmutableList;
 
 /**
  * A group of assertions that are evaluated altogether. The strategy is defined in the {@link AssertionGroupResolver}.
- * 
+ *
  * @see AssertionGroupResolver
  * @author acalia, caguiler, kfuchsberger
  */
 public class AssertionGroupExpression extends AbstractDeferredExpression<AssertionStatus> {
-    
+    private static final long serialVersionUID = 1L;
+
     private final List<AssertionExpression> assertions;
 
     public AssertionGroupExpression(Collection<AssertionExpression> assertions) {

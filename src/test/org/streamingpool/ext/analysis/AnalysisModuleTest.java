@@ -30,7 +30,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.streamingpool.core.service.StreamId;
-import org.streamingpool.ext.analysis.AnalysisModule;
 import org.streamingpool.ext.tensorics.evaluation.BufferedEvaluation;
 import org.streamingpool.ext.tensorics.evaluation.ContinuousEvaluation;
 import org.streamingpool.ext.tensorics.evaluation.TriggeredEvaluation;

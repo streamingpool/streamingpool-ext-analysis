@@ -32,7 +32,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.streamingpool.core.service.StreamId;
 import org.streamingpool.core.service.streamid.OverlapBufferStreamId;
-import org.streamingpool.ext.analysis.AnalysisModule;
 import org.streamingpool.ext.tensorics.expression.StreamIdBasedExpression;
 import org.streamingpool.ext.tensorics.streamid.ExpressionBasedStreamId;
 import org.tensorics.core.tree.domain.Expression;

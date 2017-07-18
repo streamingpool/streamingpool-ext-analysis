@@ -2,7 +2,7 @@
 /**
 *
 * This file is part of streaming pool (http://www.streamingpool.org).
-* 
+*
 * Copyright (c) 2017-present, CERN. All rights reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +16,7 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-* 
+*
 */
 // @formatter:on
 
@@ -41,12 +41,13 @@ import com.google.common.collect.ImmutableList;
  * {@link Expression} that resolves to a {@link AssertionStatus}. An {@link AssertionExpression} is composed by a
  * condition expression and a precondition expression. The precondition specifies if it makes sense to evaluate the
  * {@link AssertionExpression}.
- * 
+ *
  * @see AssertionResolver
  * @author acalia, caguiler, kfuchsbe
  */
 public class AssertionExpression extends AbstractDeferredExpression<AssertionStatus>
         implements ExceptionHandlingNode<AssertionStatus> {
+    private static final long serialVersionUID = 1L;
 
     private final String name;
     private final String key;

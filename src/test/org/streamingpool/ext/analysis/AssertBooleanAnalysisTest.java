@@ -35,8 +35,6 @@ import java.util.List;
 
 import org.junit.Test;
 import org.streamingpool.core.service.StreamId;
-import org.streamingpool.ext.analysis.AnalysisExpression;
-import org.streamingpool.ext.analysis.AnalysisModule;
 import org.streamingpool.ext.analysis.util.AbstractAnalysisTest;
 import org.streamingpool.ext.analysis.util.RxAnalysisSupport;
 import org.tensorics.core.expressions.EvaluationStatus;
