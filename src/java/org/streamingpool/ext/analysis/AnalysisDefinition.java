@@ -25,23 +25,35 @@ package org.streamingpool.ext.analysis;
 import static java.util.Objects.requireNonNull;
 
 import org.streamingpool.ext.tensorics.evaluation.EvaluationStrategy;
+import org.tensorics.core.expressions.Placeholder;
+import org.tensorics.core.tree.domain.Contexts;
+import org.tensorics.core.tree.domain.EditableResolvingContext;
+import org.tensorics.core.tree.domain.ResolvingContext;
 
+/**
+ * Class that holds all the information describing an {@link AnalysisModule}
+ * 
+ * @author acalia
+ */
 public class AnalysisDefinition {
 
     private final AnalysisExpression expression;
-    private final EvaluationStrategy evaluationStrategy;
+    private final EditableResolvingContext initalContext;
 
     public AnalysisDefinition(AnalysisExpression expression, EvaluationStrategy evaluationStrategy) {
-        super();
+        requireNonNull(evaluationStrategy, "evaluationStrategy must not be null");
+
         this.expression = requireNonNull(expression, "expression must not be null");
-        this.evaluationStrategy = requireNonNull(evaluationStrategy, "evaluationStrategy must not be null");
+        this.initalContext = Contexts.newResolvingContext();
+        this.initalContext.put(Placeholder.ofClass(EvaluationStrategy.class), evaluationStrategy);
     }
 
     public AnalysisExpression expression() {
         return expression;
     }
 
-    public EvaluationStrategy evaluationStrategy() {
-        return evaluationStrategy;
+    public ResolvingContext initalContext() {
+        return initalContext;
     }
+
 }

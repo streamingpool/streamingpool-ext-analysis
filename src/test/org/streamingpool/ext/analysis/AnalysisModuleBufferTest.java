@@ -2,7 +2,7 @@
 /**
 *
 * This file is part of streaming pool (http://www.streamingpool.org).
-* 
+*
 * Copyright (c) 2017-present, CERN. All rights reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,25 +16,33 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-* 
+*
 */
 // @formatter:on
 
 package org.streamingpool.ext.analysis;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
-import java.util.List;
-
-import org.assertj.core.api.Assertions;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.streamingpool.core.service.StreamId;
+import org.streamingpool.core.service.streamid.BufferSpecification;
 import org.streamingpool.core.service.streamid.OverlapBufferStreamId;
+import org.streamingpool.ext.tensorics.evaluation.BufferedEvaluation;
+import org.streamingpool.ext.tensorics.evaluation.EvaluationStrategy;
 import org.streamingpool.ext.tensorics.expression.StreamIdBasedExpression;
+import org.streamingpool.ext.tensorics.expression.UnresolvedStreamIdBasedExpression;
 import org.streamingpool.ext.tensorics.streamid.ExpressionBasedStreamId;
+import org.tensorics.core.expressions.Placeholder;
+import org.tensorics.core.resolve.engine.ResolvingEngine;
+import org.tensorics.core.resolve.engine.ResolvingEngines;
+import org.tensorics.core.tree.domain.Contexts;
+import org.tensorics.core.tree.domain.EditableResolvingContext;
 import org.tensorics.core.tree.domain.Expression;
+import org.tensorics.core.tree.domain.ResolvingContext;
 
 public class AnalysisModuleBufferTest {
 
@@ -48,49 +56,47 @@ public class AnalysisModuleBufferTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void defaultModuleDoesNotAllowBufferedExpressions() {
-        thrown.expect(IllegalStateException.class);
-        thrown.expectMessage("usage of buffered values");
-        @SuppressWarnings("unused")
-        AnalysisModule module = new AnalysisModule() {
-            {
-                buffered(ANY_EXPRESSION);
-            }
-        };
-    }
-
-    @Test
-    public void bufferedStreamIdResultsInBufferOfSource() {
-        @SuppressWarnings("unused")
-        AnalysisModule module = new BufferedAnalysisModule() {
-            {
-                Expression<List<Object>> bufferedExpression = buffered(ANY_STREAM_ID);
-                Assertions.assertThat(bufferedStreamIdFrom(bufferedExpression).sourceId()).isEqualTo(ANY_STREAM_ID);
-            }
-        };
-    }
-
-    @Test
     public void bufferedExpressionResultsInBufferOfStreamOfExpression() {
-        @SuppressWarnings("unused")
-        AnalysisModule module = new BufferedAnalysisModule() {
-            {
-                Expression<List<Object>> bufferedExpression = buffered(ANY_EXPRESSION);
-                Assertions.assertThat(bufferedStreamIdFrom(bufferedExpression).sourceId())
-                        .isEqualTo(ExpressionBasedStreamId.of(ANY_EXPRESSION));
-            }
-        };
+        UnresolvedStreamIdBasedExpression<Iterable<Object>> bufferExpression = (UnresolvedStreamIdBasedExpression<Iterable<Object>>) AnalysisModule
+                .buffered(ANY_EXPRESSION);
+        Expression<StreamId<Iterable<Object>>> bufferStreamIdExpression = bufferExpression.streamIdExpression();
+
+        ResolvingContext resolvedContext = resolvedContextOf(bufferStreamIdExpression);
+
+        @SuppressWarnings("rawtypes")
+        OverlapBufferStreamId<?> overlapBufferStreamId = (OverlapBufferStreamId) resolvedContext
+                .resolvedValueOf(bufferStreamIdExpression);
+
+        assertThat(overlapBufferStreamId.sourceId()).isEqualTo(ExpressionBasedStreamId.of(ANY_EXPRESSION));
     }
 
     @Test
     public void bufferedExpressionOfStreamBasedExpressionResultsInBufferOfSource() {
-        @SuppressWarnings("unused")
-        AnalysisModule module = new BufferedAnalysisModule() {
-            {
-                Expression<List<Object>> bufferedExpression = buffered(StreamIdBasedExpression.of(ANY_STREAM_ID));
-                Assertions.assertThat(bufferedStreamIdFrom(bufferedExpression).sourceId()).isEqualTo(ANY_STREAM_ID);
-            }
-        };
+        UnresolvedStreamIdBasedExpression<Iterable<Object>> bufferExpression = (UnresolvedStreamIdBasedExpression<Iterable<Object>>) AnalysisModule
+                .buffered(StreamIdBasedExpression.of(ANY_STREAM_ID));
+        Expression<StreamId<Iterable<Object>>> bufferStreamIdExpression = bufferExpression.streamIdExpression();
+
+        ResolvingContext resolvedContext = resolvedContextOf(bufferStreamIdExpression);
+
+        @SuppressWarnings("rawtypes")
+        OverlapBufferStreamId<?> overlapBufferStreamId = (OverlapBufferStreamId) resolvedContext
+                .resolvedValueOf(bufferStreamIdExpression);
+
+        assertThat(overlapBufferStreamId.sourceId()).isEqualTo(ANY_STREAM_ID);
+    }
+
+    private ResolvingContext resolvedContextOf(Expression<StreamId<Iterable<Object>>> bufferStreamIdExpression) {
+        ResolvingEngine engine = ResolvingEngines.defaultEngine();
+        EditableResolvingContext initialCtx = initalContextWithBufferedEvaluationStrategy();
+
+        ResolvingContext resolvedContext = engine.resolveDetailed(bufferStreamIdExpression, initialCtx).context();
+        return resolvedContext;
+    }
+
+    private EditableResolvingContext initalContextWithBufferedEvaluationStrategy() {
+        EditableResolvingContext initialCtx = Contexts.newResolvingContext();
+        initialCtx.put(Placeholder.ofClass(EvaluationStrategy.class), mock(BufferedEvaluation.class));
+        return initialCtx;
     }
 
     @Test
@@ -101,7 +107,7 @@ public class AnalysisModuleBufferTest {
         @SuppressWarnings("unused")
         AnalysisModule module = new BufferedAnalysisModule() {
             {
-                buffered(buffered(ANY_STREAM_ID));
+                buffered(OverlapBufferStreamId.of(ANY_STREAM_ID, mock(BufferSpecification.class)));
             }
         };
     }
@@ -110,10 +116,6 @@ public class AnalysisModuleBufferTest {
         {
             buffered().startedBy(ANY_STREAM_ID).endedBy(ANY_STREAM_ID);
         }
-    }
-
-    private static final OverlapBufferStreamId<?> bufferedStreamIdFrom(Expression<List<Object>> bufferedExpression) {
-        return (OverlapBufferStreamId<?>) ((StreamIdBasedExpression<?>) bufferedExpression).streamId();
     }
 
 }

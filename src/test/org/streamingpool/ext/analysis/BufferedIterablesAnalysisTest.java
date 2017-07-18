@@ -74,7 +74,7 @@ public class BufferedIterablesAnalysisTest extends AbstractAnalysisTest implemen
             {
                 enabled().always();
                 buffered().startedBy(startBuffer).endedAfter(Duration.ofSeconds(4));
-                assertBoolean(true).isEqualTo(PickExpression.fromFirst(bufferedIterable(of(booleanData)), 2))
+                assertBoolean(true).isEqualTo(PickExpression.fromFirst(buffered(of(booleanData)), 2))
                         .withName(label);
             }
         }).take(1).subscribe(subscriber);
