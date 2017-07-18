@@ -5,7 +5,6 @@
 package org.streamingpool.ext.analysis.testing;
 
 import static java.util.stream.Collectors.toList;
-import static org.streamingpool.core.testing.PojoClassFilters.excludeTestClasses;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,7 +51,7 @@ public final class PojoTests {
 
         List<PojoClassFilter> filters = new ArrayList<>();
         filters.addAll(Arrays.asList(
-                new PojoClassFilter[] { new FilterPackageInfo(), excludeTestClasses(), new FilterCloverClasses() }));
+                new PojoClassFilter[] { new FilterPackageInfo(), PojoClassFilters.excludeTestClasses(), new FilterCloverClasses() }));
         filters.addAll(Arrays.asList(classFilters));
 
         List<PojoClass> pojoClasses = PojoClassFactory.getPojoClassesRecursively(packageName,

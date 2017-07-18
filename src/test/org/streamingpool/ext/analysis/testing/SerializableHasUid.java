@@ -4,10 +4,6 @@
 
 package org.streamingpool.ext.analysis.testing;
 
-import static org.streamingpool.core.testing.PojoClassFilters.excludeEnums;
-import static org.streamingpool.core.testing.PojoClassFilters.excludeInterfaces;
-import static org.streamingpool.core.testing.PojoClassFilters.includeTypes;
-
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
@@ -42,8 +38,8 @@ public abstract class SerializableHasUid {
     }
 
     public final List<Object> getParameters() {
-        return PojoTests.pojocClassesForPackageName(packageNameToScan, includeTypes(Serializable.class), excludeEnums(),
-                excludeInterfaces()).stream().map(c -> new Object[] { c }).collect(Collectors.toList());
+        return PojoTests.pojocClassesForPackageName(packageNameToScan, PojoClassFilters.includeTypes(Serializable.class), PojoClassFilters.excludeEnums(),
+                PojoClassFilters.excludeInterfaces()).stream().map(c -> new Object[] { c }).collect(Collectors.toList());
     }
 
     @Test
