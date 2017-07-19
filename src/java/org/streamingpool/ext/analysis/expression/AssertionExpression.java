@@ -26,6 +26,8 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.streamingpool.ext.analysis.AssertionBuilder;
 import org.streamingpool.ext.analysis.AssertionStatus;
 import org.streamingpool.ext.analysis.resolver.AssertionResolver;
@@ -48,6 +50,7 @@ import com.google.common.collect.ImmutableList;
 public class AssertionExpression extends AbstractDeferredExpression<AssertionStatus>
         implements ExceptionHandlingNode<AssertionStatus> {
     private static final long serialVersionUID = 1L;
+    private static final Logger LOGGER = LoggerFactory.getLogger(AssertionExpression.class);
 
     private final String name;
     private final String key;
@@ -84,6 +87,7 @@ public class AssertionExpression extends AbstractDeferredExpression<AssertionSta
 
     @Override
     public AssertionStatus handle(Exception exception) {
+        LOGGER.error("Exception evaluating expression {} [{}]", name, key, exception);
         return AssertionStatus.ERROR;
     }
 
