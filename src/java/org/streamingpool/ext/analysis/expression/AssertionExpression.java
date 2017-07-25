@@ -24,6 +24,8 @@ package org.streamingpool.ext.analysis.expression;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -36,6 +38,7 @@ import org.tensorics.core.expressions.IterableResolvingExpression;
 import org.tensorics.core.tree.domain.AbstractDeferredExpression;
 import org.tensorics.core.tree.domain.ExceptionHandlingNode;
 import org.tensorics.core.tree.domain.Expression;
+import org.tensorics.core.tree.domain.ResolvedExpression;
 
 import com.google.common.collect.ImmutableList;
 
@@ -51,6 +54,7 @@ public class AssertionExpression extends AbstractDeferredExpression<AssertionSta
         implements ExceptionHandlingNode<AssertionStatus> {
     private static final long serialVersionUID = 1L;
     private static final Logger LOGGER = LoggerFactory.getLogger(AssertionExpression.class);
+    private static final Expression<Boolean> DEFAULT_TRUE_PRECONDITION = ResolvedExpression.of(true);
 
     private final String name;
     private final String key;
@@ -65,7 +69,7 @@ public class AssertionExpression extends AbstractDeferredExpression<AssertionSta
         this.condition = builder.condition();
         this.key = builder.key();
         this.preConditionsExpression = new CombinedBooleanExpression(builder.preConditionsReducer(),
-                new IterableResolvingExpression<>(builder.preConditions()));
+                new IterableResolvingExpression<>(defaultPreconditionOnEmpty(builder.preConditions())));
     }
 
     @Override
@@ -153,6 +157,10 @@ public class AssertionExpression extends AbstractDeferredExpression<AssertionSta
 
     public String key() {
         return key;
+    }
+
+    private static Collection<Expression<Boolean>> defaultPreconditionOnEmpty(Collection<Expression<Boolean>> preConditions) {
+        return preConditions.isEmpty() ? Collections.singletonList(DEFAULT_TRUE_PRECONDITION) : preConditions;
     }
 
 }

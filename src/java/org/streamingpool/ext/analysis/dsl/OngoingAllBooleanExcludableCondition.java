@@ -34,7 +34,7 @@ import com.google.common.collect.Sets;
 
 public class OngoingAllBooleanExcludableCondition {
 
-    private static final AllTrue ALL_TRUE = new AllTrue();
+    private static final And ALL_TRUE = new And();
     private final ConditionBuilder builder;
     private final Set<? extends Expression<Boolean>> sources;
 

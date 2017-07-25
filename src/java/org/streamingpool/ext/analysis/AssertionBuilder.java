@@ -26,14 +26,14 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.Collection;
 
-import org.streamingpool.ext.analysis.dsl.AllTrue;
+import org.streamingpool.ext.analysis.dsl.And;
 import org.streamingpool.ext.analysis.dsl.IterableBooleanConversion;
 import org.tensorics.core.tree.domain.Expression;
 
 import com.google.common.collect.ImmutableList;
 
 public class AssertionBuilder extends ConditionBuilder {
-    public static final IterableBooleanConversion DEFAULT_CONDITIONS_REDUCER = new AllTrue();
+    public static final IterableBooleanConversion DEFAULT_CONDITIONS_REDUCER = new And();
 
     private final ImmutableList.Builder<Expression<Boolean>> preConditions = ImmutableList.builder();
     private IterableBooleanConversion preConditionsReducer = DEFAULT_CONDITIONS_REDUCER;

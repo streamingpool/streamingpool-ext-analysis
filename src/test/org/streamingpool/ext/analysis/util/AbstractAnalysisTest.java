@@ -26,21 +26,35 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.streamingpool.core.testing.AbstractStreamTest;
 import org.streamingpool.ext.analysis.AnalysisDefinition;
+import org.streamingpool.ext.analysis.AnalysisExpression;
 import org.streamingpool.ext.analysis.AnalysisModule;
 import org.streamingpool.ext.analysis.AnalysisModulePreprocessor;
+import org.streamingpool.ext.analysis.AnalysisResult;
 import org.streamingpool.ext.analysis.AnalysisStreamId;
 import org.streamingpool.ext.analysis.conf.AnalysisConfiguration;
+import org.streamingpool.ext.analysis.conf.AnalysisResolvingEngineConfiguration;
+import org.tensorics.core.resolve.engine.ResolvingEngine;
 
-@ContextConfiguration(classes = { AnalysisConfiguration.class, AnalysisTestConfiguration.class })
+@ContextConfiguration(classes = { AnalysisConfiguration.class, AnalysisResolvingEngineConfiguration.class, AnalysisTestConfiguration.class })
 public abstract class AbstractAnalysisTest extends AbstractStreamTest implements AnalysisTest {
 
     @Autowired
     private AnalysisModulePreprocessor modulePreprocessor;
 
+    @Autowired
+    private ResolvingEngine engine;
+    
     @Override
     public AnalysisStreamId analysisIdOf(AnalysisModule analysisModule) {
         AnalysisDefinition analysisDefinition = modulePreprocessor.process(analysisModule);
         return new AnalysisStreamId(analysisDefinition);
+    }
+
+    @Override
+    public AnalysisResult resolveAnalysisModule(AnalysisModule analysisModule) {
+        AnalysisDefinition definition = modulePreprocessor.process(analysisModule);
+        AnalysisExpression rootExpression = definition.expression();
+        return AnalysisResult.fromResult(engine.resolveDetailed(rootExpression));
     }
 
 }

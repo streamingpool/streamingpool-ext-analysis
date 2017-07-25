@@ -22,19 +22,13 @@
 
 package org.streamingpool.ext.analysis;
 
-import static java.util.Objects.requireNonNull;
-import static org.tensorics.core.lang.TensoricExpressions.use;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.streamingpool.core.service.StreamId;
-import org.streamingpool.core.service.streamid.BufferSpecification;
-import org.streamingpool.core.service.streamid.OverlapBufferStreamId;
-import org.streamingpool.ext.analysis.dsl.AllTrue;
+import org.streamingpool.ext.analysis.dsl.And;
 import org.streamingpool.ext.analysis.dsl.OngoingAllBooleanCondition;
 import org.streamingpool.ext.analysis.dsl.OngoingAllBooleanExcludableCondition;
 import org.streamingpool.ext.analysis.dsl.OngoingAnalysisEnabler;
@@ -50,11 +44,7 @@ import org.streamingpool.ext.tensorics.evaluation.EvaluationStrategy;
 import org.streamingpool.ext.tensorics.evaluation.EvaluationStrategyBuilder;
 import org.streamingpool.ext.tensorics.evaluation.TriggeredEvaluation;
 import org.streamingpool.ext.tensorics.evaluation.TriggeredEvaluation.Builder;
-import org.streamingpool.ext.tensorics.expression.StreamIdBasedExpression;
-import org.streamingpool.ext.tensorics.expression.UnresolvedStreamIdBasedExpression;
-import org.streamingpool.ext.tensorics.streamid.ExpressionBasedStreamId;
 import org.tensorics.core.expressions.LatestOfExpression;
-import org.tensorics.core.expressions.Placeholder;
 import org.tensorics.core.iterable.expressions.IterableExpressionToIterable;
 import org.tensorics.core.iterable.expressions.IterableOperationExpression;
 import org.tensorics.core.tree.domain.Expression;
@@ -106,10 +96,6 @@ public abstract class AnalysisModule {
         return assertThat(ResolvedExpression.of(thatSource));
     }
 
-    protected final <T> OngoingCondition<T> assertThat(StreamId<T> thatSource) {
-        return assertThat(StreamIdBasedExpression.of(thatSource));
-    }
-
     protected final OngoingBooleanCondition assertBoolean(Expression<Boolean> thatSource) {
         return new OngoingBooleanCondition(newAssertionBuilder(), thatSource);
     }
@@ -127,18 +113,9 @@ public abstract class AnalysisModule {
         return new OngoingAllBooleanCondition(newAssertionBuilder(), thatSource);
     }
 
-    protected final OngoingAllBooleanCondition assertAllBoolean(StreamId<? extends Iterable<Boolean>> thatSourceId) {
-        return assertAllBoolean(StreamIdBasedExpression.of(thatSourceId));
-    }
-
     protected final OngoingAnyBooleanCondition assertAtLeastOneBooleanOf(
             Expression<? extends Iterable<Boolean>> thatSource) {
         return new OngoingAnyBooleanCondition(newAssertionBuilder(), thatSource);
-    }
-
-    protected final OngoingAnyBooleanCondition assertAtLeastOneBooleanOf(
-            StreamId<? extends Iterable<Boolean>> thatSourceId) {
-        return assertAtLeastOneBooleanOf(StreamIdBasedExpression.of(thatSourceId));
     }
 
     protected OngoingBooleanCondition assertLatestBooleanOf(Expression<Iterable<Boolean>> buffered) {
@@ -159,7 +136,7 @@ public abstract class AnalysisModule {
 
     protected final OngoingPrecondition<Boolean> whenAllTrue(Iterable<Expression<Boolean>> expressions) {
         Expression<Iterable<Boolean>> booleans = new IterableExpressionToIterable<>(expressions);
-        Expression<Boolean> combined = new IterableOperationExpression<>(new AllTrue(), booleans);
+        Expression<Boolean> combined = new IterableOperationExpression<>(new And(), booleans);
         return whenTrue(combined);
     }
 
@@ -169,38 +146,6 @@ public abstract class AnalysisModule {
 
     protected final <T> OngoingPrecondition<T> when(T whenSource) {
         return when(ResolvedExpression.of(whenSource));
-    }
-
-    /**
-     * It buffers the source {@link Expression} and returns an expression with the latest value from the buffer
-     */
-    public static final <T1> Expression<T1> latestOf(Expression<T1> source) {
-        Expression<Iterable<T1>> bufferedSource = buffered(source);
-        return LatestOfExpression.latestOf(bufferedSource);
-    }
-
-    public static final <T> Expression<Iterable<T>> buffered(Expression<T> sourceExpression) {
-        requireNonNull(sourceExpression, "sourceExpression must not be null.");
-        if (sourceExpression instanceof StreamIdBasedExpression) {
-            return buffered(((StreamIdBasedExpression<T>) sourceExpression).streamId());
-        } else {
-            return buffered(ExpressionBasedStreamId.of(sourceExpression));
-        }
-    }
-
-    public static final <T> Expression<Iterable<T>> buffered(StreamId<T> sourceStreamId) {
-        requireNonNull(sourceStreamId, "sourceStreamId must not be null.");
-        if (sourceStreamId instanceof OverlapBufferStreamId) {
-            throw new IllegalArgumentException("The given sourceStreamId is already a buffered stream id. "
-                    + "Buffering a buffered stream makes limited sense and is currently not supported.");
-            /* Should we allow this? It probably would create more confusion than usefulness */
-        }
-
-        Expression<StreamId<Iterable<T>>> bufferStreamIdExpression = use(Placeholder.ofClass(EvaluationStrategy.class))
-                .in(evaluationStrategy -> OverlapBufferStreamId.of(sourceStreamId,
-                        bufferSpecification(evaluationStrategy)));
-
-        return new UnresolvedStreamIdBasedExpression<>(bufferStreamIdExpression);
     }
 
     private AssertionBuilder newAssertionBuilder() {
@@ -245,16 +190,6 @@ public abstract class AnalysisModule {
                     "It is only allowed to specify once either triggered() or buffered() within the same analysis module. "
                             + "It seems that you tried to specify both or one twice.");
         }
-    }
-
-    private static BufferSpecification bufferSpecification(EvaluationStrategy strategy) {
-        if (!(strategy instanceof BufferedEvaluation)) {
-            throw new IllegalStateException("The usage of buffered values is only allowed while using the '"
-                    + BufferedEvaluation.class.getSimpleName() + "' evaluation strategy. "
-                    + "Probably you forgot to specify the buffered()... clause? "
-                    + "(This has to be done before using a buffered stream/expression)");
-        }
-        return ((BufferedEvaluation) strategy).bufferSpecification();
     }
 
     private static final EnablingConditionBuilder defaultEnablingConditionBuilder() {

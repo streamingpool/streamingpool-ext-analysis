@@ -28,7 +28,7 @@ import org.tensorics.core.tree.domain.Expression;
 
 public class OngoingAllBooleanCondition {
 
-    private static final AllTrue ALL_TRUE = new AllTrue();
+    private static final And ALL_TRUE = new And();
     private final ConditionBuilder builder;
     private final Expression<Iterable<Boolean>> sources;
 
@@ -36,9 +36,14 @@ public class OngoingAllBooleanCondition {
         super();
         this.builder = builder;
         @SuppressWarnings("unchecked")
-        /* XXX this is not too nice... is there any better way?*/
+        /* XXX this is not too nice... is there any better way? */
         Expression<Iterable<Boolean>> castedSource = (Expression<Iterable<Boolean>>) source;
         this.sources = castedSource;
+    }
+
+    public OngoingAllBooleanCondition areTrue() {
+        this.builder.withCondition(new ConversionOperationExpression<>(ALL_TRUE, sources));
+        return this;
     }
 
     public OngoingAllBooleanCondition withName(String name) {
@@ -46,8 +51,8 @@ public class OngoingAllBooleanCondition {
         return this;
     }
 
-    public OngoingAllBooleanCondition areTrue() {
-        this.builder.withCondition(new ConversionOperationExpression<>(ALL_TRUE, sources));
+    public OngoingAllBooleanCondition withKey(String key) {
+        this.builder.withKey(key);
         return this;
     }
 
