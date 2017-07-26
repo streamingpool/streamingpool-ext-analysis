@@ -29,8 +29,8 @@ import static org.streamingpool.ext.analysis.AssertionStatus.FAILURE;
 import static org.streamingpool.ext.analysis.AssertionStatus.SUCCESSFUL;
 
 import org.junit.Test;
-import org.streamingpool.ext.analysis.util.AbstractAnalysisTest;
-import org.streamingpool.ext.analysis.util.RxAnalysisSupport;
+import org.streamingpool.ext.analysis.testing.AbstractAnalysisTest;
+import org.streamingpool.ext.analysis.testing.RxAnalysisSupport;
 import org.tensorics.core.tree.domain.Expression;
 import org.tensorics.core.tree.domain.ResolvedExpression;
 

@@ -20,7 +20,7 @@
 */
 // @formatter:on
 
-package org.streamingpool.ext.analysis.util;
+package org.streamingpool.ext.analysis.testing;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -20,7 +20,7 @@
 */
 // @formatter:on
 
-package org.streamingpool.ext.analysis.util;
+package org.streamingpool.ext.analysis.testing;
 
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
