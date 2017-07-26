@@ -25,21 +25,28 @@ package org.streamingpool.ext.analysis.dsl;
 import static java.lang.Boolean.TRUE;
 import static java.util.stream.StreamSupport.stream;
 
+import java.util.NoSuchElementException;
+
+import com.google.common.collect.Iterables;
+
 /**
  * {@link IterableBooleanConversion} that performs a logical AND over all the elements of the iterable.
  * 
  * @author acalia, caguiler, kfuchsberger
  */
-public class AllTrue implements IterableBooleanConversion {
+public class And implements IterableBooleanConversion {
 
     @Override
     public Boolean apply(Iterable<Boolean> booleanList) {
+        if (Iterables.isEmpty(booleanList)) {
+            throw new NoSuchElementException("Cannot perform a logical AND with no elements");
+        }
         return stream(booleanList.spliterator(), false).allMatch(TRUE::equals);
     }
 
     @Override
     public String toString() {
-        return "AllTrue";
+        return "AND";
     }
 
 }

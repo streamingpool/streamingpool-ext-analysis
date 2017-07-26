@@ -22,153 +22,325 @@
 
 package org.streamingpool.ext.analysis;
 
-import static io.reactivex.Flowable.empty;
-import static io.reactivex.Flowable.interval;
-import static io.reactivex.Flowable.just;
-import static io.reactivex.Flowable.merge;
-import static io.reactivex.Flowable.never;
-import static java.time.Duration.ofSeconds;
-import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.streamingpool.ext.tensorics.expression.StreamIdBasedExpression.of;
-import static org.tensorics.core.expressions.EvaluationStatus.EVALUATED;
+import static org.streamingpool.ext.analysis.AssertionStatus.SUCCESSFUL;
+import static org.streamingpool.ext.tensorics.expression.BufferedStreamExpression.buffer;
 
+import java.time.Duration;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.streamingpool.core.service.StreamFactoryRegistry;
 import org.streamingpool.core.service.StreamId;
+import org.streamingpool.core.service.streamid.DelayedStreamId;
 import org.streamingpool.ext.analysis.util.AbstractAnalysisTest;
 import org.streamingpool.ext.analysis.util.RxAnalysisSupport;
-import org.streamingpool.ext.tensorics.exception.NoBufferedStreamSpecifiedException;
-import org.streamingpool.ext.tensorics.expression.StreamIdBasedExpression;
-import org.tensorics.core.expressions.EvaluationStatus;
-import org.tensorics.core.resolve.domain.DetailedExpressionResult;
+import org.streamingpool.ext.tensorics.expression.BufferedStreamExpression;
+import org.streamingpool.ext.tensorics.streamfactory.BufferedTensoricsExpressionStreamFactory;
+import org.tensorics.core.resolve.engine.ResolvingEngine;
 
+import io.reactivex.Flowable;
+import io.reactivex.processors.PublishProcessor;
 import io.reactivex.subscribers.TestSubscriber;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SuppressWarnings("unchecked")
 public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnalysisSupport {
 
-    private static final StreamId<Object> START_STREAM = mock(StreamId.class);
-    private static final StreamId<Object> END_1_STREAM = mock(StreamId.class);
-    private static final StreamId<Object> END_2_STREAM = mock(StreamId.class);
-    private static final StreamId<Boolean> BOOLEAN_INTERVAL = mock(StreamId.class);
-    private static final StreamIdBasedExpression<Boolean> ANY_BOOLEAN_EXPRESSION = of(BOOLEAN_INTERVAL);
+    @Autowired
+    private StreamFactoryRegistry factoryRegistry;
+
+    @Autowired
+    private ResolvingEngine engine;
 
     @Before
     public void setUp() {
-        provide(interval(1, SECONDS).map(v -> v % 2 == 0)).as(BOOLEAN_INTERVAL);
+        factoryRegistry.addIntercept(new BufferedTensoricsExpressionStreamFactory(engine));
+    }
 
+    @Test
+    public void testFullAnalysis() {
+        PublishProcessor<String> startStream = PublishProcessor.create();
+        PublishProcessor<String> endStream = PublishProcessor.create();
+        PublishProcessor<Boolean> sourceStream = PublishProcessor.create();
+
+        StreamId<String> startStreamId = provide(startStream).withUniqueStreamId();
+        StreamId<String> endStreamId = provide(endStream).withUniqueStreamId();
+        StreamId<Boolean> sourceStreamId = provide(sourceStream.onBackpressureBuffer()).withUniqueStreamId();
+
+        final String ASSERTION_NAME = "name";
+        final BufferedStreamExpression<Boolean> BUFFERED_SOURCE = BufferedStreamExpression.buffer(sourceStreamId);
+
+        Flowable<AnalysisResult> resultStream = rxFrom(new AnalysisModule() {
+            {
+                enabled().always();
+                buffered().startedBy(startStreamId).endedOnMatch(endStreamId);
+                assertAllBoolean(BUFFERED_SOURCE).areTrue().withName(ASSERTION_NAME);
+            }
+        });
+
+        TestSubscriber<AnalysisResult> testSubscriber = resultStream.test();
+
+        startStream.onNext("A");
+        await();
+
+        sourceStream.onNext(true);
+        sourceStream.onNext(false);
+        sourceStream.onNext(true);
+
+        await();
+        endStream.onNext("A");
+
+        AnalysisResult analysisResult = testSubscriber.awaitCount(1).assertValueCount(1).values().get(0);
+
+        assertThat(statusOfAssertion(analysisResult, ASSERTION_NAME)).isEqualTo(AssertionStatus.FAILURE);
+        assertThat(analysisResult.resolvingContext().resolvedValueOf(BUFFERED_SOURCE)).containsExactly(true, false,
+                true);
+    }
+
+    @Test
+    public void testEndStreamIsUsedAsBufferedInAnalysis() {
+        PublishProcessor<String> startStream = PublishProcessor.create();
+        PublishProcessor<String> endStream = PublishProcessor.create();
+
+        StreamId<String> startStreamId = provide(startStream).withUniqueStreamId();
+        StreamId<String> endStreamId = provide(endStream).withUniqueStreamId();
+
+        final String END_VALUE = "end";
+        final String ASSERTION_NAME = "name";
+        final BufferedStreamExpression<String> BUFFERED_END = BufferedStreamExpression.buffer(endStreamId);
+
+        Flowable<AnalysisResult> resultStream = rxFrom(new AnalysisModule() {
+            {
+                enabled().always();
+                buffered().startedBy(startStreamId)
+                        .endedOnEvery(DelayedStreamId.delayBy(endStreamId, Duration.ofSeconds(1)));
+                assertThat(BUFFERED_END).is(buffer -> buffer.contains(END_VALUE)).withName(ASSERTION_NAME);
+            }
+        });
+
+        TestSubscriber<AnalysisResult> testSubscriber = resultStream.test();
+
+        startStream.onNext("any");
+        await();
+
+        await();
+        endStream.onNext(END_VALUE);
+
+        AnalysisResult analysisResult = testSubscriber.awaitCount(1).assertValueCount(1).values().get(0);
+
+        assertThat(statusOfAssertion(analysisResult, ASSERTION_NAME)).isEqualTo(AssertionStatus.SUCCESSFUL);
+        assertThat(analysisResult.resolvingContext().resolvedValueOf(BUFFERED_END)).containsExactly(END_VALUE);
+    }
+
+    @Test
+    public void testOverlappingAnalyses() {
+        PublishProcessor<String> startStream = PublishProcessor.create();
+        PublishProcessor<String> endStream = PublishProcessor.create();
+        PublishProcessor<Boolean> sourceStream = PublishProcessor.create();
+
+        StreamId<String> startStreamId = provide(startStream).withUniqueStreamId();
+        StreamId<String> endStreamId = provide(endStream).withUniqueStreamId();
+        StreamId<Boolean> sourceStreamId = provide(sourceStream.onBackpressureBuffer()).withUniqueStreamId();
+
+        final String ASSERTION_NAME = "name";
+        final BufferedStreamExpression<Boolean> BUFFERED_SOURCE = BufferedStreamExpression.buffer(sourceStreamId);
+
+        Flowable<AnalysisResult> resultStream = rxFrom(new AnalysisModule() {
+            {
+                enabled().always();
+                buffered().startedBy(startStreamId).endedOnMatch(endStreamId);
+                assertAllBoolean(BUFFERED_SOURCE).areTrue().withName(ASSERTION_NAME);
+            }
+        });
+
+        TestSubscriber<AnalysisResult> testSubscriber = resultStream.test();
+
+        startStream.onNext("A");
+        await();
+        startStream.onNext("C");
+        await();
+
+        sourceStream.onNext(true);
+        sourceStream.onNext(false);
+
+        await();
+        startStream.onNext("B");
+        await();
+
+        sourceStream.onNext(true);
+
+        await();
+        endStream.onNext("A");
+        await();
+
+        sourceStream.onNext(true);
+        sourceStream.onNext(true);
+        sourceStream.onNext(true);
+
+        await();
+        endStream.onNext("B");
+        await();
+
+        sourceStream.onNext(true);
+
+        await();
+        endStream.onNext("C");
+
+        List<AnalysisResult> analysisResults = testSubscriber.awaitCount(3).assertValueCount(3).values();
+
+        AnalysisResult resultA = analysisResults.get(0);
+        AnalysisResult resultB = analysisResults.get(1);
+        AnalysisResult resultC = analysisResults.get(2);
+        /* analysis A */
+        assertThat(statusOfAssertion(resultA, ASSERTION_NAME)).isEqualTo(AssertionStatus.FAILURE);
+        assertThat(resultA.resolvingContext().resolvedValueOf(BUFFERED_SOURCE)).containsExactly(true, false, true);
+        /* analysis B */
+        assertThat(statusOfAssertion(resultB, ASSERTION_NAME)).isEqualTo(AssertionStatus.SUCCESSFUL);
+        assertThat(resultB.resolvingContext().resolvedValueOf(BUFFERED_SOURCE)).containsExactly(true, true, true, true);
+        /* analysis C */
+        assertThat(statusOfAssertion(resultC, ASSERTION_NAME)).isEqualTo(AssertionStatus.FAILURE);
+        assertThat(resultC.resolvingContext().resolvedValueOf(BUFFERED_SOURCE)).containsExactly(true, false, true, true,
+                true, true, true);
+    }
+
+    private void await() {
+        await(200);
+    }
+
+    private void await(long millis) {
+        try {
+            TimeUnit.MILLISECONDS.sleep(millis);
+        } catch (InterruptedException e) {
+            /* */
+        }
     }
 
     @Test
     public void testEndedByTimeout() throws Exception {
-        provide(just(new Object()).delay(1, TimeUnit.SECONDS)).as(START_STREAM);
+        PublishProcessor<String> startStream = PublishProcessor.create();
+        PublishProcessor<Boolean> sourceStream = PublishProcessor.create();
 
-        TestSubscriber<DetailedExpressionResult<EvaluationStatus, AnalysisExpression>> subscriber = new TestSubscriber<>();
+        StreamId<String> startStreamId = provide(startStream).withUniqueStreamId();
+        StreamId<Boolean> sourceStreamId = provide(sourceStream.onBackpressureBuffer()).withUniqueStreamId();
+
+        final BufferedStreamExpression<Boolean> SOURCE_EXPRESSION = buffer(sourceStreamId);
+        final String ASSERTION_NAME = "any name";
+        final int ANALYSIS_TIMEOUT_MS = 2_000;
+
+        TestSubscriber<AnalysisResult> subscriber = new TestSubscriber<>();
         rxFrom(new AnalysisModule() {
             {
                 enabled().always();
-                buffered().startedBy(START_STREAM).endedAfter(ofSeconds(2));
-                assertAllBoolean(buffered(ANY_BOOLEAN_EXPRESSION)).areTrue();
+                buffered().startedBy(startStreamId).endedAfter(Duration.ofMillis(ANALYSIS_TIMEOUT_MS));
+                assertAllBoolean(SOURCE_EXPRESSION).areTrue().withName(ASSERTION_NAME);
             }
-        }).take(1).subscribe(subscriber);
+        }).subscribe(subscriber);
 
-        subscriber.awaitTerminalEvent(4, SECONDS);
-        subscriber.assertComplete();
-        assertThat(evaluationStatusesOf(subscriber)).hasSize(1).containsOnly(EVALUATED);
-    }
+        startStream.onNext("A");
+        await();
 
-    @Test
-    public void testEndedByStream() throws Exception {
-        Object endingObject = new Object();
-        provide(merge(just(endingObject).delay(1, SECONDS), never())).as(START_STREAM);
-        provide(merge(just(endingObject).delay(2, SECONDS), never())).as(END_1_STREAM);
+        sourceStream.onNext(true);
+        sourceStream.onNext(true);
 
-        TestSubscriber<DetailedExpressionResult<EvaluationStatus, AnalysisExpression>> subscriber = new TestSubscriber<>();
-        rxFrom(new AnalysisModule() {
-            {
-                enabled().always();
-                buffered().startedBy(START_STREAM).endedBy(END_1_STREAM);
-                assertAllBoolean(buffered(ANY_BOOLEAN_EXPRESSION)).areTrue();
-            }
-        }).take(1).subscribe(subscriber);
+        await(ANALYSIS_TIMEOUT_MS);
 
-        subscriber.awaitTerminalEvent(5, SECONDS);
-        subscriber.assertComplete();
-        assertThat(evaluationStatusesOf(subscriber)).hasSize(1).containsOnly(EVALUATED);
+        AnalysisResult result = subscriber.awaitCount(1).assertValueCount(1).values().get(0);
+
+        assertThat(result.resolvingContext().resolvedValueOf(SOURCE_EXPRESSION)).containsExactly(true, true);
+        assertThat(statusOfAssertion(result, ASSERTION_NAME)).isEqualTo(SUCCESSFUL);
     }
 
     @Test
     public void testEndedByFisrtOfMultipleStream() throws Exception {
-        Object endingObject = new Object();
-        provide(merge(just(endingObject).delay(1, TimeUnit.SECONDS), never())).as(START_STREAM);
-        provide(merge(just(endingObject).delay(2, TimeUnit.SECONDS), never())).as(END_1_STREAM);
-        provide(merge(just(endingObject).delay(3, TimeUnit.SECONDS), never())).as(END_2_STREAM);
+        PublishProcessor<String> startStream = PublishProcessor.create();
+        PublishProcessor<String> end1Stream = PublishProcessor.create();
+        PublishProcessor<String> end2Stream = PublishProcessor.create();
+        PublishProcessor<Boolean> sourceStream = PublishProcessor.create();
 
-        TestSubscriber<DetailedExpressionResult<EvaluationStatus, AnalysisExpression>> subscriber = new TestSubscriber<>();
-        rxFrom(new AnalysisModule() {
+        StreamId<String> startStreamId = provide(startStream).withUniqueStreamId();
+        StreamId<String> end1StreamId = provide(end1Stream).withUniqueStreamId();
+        StreamId<String> end2StreamId = provide(end2Stream).withUniqueStreamId();
+        StreamId<Boolean> sourceStreamId = provide(sourceStream.onBackpressureBuffer()).withUniqueStreamId();
+
+        final String ASSERTION_NAME = "name";
+        final BufferedStreamExpression<Boolean> BUFFERED_SOURCE = BufferedStreamExpression.buffer(sourceStreamId);
+
+        TestSubscriber<AnalysisResult> testSubscriber = rxFrom(new AnalysisModule() {
             {
                 enabled().always();
-                buffered().startedBy(START_STREAM).endedBy(END_1_STREAM).or().endedBy(END_2_STREAM);
-                assertAllBoolean(buffered(ANY_BOOLEAN_EXPRESSION)).areTrue();
+                buffered().startedBy(startStreamId).endedOnMatch(end1StreamId).or().endedOnMatch(end2StreamId);
+                assertAllBoolean(BUFFERED_SOURCE).areTrue().withName(ASSERTION_NAME);
             }
-        }).take(1).subscribe(subscriber);
+        }).test();
 
-        subscriber.awaitTerminalEvent(5, SECONDS);
-        subscriber.assertComplete();
-        assertThat(evaluationStatusesOf(subscriber)).hasSize(1).containsOnly(EVALUATED);
+        startStream.onNext("A");
+        await();
+
+        sourceStream.onNext(true);
+        sourceStream.onNext(true);
+
+        await();
+        end1Stream.onNext("A");
+        await();
+
+        sourceStream.onNext(false); /* should not appear in the analysis result since the buffer is already closed */
+
+        await();
+        end2Stream.onNext("A");
+
+        AnalysisResult analysisResult = testSubscriber.awaitCount(1).assertValueCount(1).values().get(0);
+
+        assertThat(statusOfAssertion(analysisResult, ASSERTION_NAME)).isEqualTo(AssertionStatus.SUCCESSFUL);
+        assertThat(analysisResult.resolvingContext().resolvedValueOf(BUFFERED_SOURCE)).containsExactly(true, true);
     }
 
     @Test
-    public void testEndedByNeverPublishingStream() throws Exception {
-        provide(merge(just(new Object()).delay(1, TimeUnit.SECONDS), never())).as(START_STREAM);
-        provide(never()).as(END_1_STREAM);
+    public void testNotEndedByNeverPublishingStream() throws Exception {
+        PublishProcessor<String> startStream = PublishProcessor.create();
+        PublishProcessor<String> endStream = PublishProcessor.create();
 
-        TestSubscriber<DetailedExpressionResult<EvaluationStatus, AnalysisExpression>> subscriber = new TestSubscriber<>();
+        StreamId<String> startStreamId = provide(startStream).withUniqueStreamId();
+        StreamId<String> endStreamId = provide(endStream).withUniqueStreamId();
+
+        TestSubscriber<AnalysisResult> subscriber = new TestSubscriber<>();
         rxFrom(new AnalysisModule() {
             {
-                enabled().always();
-                buffered().startedBy(START_STREAM).endedBy(END_1_STREAM);
-                assertAllBoolean(buffered(ANY_BOOLEAN_EXPRESSION)).areTrue();
+                buffered().startedBy(startStreamId).endedOnEvery(endStreamId);
+                assertAllBoolean(buffer(provide(Flowable.<Boolean> never()).withUniqueStreamId())).areTrue();
             }
-        }).subscribe(subscriber);
+        }).take(1).subscribe(subscriber);
 
-        subscriber.awaitTerminalEvent(5, TimeUnit.SECONDS);
+        startStream.onNext("A");
+        await();
+
+        subscriber.awaitTerminalEvent(1, TimeUnit.SECONDS);
         subscriber.assertNotTerminated();
     }
 
     @Test
     public void testEndedByCompleatedStream() throws Exception {
-        provide(merge(just(new Object()).delay(1, TimeUnit.SECONDS), never())).as(START_STREAM);
-        provide(empty()).as(END_1_STREAM);
+        PublishProcessor<String> startStream = PublishProcessor.create();
+        PublishProcessor<String> endStream = PublishProcessor.create();
 
-        TestSubscriber<DetailedExpressionResult<EvaluationStatus, AnalysisExpression>> subscriber = new TestSubscriber<>();
+        StreamId<String> startStreamId = provide(startStream).withUniqueStreamId();
+        StreamId<String> endStreamId = provide(endStream).withUniqueStreamId();
+
+        TestSubscriber<AnalysisResult> subscriber = new TestSubscriber<>();
         rxFrom(new AnalysisModule() {
             {
-                enabled().always();
-                buffered().startedBy(START_STREAM).endedBy(END_1_STREAM);
-                assertAllBoolean(buffered(ANY_BOOLEAN_EXPRESSION)).areTrue();
+                buffered().startedBy(startStreamId).endedOnEvery(endStreamId);
+                assertAllBoolean(buffer(provide(Flowable.<Boolean> never()).withUniqueStreamId())).areTrue();
             }
-        }).subscribe(subscriber);
+        }).take(1).subscribe(subscriber);
 
-        subscriber.awaitTerminalEvent(2, SECONDS);
+        startStream.onNext("A");
+        await();
+        endStream.onComplete();
+
+        subscriber.awaitTerminalEvent(1, TimeUnit.SECONDS);
         subscriber.assertNotTerminated();
-    }
-
-    @Test(expected = NoBufferedStreamSpecifiedException.class)
-    public void testNoBufferedAssertionInAnalysis() throws Exception {
-        rxFrom(new AnalysisModule() {
-            {
-                enabled().always();
-                buffered().startedBy(START_STREAM).endedAfter(ofSeconds(1));
-            }
-        });
     }
 
 }

@@ -28,7 +28,7 @@ import org.tensorics.core.tree.domain.Expression;
 
 public class OngoingAnyBooleanCondition {
 
-    private final AnyOf ANY_OF = new AnyOf();
+    private final Or ANY_OF = new Or();
     private final ConditionBuilder builder;
     private final Expression<Iterable<Boolean>> sources;
 

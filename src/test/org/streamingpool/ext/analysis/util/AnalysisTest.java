@@ -23,10 +23,13 @@
 package org.streamingpool.ext.analysis.util;
 
 import org.streamingpool.ext.analysis.AnalysisModule;
+import org.streamingpool.ext.analysis.AnalysisResult;
 import org.streamingpool.ext.analysis.AnalysisStreamId;
 
 public interface AnalysisTest {
 
     AnalysisStreamId analysisIdOf(AnalysisModule analysisModule);
 
+    AnalysisResult resolveAnalysisModule(AnalysisModule analysisModule);
+    
 }

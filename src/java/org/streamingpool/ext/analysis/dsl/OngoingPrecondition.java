@@ -56,7 +56,7 @@ public class OngoingPrecondition<T> {
     }
 
     public OngoingPrecondition<T> or() {
-        this.builder.withPreConditionReducer(new AnyOf());
+        this.builder.withPreConditionReducer(new Or());
         return this;
     }
 
@@ -86,7 +86,7 @@ public class OngoingPrecondition<T> {
         return thenAssertBoolean(ResolvedExpression.of(thatSource));
     }
 
-    public OngoingBooleanCondition thenAssertLatestBooleanOf(Expression<Iterable<Boolean>> buffered) {
+    public OngoingBooleanCondition thenAssertLatestBooleanOf(Expression<? extends Iterable<Boolean>> buffered) {
         return new OngoingBooleanCondition(builder, LatestOfExpression.latestOf(buffered));
     }
 

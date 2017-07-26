@@ -64,13 +64,18 @@ public class OngoingBufferedStrategyStarted<T> {
      * 
      * @param endStreamId the Id to stop the buffering
      */
-    public OngoingBufferedStrategyStarted<T> endedBy(StreamId<?> endStreamId) {
+    public OngoingBufferedStrategyStarted<T> endedOnEvery(StreamId<?> endStreamId) {
         builder.withEndMatcher(EndStreamMatcher.endingOnEvery(endStreamId));
         return this;
     }
 
     public <U> OngoingBufferedStrategyStarted<T> endedBy(StreamId<U> endStreamId, BiPredicate<T, U> predicate) {
         builder.withEndMatcher(EndStreamMatcher.endingOnMatch(endStreamId, predicate));
+        return this;
+    }
+    
+    public <U> OngoingBufferedStrategyStarted<T> endedOnMatch(StreamId<U> endStreamId) {
+        builder.withEndMatcher(EndStreamMatcher.endingOnMatch(endStreamId, (start, end) -> start.equals(end)));
         return this;
     }
 

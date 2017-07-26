@@ -102,7 +102,7 @@ public class AnalysisModuleTest {
     public void specifyingBufferedDoesNotThrow() {
         AnalysisModule module = new AnalysisModule() {
             {
-                buffered().startedBy(ANY_STREAM_ID).endedBy(ANY_STREAM_ID);
+                buffered().startedBy(ANY_STREAM_ID).endedOnEvery(ANY_STREAM_ID);
             }
         };
         assertThat(module.evaluationStrategy()).isInstanceOf(BufferedEvaluation.class);
@@ -114,8 +114,8 @@ public class AnalysisModuleTest {
         @SuppressWarnings("unused")
         AnalysisModule module = new AnalysisModule() {
             {
-                buffered().startedBy(ANY_STREAM_ID).endedBy(ANY_STREAM_ID);
-                buffered().startedBy(ANY_STREAM_ID).endedBy(ANY_STREAM_ID);
+                buffered().startedBy(ANY_STREAM_ID).endedOnEvery(ANY_STREAM_ID);
+                buffered().startedBy(ANY_STREAM_ID).endedOnEvery(ANY_STREAM_ID);
             }
         };
     }
@@ -139,7 +139,7 @@ public class AnalysisModuleTest {
         AnalysisModule module = new AnalysisModule() {
             {
                 triggered().by(ANY_STREAM_ID);
-                buffered().startedBy(ANY_STREAM_ID).endedBy(ANY_STREAM_ID);
+                buffered().startedBy(ANY_STREAM_ID).endedOnEvery(ANY_STREAM_ID);
             }
         };
     }

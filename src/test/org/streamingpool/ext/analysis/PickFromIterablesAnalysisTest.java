@@ -34,23 +34,37 @@ import static org.streamingpool.ext.tensorics.expression.StreamIdBasedExpression
 
 import java.time.Duration;
 
-import org.junit.Ignore;
+import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.streamingpool.core.service.StreamFactoryRegistry;
 import org.streamingpool.core.service.StreamId;
 import org.streamingpool.ext.analysis.util.AbstractAnalysisTest;
 import org.streamingpool.ext.analysis.util.RxAnalysisSupport;
-import org.tensorics.core.expressions.EvaluationStatus;
+import org.streamingpool.ext.tensorics.expression.BufferedStreamExpression;
+import org.streamingpool.ext.tensorics.streamfactory.BufferedTensoricsExpressionStreamFactory;
 import org.tensorics.core.iterable.expressions.PickExpression;
-import org.tensorics.core.resolve.domain.DetailedExpressionResult;
+import org.tensorics.core.resolve.engine.ResolvingEngine;
 
 import io.reactivex.subscribers.TestSubscriber;
 
-public class BufferedIterablesAnalysisTest extends AbstractAnalysisTest implements RxAnalysisSupport {
+public class PickFromIterablesAnalysisTest extends AbstractAnalysisTest implements RxAnalysisSupport {
+
+    @Autowired
+    private StreamFactoryRegistry factoryRegistry;
+
+    @Autowired
+    private ResolvingEngine engine;
+
+    @Before
+    public void setUp() {
+        factoryRegistry.addIntercept(new BufferedTensoricsExpressionStreamFactory(engine));
+    }
 
     @Test
     public void testPickExpressionOfIterable() throws Exception {
         StreamId<? extends Iterable<Boolean>> sourceId = provide(just(asList(false, true, false))).withUniqueStreamId();
-        TestSubscriber<DetailedExpressionResult<EvaluationStatus, AnalysisExpression>> subscriber = new TestSubscriber<>();
+        TestSubscriber<AnalysisResult> subscriber = new TestSubscriber<>();
         rxFrom(new AnalysisModule() {
             {
                 enabled().always();
@@ -69,12 +83,12 @@ public class BufferedIterablesAnalysisTest extends AbstractAnalysisTest implemen
         StreamId<Boolean> booleanData = provide(interval(1, SECONDS).map(v -> true)).withUniqueStreamId();
         String label = "any";
 
-        TestSubscriber<DetailedExpressionResult<EvaluationStatus, AnalysisExpression>> subscriber = new TestSubscriber<>();
+        TestSubscriber<AnalysisResult> subscriber = new TestSubscriber<>();
         rxFrom(new AnalysisModule() {
             {
                 enabled().always();
                 buffered().startedBy(startBuffer).endedAfter(Duration.ofSeconds(4));
-                assertBoolean(true).isEqualTo(PickExpression.fromFirst(buffered(of(booleanData)), 2))
+                assertBoolean(true).isEqualTo(PickExpression.fromFirst(BufferedStreamExpression.buffer(booleanData), 2))
                         .withName(label);
             }
         }).take(1).subscribe(subscriber);
@@ -84,12 +98,11 @@ public class BufferedIterablesAnalysisTest extends AbstractAnalysisTest implemen
         assertThat(statusesOfAssertion(subscriber, label)).containsOnly(SUCCESSFUL);
     }
 
-    @Ignore
     @Test
     public void testPickExpressionOutOfBound() throws Exception {
         StreamId<? extends Iterable<Boolean>> sourceId = provide(just(asList(false, true, false))).withUniqueStreamId();
         String label = "any";
-        TestSubscriber<DetailedExpressionResult<EvaluationStatus, AnalysisExpression>> subscriber = new TestSubscriber<>();
+        TestSubscriber<AnalysisResult> subscriber = new TestSubscriber<>();
         rxFrom(new AnalysisModule() {
             {
                 enabled().always();
