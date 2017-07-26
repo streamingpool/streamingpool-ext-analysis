@@ -27,7 +27,6 @@ import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.streamingpool.ext.analysis.AssertionStatus.FAILURE;
 import static org.streamingpool.ext.analysis.AssertionStatus.SUCCESSFUL;
-import static org.tensorics.core.tree.domain.ResolvedExpression.of;
 
 import org.junit.Test;
 import org.streamingpool.ext.analysis.util.AbstractAnalysisTest;
@@ -94,9 +93,9 @@ public class AssertBooleanAnalysisTest extends AbstractAnalysisTest implements R
 
     @Test
     public void testExcludingBooleans() {
-        Expression<Boolean> booleanSource1Id = of(true);
-        Expression<Boolean> booleanSource2Id = of(true);
-        Expression<Boolean> booleanSource3Id = of(false);
+        Expression<Boolean> booleanSource1Id = ResolvedExpression.of(true);
+        Expression<Boolean> booleanSource2Id = ResolvedExpression.of(true);
+        Expression<Boolean> booleanSource3Id = ResolvedExpression.of(false);
 
         AnalysisModule analysisModule = new AnalysisModule() {
             {
