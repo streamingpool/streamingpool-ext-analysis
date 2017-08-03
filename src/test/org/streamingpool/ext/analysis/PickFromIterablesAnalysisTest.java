@@ -39,6 +39,8 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.streamingpool.core.service.StreamFactoryRegistry;
 import org.streamingpool.core.service.StreamId;
+import org.streamingpool.ext.analysis.modules.BufferedAnalysisModule;
+import org.streamingpool.ext.analysis.modules.ContinuousAnalysisModule;
 import org.streamingpool.ext.analysis.testing.AbstractAnalysisTest;
 import org.streamingpool.ext.analysis.testing.RxAnalysisSupport;
 import org.streamingpool.ext.tensorics.expression.BufferedStreamExpression;
@@ -65,7 +67,7 @@ public class PickFromIterablesAnalysisTest extends AbstractAnalysisTest implemen
     public void testPickExpressionOfIterable() throws Exception {
         StreamId<? extends Iterable<Boolean>> sourceId = provide(just(asList(false, true, false))).withUniqueStreamId();
         TestSubscriber<AnalysisResult> subscriber = new TestSubscriber<>();
-        rxFrom(new AnalysisModule() {
+        rxFrom(new ContinuousAnalysisModule() {
             {
                 enabled().always();
                 assertBoolean(true).isEqualTo(PickExpression.fromFirst(of(sourceId), 1));
@@ -84,7 +86,7 @@ public class PickFromIterablesAnalysisTest extends AbstractAnalysisTest implemen
         String label = "any";
 
         TestSubscriber<AnalysisResult> subscriber = new TestSubscriber<>();
-        rxFrom(new AnalysisModule() {
+        rxFrom(new BufferedAnalysisModule() {
             {
                 enabled().always();
                 buffered().startedBy(startBuffer).endedAfter(Duration.ofSeconds(4));
@@ -103,7 +105,7 @@ public class PickFromIterablesAnalysisTest extends AbstractAnalysisTest implemen
         StreamId<? extends Iterable<Boolean>> sourceId = provide(just(asList(false, true, false))).withUniqueStreamId();
         String label = "any";
         TestSubscriber<AnalysisResult> subscriber = new TestSubscriber<>();
-        rxFrom(new AnalysisModule() {
+        rxFrom(new ContinuousAnalysisModule() {
             {
                 enabled().always();
                 assertBoolean(true).isEqualTo(PickExpression.fromFirst(of(sourceId), MIN_VALUE)).withName(label);

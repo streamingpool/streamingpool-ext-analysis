@@ -20,7 +20,7 @@
 */
 // @formatter:on
 
-package org.streamingpool.ext.analysis;
+package org.streamingpool.ext.analysis.modules;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,22 +28,18 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.streamingpool.ext.analysis.AssertionBuilder;
+import org.streamingpool.ext.analysis.EnablingConditionBuilder;
 import org.streamingpool.ext.analysis.dsl.And;
 import org.streamingpool.ext.analysis.dsl.OngoingAllBooleanCondition;
 import org.streamingpool.ext.analysis.dsl.OngoingAllBooleanExcludableCondition;
 import org.streamingpool.ext.analysis.dsl.OngoingAnalysisEnabler;
 import org.streamingpool.ext.analysis.dsl.OngoingAnyBooleanCondition;
 import org.streamingpool.ext.analysis.dsl.OngoingBooleanCondition;
-import org.streamingpool.ext.analysis.dsl.OngoingBufferedStrategy;
 import org.streamingpool.ext.analysis.dsl.OngoingCondition;
 import org.streamingpool.ext.analysis.dsl.OngoingPrecondition;
-import org.streamingpool.ext.analysis.dsl.OngoingTriggeredStrategy;
-import org.streamingpool.ext.tensorics.evaluation.BufferedEvaluation;
-import org.streamingpool.ext.tensorics.evaluation.ContinuousEvaluation;
 import org.streamingpool.ext.tensorics.evaluation.EvaluationStrategy;
 import org.streamingpool.ext.tensorics.evaluation.EvaluationStrategyBuilder;
-import org.streamingpool.ext.tensorics.evaluation.TriggeredEvaluation;
-import org.streamingpool.ext.tensorics.evaluation.TriggeredEvaluation.Builder;
 import org.tensorics.core.expressions.LatestOfExpression;
 import org.tensorics.core.iterable.expressions.IterableExpressionToIterable;
 import org.tensorics.core.iterable.expressions.IterableOperationExpression;
@@ -55,37 +51,29 @@ import org.tensorics.core.tree.domain.ResolvedExpression;
  * <p>
  * This class is not threadsafe!
  * 
- * @author acalia, caguiler, kfuchsbe
+ * @author acalia, caguiler, kfuchsbe, mhruska
  */
-public abstract class AnalysisModule {
+public abstract class AnalysisModule<T extends EvaluationStrategyBuilder> {
 
     private final List<AssertionBuilder> assertionBuilders = new ArrayList<>();
 
+    private T evaluationStrategyBuilder;
     private final AtomicBoolean enablingSpecified = new AtomicBoolean(false);
     private EnablingConditionBuilder enablerBuilder;
 
     private final AtomicBoolean strategySpecified = new AtomicBoolean(false);
-    private EvaluationStrategyBuilder evaluationStrategyBuilder;
     private EvaluationStrategy evaluationStrategy = null;
+
+    protected AnalysisModule() {
+        specifyEvaluationStartegyBuilder();
+    }
+
+    protected abstract void specifyEvaluationStartegyBuilder();
 
     protected final OngoingAnalysisEnabler enabled() {
         throwIfEnablingSpecifiedTwice();
         newEnablerBuilder();
         return new OngoingAnalysisEnabler(enablerBuilder);
-    }
-
-    protected final OngoingTriggeredStrategy triggered() {
-        throwIfStrategySpecifiedTwice();
-        Builder builder = TriggeredEvaluation.builder();
-        this.evaluationStrategyBuilder = builder;
-        return new OngoingTriggeredStrategy(builder);
-    }
-
-    protected final OngoingBufferedStrategy buffered() {
-        throwIfStrategySpecifiedTwice();
-        BufferedEvaluation.Builder builder = BufferedEvaluation.builder();
-        this.evaluationStrategyBuilder = builder;
-        return new OngoingBufferedStrategy(builder);
     }
 
     protected final <T> OngoingCondition<T> assertThat(Expression<T> thatSource) {
@@ -166,25 +154,21 @@ public abstract class AnalysisModule {
         return Optional.ofNullable(enablerBuilder).orElse(defaultEnablingConditionBuilder());
     }
 
-    private EvaluationStrategyBuilder evaluationStrategyBuilder() {
-        return Optional.ofNullable(this.evaluationStrategyBuilder).orElse(defaultEvaluationStrategyBuilder());
-    }
-
     public EvaluationStrategy evaluationStrategy() {
         if (evaluationStrategy == null) {
-            evaluationStrategy = evaluationStrategyBuilder().build();
+            evaluationStrategy = getEvaluationStrategyBuilder().build();
         }
         return evaluationStrategy;
     }
 
-    private void throwIfEnablingSpecifiedTwice() {
+    protected void throwIfEnablingSpecifiedTwice() {
         if (enablingSpecified.getAndSet(true)) {
             throw new IllegalStateException("Only one fluent clause specifying the enabling condition is allowed. "
                     + "Seems you tried to call evaluated() twice.");
         }
     }
 
-    private void throwIfStrategySpecifiedTwice() {
+    protected void throwIfStrategySpecifiedTwice() {
         if (strategySpecified.getAndSet(true)) {
             throw new IllegalStateException(
                     "It is only allowed to specify once either triggered() or buffered() within the same analysis module. "
@@ -196,8 +180,11 @@ public abstract class AnalysisModule {
         return new EnablingConditionBuilder().withCondition(ResolvedExpression.of(true));
     }
 
-    private static final EvaluationStrategyBuilder defaultEvaluationStrategyBuilder() {
-        return ContinuousEvaluation.builder();
+    protected T getEvaluationStrategyBuilder() {
+        return evaluationStrategyBuilder;
     }
 
+    protected void setEvaluationStrategyBuilder(T builder) {
+        this.evaluationStrategyBuilder = builder;
+    }
 }

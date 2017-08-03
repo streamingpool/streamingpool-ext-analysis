@@ -24,6 +24,7 @@ package org.streamingpool.ext.analysis;
 
 import static java.util.Objects.requireNonNull;
 
+import org.streamingpool.ext.analysis.modules.AnalysisModule;
 import org.streamingpool.ext.tensorics.evaluation.EvaluationStrategy;
 import org.tensorics.core.expressions.Placeholder;
 import org.tensorics.core.tree.domain.Contexts;

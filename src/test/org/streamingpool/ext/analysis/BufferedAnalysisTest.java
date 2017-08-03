@@ -36,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.streamingpool.core.service.StreamFactoryRegistry;
 import org.streamingpool.core.service.StreamId;
 import org.streamingpool.core.service.streamid.DelayedStreamId;
+import org.streamingpool.ext.analysis.modules.BufferedAnalysisModule;
 import org.streamingpool.ext.analysis.testing.AbstractAnalysisTest;
 import org.streamingpool.ext.analysis.testing.RxAnalysisSupport;
 import org.streamingpool.ext.tensorics.expression.BufferedStreamExpression;
@@ -72,7 +73,7 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
         final String ASSERTION_NAME = "name";
         final BufferedStreamExpression<Boolean> BUFFERED_SOURCE = BufferedStreamExpression.buffer(sourceStreamId);
 
-        Flowable<AnalysisResult> resultStream = rxFrom(new AnalysisModule() {
+        Flowable<AnalysisResult> resultStream = rxFrom(new BufferedAnalysisModule() {
             {
                 enabled().always();
                 buffered().startedBy(startStreamId).endedOnMatch(endStreamId);
@@ -111,7 +112,7 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
         final String ASSERTION_NAME = "name";
         final BufferedStreamExpression<String> BUFFERED_END = BufferedStreamExpression.buffer(endStreamId);
 
-        Flowable<AnalysisResult> resultStream = rxFrom(new AnalysisModule() {
+        Flowable<AnalysisResult> resultStream = rxFrom(new BufferedAnalysisModule() {
             {
                 enabled().always();
                 buffered().startedBy(startStreamId)
@@ -147,7 +148,7 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
         final String ASSERTION_NAME = "name";
         final BufferedStreamExpression<Boolean> BUFFERED_SOURCE = BufferedStreamExpression.buffer(sourceStreamId);
 
-        Flowable<AnalysisResult> resultStream = rxFrom(new AnalysisModule() {
+        Flowable<AnalysisResult> resultStream = rxFrom(new BufferedAnalysisModule() {
             {
                 enabled().always();
                 buffered().startedBy(startStreamId).endedOnMatch(endStreamId);
@@ -230,7 +231,7 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
         final int ANALYSIS_TIMEOUT_MS = 2_000;
 
         TestSubscriber<AnalysisResult> subscriber = new TestSubscriber<>();
-        rxFrom(new AnalysisModule() {
+        rxFrom(new BufferedAnalysisModule() {
             {
                 enabled().always();
                 buffered().startedBy(startStreamId).endedAfter(Duration.ofMillis(ANALYSIS_TIMEOUT_MS));
@@ -267,7 +268,7 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
         final String ASSERTION_NAME = "name";
         final BufferedStreamExpression<Boolean> BUFFERED_SOURCE = BufferedStreamExpression.buffer(sourceStreamId);
 
-        TestSubscriber<AnalysisResult> testSubscriber = rxFrom(new AnalysisModule() {
+        TestSubscriber<AnalysisResult> testSubscriber = rxFrom(new BufferedAnalysisModule() {
             {
                 enabled().always();
                 buffered().startedBy(startStreamId).endedOnMatch(end1StreamId).or().endedOnMatch(end2StreamId);
@@ -305,7 +306,7 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
         StreamId<String> endStreamId = provide(endStream).withUniqueStreamId();
 
         TestSubscriber<AnalysisResult> subscriber = new TestSubscriber<>();
-        rxFrom(new AnalysisModule() {
+        rxFrom(new BufferedAnalysisModule() {
             {
                 buffered().startedBy(startStreamId).endedOnEvery(endStreamId);
                 assertAllBoolean(buffer(provide(Flowable.<Boolean> never()).withUniqueStreamId())).areTrue();
@@ -328,7 +329,7 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
         StreamId<String> endStreamId = provide(endStream).withUniqueStreamId();
 
         TestSubscriber<AnalysisResult> subscriber = new TestSubscriber<>();
-        rxFrom(new AnalysisModule() {
+        rxFrom(new BufferedAnalysisModule() {
             {
                 buffered().startedBy(startStreamId).endedOnEvery(endStreamId);
                 assertAllBoolean(buffer(provide(Flowable.<Boolean> never()).withUniqueStreamId())).areTrue();

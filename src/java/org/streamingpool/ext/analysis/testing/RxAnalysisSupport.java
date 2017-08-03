@@ -30,11 +30,11 @@ import java.util.List;
 import org.streamingpool.core.service.diagnostic.ErrorStreamId;
 import org.streamingpool.core.support.RxStreamSupport;
 import org.streamingpool.ext.analysis.AnalysisExpression;
-import org.streamingpool.ext.analysis.AnalysisModule;
 import org.streamingpool.ext.analysis.AnalysisResult;
 import org.streamingpool.ext.analysis.AnalysisStreamId;
 import org.streamingpool.ext.analysis.AssertionStatus;
 import org.streamingpool.ext.analysis.expression.AssertionExpression;
+import org.streamingpool.ext.analysis.modules.AnalysisModule;
 import org.tensorics.core.expressions.EvaluationStatus;
 import org.tensorics.core.resolve.domain.DetailedExpressionResult;
 

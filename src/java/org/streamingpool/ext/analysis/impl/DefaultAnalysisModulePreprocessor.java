@@ -27,10 +27,10 @@ import static java.util.stream.Collectors.toList;
 
 import org.streamingpool.ext.analysis.AnalysisDefinition;
 import org.streamingpool.ext.analysis.AnalysisExpression;
-import org.streamingpool.ext.analysis.AnalysisModule;
 import org.streamingpool.ext.analysis.AnalysisModulePreprocessor;
 import org.streamingpool.ext.analysis.expression.AssertionExpression;
 import org.streamingpool.ext.analysis.expression.AssertionGroupExpression;
+import org.streamingpool.ext.analysis.modules.AnalysisModule;
 import org.tensorics.core.tree.domain.Expression;
 
 public class DefaultAnalysisModulePreprocessor implements AnalysisModulePreprocessor {
@@ -43,12 +43,12 @@ public class DefaultAnalysisModulePreprocessor implements AnalysisModulePreproce
                 module.evaluationStrategy());
     }
 
-    private AssertionGroupExpression assertionSetFrom(AnalysisModule module) {
+    private AssertionGroupExpression assertionSetFrom(AnalysisModule<?> module) {
         return module.assertionBuilders().stream().map(AssertionExpression::new)
                 .collect(collectingAndThen(toList(), AssertionGroupExpression::new));
     }
 
-    private Expression<Boolean> enablerExpressionFrom(AnalysisModule module) {
+    private Expression<Boolean> enablerExpressionFrom(AnalysisModule<?> module) {
         return module.enablingBuilder().build();
     }
 }

@@ -30,6 +30,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.streamingpool.core.service.StreamId;
+import org.streamingpool.ext.analysis.modules.AnalysisModule;
+import org.streamingpool.ext.analysis.modules.BufferedAnalysisModule;
+import org.streamingpool.ext.analysis.modules.ContinuousAnalysisModule;
+import org.streamingpool.ext.analysis.modules.TriggeredAnalysisModule;
 import org.streamingpool.ext.tensorics.evaluation.BufferedEvaluation;
 import org.streamingpool.ext.tensorics.evaluation.ContinuousEvaluation;
 import org.streamingpool.ext.tensorics.evaluation.TriggeredEvaluation;
@@ -49,20 +53,20 @@ public class AnalysisModuleTest {
 
     @Test
     public void specifyEnablingDoesNotThrow() {
-        AnalysisModule module = new AnalysisModule() {
+        AnalysisModule<?> module = new ContinuousAnalysisModule() {
             {
                 enabled().always();
             }
         };
         assertThat(module.enablingBuilder()).isNotNull();
     }
-    
+
     @Test
     public void specifyingEnablingTwiceThrows() {
         thrown.expect(IllegalStateException.class);
         thrown.expectMessage("enabling");
         @SuppressWarnings("unused")
-        AnalysisModule module = new AnalysisModule() {
+        AnalysisModule<?> module = new ContinuousAnalysisModule() {
             {
                 enabled().always();
                 enabled().always();
@@ -74,7 +78,7 @@ public class AnalysisModuleTest {
     public void incompleteEnablingClauseThrows() {
         thrown.expect(IllegalStateException.class);
         thrown.expectMessage("enabled()");
-        AnalysisModule module = new AnalysisModule() {
+        AnalysisModule<?> module = new ContinuousAnalysisModule() {
             {
                 enabled();
             }
@@ -100,7 +104,7 @@ public class AnalysisModuleTest {
 
     @Test
     public void specifyingBufferedDoesNotThrow() {
-        AnalysisModule module = new AnalysisModule() {
+        AnalysisModule<?> module = new BufferedAnalysisModule() {
             {
                 buffered().startedBy(ANY_STREAM_ID).endedOnEvery(ANY_STREAM_ID);
             }
@@ -112,7 +116,7 @@ public class AnalysisModuleTest {
     public void specifyingTwoBufferedClausesThrows() {
         expectTriggeredOrBufferedException();
         @SuppressWarnings("unused")
-        AnalysisModule module = new AnalysisModule() {
+        AnalysisModule<?> module = new BufferedAnalysisModule() {
             {
                 buffered().startedBy(ANY_STREAM_ID).endedOnEvery(ANY_STREAM_ID);
                 buffered().startedBy(ANY_STREAM_ID).endedOnEvery(ANY_STREAM_ID);
@@ -124,22 +128,10 @@ public class AnalysisModuleTest {
     public void specifyinTwoTriggeredClausesThrows() {
         expectTriggeredOrBufferedException();
         @SuppressWarnings("unused")
-        AnalysisModule module = new AnalysisModule() {
+        AnalysisModule<?> module = new TriggeredAnalysisModule() {
             {
                 triggered().by(ANY_STREAM_ID);
                 triggered().by(ANY_STREAM_ID);
-            }
-        };
-    }
-
-    @Test
-    public void specifyinTriggeredAndBufferedClausesThrows() {
-        expectTriggeredOrBufferedException();
-        @SuppressWarnings("unused")
-        AnalysisModule module = new AnalysisModule() {
-            {
-                triggered().by(ANY_STREAM_ID);
-                buffered().startedBy(ANY_STREAM_ID).endedOnEvery(ANY_STREAM_ID);
             }
         };
     }
@@ -148,7 +140,7 @@ public class AnalysisModuleTest {
     public void incompleteTriggerClauseThrowsWhenBuilding() {
         thrown.expect(NullPointerException.class);
         thrown.expectMessage("triggeringStreamId");
-        AnalysisModule module = new AnalysisModule() {
+        AnalysisModule<?> module = new TriggeredAnalysisModule() {
             {
                 triggered();
             }
@@ -160,7 +152,7 @@ public class AnalysisModuleTest {
     public void incompleteBufferedClauseThrowsWhenBuilding() {
         thrown.expect(NullPointerException.class);
         thrown.expectMessage("startStreamId");
-        AnalysisModule module = new AnalysisModule() {
+        AnalysisModule<?> module = new BufferedAnalysisModule() {
             {
                 buffered();
             }
@@ -170,7 +162,7 @@ public class AnalysisModuleTest {
 
     @Test
     public void specifyingTriggeredDoesNotThrow() {
-        AnalysisModule module = new AnalysisModule() {
+        AnalysisModule<?> module = new TriggeredAnalysisModule() {
             {
                 triggered().by(ANY_STREAM_ID);
             }
@@ -183,8 +175,8 @@ public class AnalysisModuleTest {
         thrown.expectMessage("triggered() or buffered()");
     }
 
-    private static final AnalysisModule emptyModule() {
-        return new AnalysisModule() {
+    private static final AnalysisModule<?> emptyModule() {
+        return new ContinuousAnalysisModule() {
             /* empty on purpose */
         };
     }

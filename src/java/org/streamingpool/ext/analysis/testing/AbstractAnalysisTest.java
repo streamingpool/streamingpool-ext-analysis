@@ -27,12 +27,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.streamingpool.core.testing.AbstractStreamTest;
 import org.streamingpool.ext.analysis.AnalysisDefinition;
 import org.streamingpool.ext.analysis.AnalysisExpression;
-import org.streamingpool.ext.analysis.AnalysisModule;
 import org.streamingpool.ext.analysis.AnalysisModulePreprocessor;
 import org.streamingpool.ext.analysis.AnalysisResult;
 import org.streamingpool.ext.analysis.AnalysisStreamId;
 import org.streamingpool.ext.analysis.conf.AnalysisConfiguration;
 import org.streamingpool.ext.analysis.conf.AnalysisResolvingEngineConfiguration;
+import org.streamingpool.ext.analysis.modules.AnalysisModule;
 import org.tensorics.core.resolve.engine.ResolvingEngine;
 
 @ContextConfiguration(classes = { AnalysisConfiguration.class, AnalysisResolvingEngineConfiguration.class, AnalysisTestConfiguration.class })

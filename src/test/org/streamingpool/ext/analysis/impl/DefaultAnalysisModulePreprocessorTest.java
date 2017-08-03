@@ -27,14 +27,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 import org.streamingpool.ext.analysis.AnalysisExpression;
-import org.streamingpool.ext.analysis.AnalysisModule;
 import org.streamingpool.ext.analysis.AnalysisModulePreprocessor;
 import org.streamingpool.ext.analysis.expression.AssertionGroupExpression;
+import org.streamingpool.ext.analysis.modules.AnalysisModule;
+import org.streamingpool.ext.analysis.modules.ContinuousAnalysisModule;
 import org.tensorics.core.tree.domain.ResolvedExpression;
 
 public class DefaultAnalysisModulePreprocessorTest {
 
-    private static final AnalysisModule EMPTY_MODULE = new AnalysisModule() {
+    private static final AnalysisModule<?> EMPTY_MODULE = new ContinuousAnalysisModule() {
         /* empty on purpose */
     };
 

@@ -22,6 +22,7 @@
 
 package org.streamingpool.ext.analysis;
 
+import org.streamingpool.ext.analysis.modules.AnalysisModule;
 import org.tensorics.core.expressions.WindowedExpression;
 
 /**
