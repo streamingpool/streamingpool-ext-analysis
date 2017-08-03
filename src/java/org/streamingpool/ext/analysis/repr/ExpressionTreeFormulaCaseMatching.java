@@ -39,7 +39,7 @@ public class ExpressionTreeFormulaCaseMatching extends AbstractRecursiveRepresen
 
     public String repr(FunctionalExpression<?> exp) {
         return strictNaming.apply(exp);
-//        return Names.fromOverriddenToString(exp);
+        // return Names.fromOverriddenToString(exp);
     }
 
     public String repr(LatestOfExpression<?> exp) {
@@ -64,7 +64,7 @@ public class ExpressionTreeFormulaCaseMatching extends AbstractRecursiveRepresen
     }
 
     public String repr(ResolvedExpression<?> exp) {
-        return recurse(exp.get());
+        return exp.get() == null ? "Null" : exp.get().toString();
     }
 
     public String repr(ConversionOperationExpression<?, ?> exp) {
