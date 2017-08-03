@@ -22,66 +22,26 @@
 
 package org.streamingpool.ext.analysis;
 
-import static org.streamingpool.core.names.resolve.Names.FROM_NAME_METHOD;
-import static org.streamingpool.ext.analysis.names.ExpressionNames.FROM_ASSERTION_EXPRESSION;
-import static org.streamingpool.ext.analysis.names.ExpressionNames.FROM_BINARY_PREDICATE_EXPRESSION;
-import static org.streamingpool.ext.analysis.names.ExpressionNames.FROM_CONVERSION_EXPRESSION;
-import static org.streamingpool.ext.analysis.names.ExpressionNames.FROM_PREDICATE_EXPRESSION;
-import static org.streamingpool.ext.analysis.names.ExpressionNames.FROM_RESOLVED_EXPRESSION;
-
 import java.util.Optional;
-import java.util.function.Function;
 
-import org.streamingpool.core.names.resolve.Chains;
-import org.streamingpool.core.names.resolve.Names;
-import org.streamingpool.core.service.streamid.DerivedStreamId;
-import org.streamingpool.core.service.streamid.OverlapBufferStreamId;
 import org.streamingpool.ext.analysis.expression.AssertionExpression;
-import org.streamingpool.ext.analysis.names.ExpressionNames;
-import org.streamingpool.ext.tensorics.expression.StreamIdBasedExpression;
-import org.streamingpool.ext.tensorics.streamid.ExpressionBasedStreamId;
-import org.tensorics.core.expressions.BinaryPredicateExpression;
-import org.tensorics.core.expressions.ConversionOperationExpression;
-import org.tensorics.core.expressions.PredicateExpression;
+import org.streamingpool.ext.analysis.repr.AnalysisTreeRepresentation;
 import org.tensorics.core.tree.domain.Expression;
 import org.tensorics.core.tree.domain.Node;
-import org.tensorics.core.tree.domain.ResolvedExpression;
 import org.tensorics.core.tree.domain.ResolvingContext;
 import org.tensorics.core.tree.walking.Trees;
 
 public class ResolvedSnapshot<R, E extends Expression<R>> {
 
     private final ResolvingContext context;
-    private final Function<Object, String> nameRepository;
-    private final Function<Object, String> nameResolving;
+    private final AnalysisTreeRepresentation repr;
     private final E root;
 
-    public ResolvedSnapshot(E rootExpression, ResolvingContext context, Function<Object, String> nameRepository) {
+    public ResolvedSnapshot(E rootExpression, ResolvingContext context, AnalysisTreeRepresentation repr) {
         super();
         this.root = rootExpression;
         this.context = context;
-        this.nameRepository = nameRepository;
-        this.nameResolving = createFullNameResolving();
-    }
-
-    private final Function<Object, String> createFullNameResolving() {
-        // @formatter:off
-        return Chains.<String>chain()
-                .or(nameRepository)
-                .or(FROM_NAME_METHOD)
-                .or(Names::fromGetNameMethod)
-                .branchCase(AssertionExpression.class, FROM_NAME_METHOD).or(FROM_ASSERTION_EXPRESSION).orElseNull()
-                .branchCase(BinaryPredicateExpression.class, FROM_BINARY_PREDICATE_EXPRESSION).orElseNull()
-                .branchCase(ResolvedExpression.class, FROM_RESOLVED_EXPRESSION).orElseNull()
-                .branchCase(PredicateExpression.class, FROM_PREDICATE_EXPRESSION).orElseNull()
-                .branchCase(ConversionOperationExpression.class, FROM_NAME_METHOD).or(FROM_CONVERSION_EXPRESSION).orElseNull()
-                .branchCase(StreamIdBasedExpression.class, ExpressionNames::fromStreambasedExpression).orElseNull()
-                .branchCase(OverlapBufferStreamId.class, (id,f) -> f.apply(id.sourceId())).orElseNull()
-                .branchCase(ExpressionBasedStreamId.class, (id, f) -> f.apply(id.getDetailedId())).orElseNull()
-                .branchCase(DerivedStreamId.class, (id,f) -> f.apply(id.conversion()) + "(" + f.apply(id.sourceStreamId()) + ")").orElseNull()
-                .or(Names::fromSimpleClassName)
-                .orElseNull();
-        // @formatter:on
+        this.repr = repr;
     }
 
     public String detailedStringFor(Node exp) {
@@ -106,20 +66,17 @@ public class ResolvedSnapshot<R, E extends Expression<R>> {
      * XXX Remove unnecessary stuff
      */
 
-    public String nameFor(AssertionExpression exp) {
-        return nameResolving.apply(exp);
-    }
-
     public String keyFor(AssertionExpression exp) {
         return Optional.ofNullable(exp.key()).orElse(formatAsKey(nameFor(exp)));
     }
 
     public static String formatAsKey(String name) {
-        return name.toLowerCase().replaceAll("_", "-").replaceAll("[ ,:;\\[\\(\\]\\)]+", " ").trim().replaceAll(" ", ".") + ".[GENERATED]";
+        return name.toLowerCase().replaceAll("_", "-").replaceAll("[ ,:;\\[\\(\\]\\)]+", " ").trim().replaceAll(" ",
+                ".") + ".[GENERATED]";
     }
 
     public String nameFor(Node exp) {
-        return nameResolving.apply(exp);
+        return repr.formulaLike().apply(exp);
     }
 
     public ResolvingContext context() {
@@ -130,8 +87,7 @@ public class ResolvedSnapshot<R, E extends Expression<R>> {
         return root;
     }
 
-    public Function<Object, String> nameRepository() {
-        return this.nameRepository;
+    public AnalysisTreeRepresentation repr() {
+        return repr;
     }
-
 }
