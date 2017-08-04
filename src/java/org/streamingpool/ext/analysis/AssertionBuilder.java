@@ -33,7 +33,7 @@ import org.tensorics.core.tree.domain.Expression;
 import com.google.common.collect.ImmutableList;
 
 public class AssertionBuilder extends ConditionBuilder {
-    public static final IterableBooleanConversion DEFAULT_CONDITIONS_REDUCER = new And();
+    private static final IterableBooleanConversion DEFAULT_CONDITIONS_REDUCER = new And();
 
     private final ImmutableList.Builder<Expression<Boolean>> preConditions = ImmutableList.builder();
     private IterableBooleanConversion preConditionsReducer = DEFAULT_CONDITIONS_REDUCER;

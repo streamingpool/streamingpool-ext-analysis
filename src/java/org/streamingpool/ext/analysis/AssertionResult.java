@@ -39,15 +39,11 @@ public class AssertionResult {
     }
 
     public String condition() {
-        return snapshot.nameFor(assertion);
+        return assertion.name();
     }
 
     public AssertionStatus status() {
         return snapshot.context().resolvedValueOf(assertion);
-    }
-
-    public String detailedStringResult() {
-        return snapshot.detailedStringFor(assertion);
     }
 
     public AssertionExpression assertion() {
@@ -60,8 +56,6 @@ public class AssertionResult {
 
     @Override
     public String toString() {
-        return "ConditionResult [assertion=" + assertion + ", status=" + status() + ", detailedStringResult="
-                + detailedStringResult() + "]";
+        return "AssertionResult [assertion=" + assertion + ", snapshot=" + snapshot + "]";
     }
-
 }

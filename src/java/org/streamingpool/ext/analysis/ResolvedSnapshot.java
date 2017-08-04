@@ -22,61 +22,17 @@
 
 package org.streamingpool.ext.analysis;
 
-import java.util.Optional;
-
-import org.streamingpool.ext.analysis.expression.AssertionExpression;
-import org.streamingpool.ext.analysis.repr.AnalysisTreeRepresentation;
 import org.tensorics.core.tree.domain.Expression;
-import org.tensorics.core.tree.domain.Node;
 import org.tensorics.core.tree.domain.ResolvingContext;
-import org.tensorics.core.tree.walking.Trees;
 
 public class ResolvedSnapshot<R, E extends Expression<R>> {
 
     private final ResolvingContext context;
-    private final AnalysisTreeRepresentation repr;
     private final E root;
 
-    public ResolvedSnapshot(E rootExpression, ResolvingContext context, AnalysisTreeRepresentation repr) {
-        super();
+    public ResolvedSnapshot(E rootExpression, ResolvingContext context) {
         this.root = rootExpression;
         this.context = context;
-        this.repr = repr;
-    }
-
-    public String detailedStringFor(Node exp) {
-        StringBuilder detailedResult = new StringBuilder();
-        for (Node child : Trees.findBottomNodes(exp)) {
-            // if (child.equals(INJECTION_ATTEMPT)) {
-            // continue;
-            // }
-            // if (child instanceof ResolvedExpression) {
-            // continue;
-            // }
-            @SuppressWarnings("unused")
-            String childResult = context.resolvedValueOf((Expression<?>) child).toString();
-            // String childName = recursiveNameFor(child);
-            return "DETAIL String not resolved";
-            // detailedResult.append(childName).append("=").append(childResult).append("; ");
-        }
-        return detailedResult.toString();
-    }
-
-    /*
-     * XXX Remove unnecessary stuff
-     */
-
-    public String keyFor(AssertionExpression exp) {
-        return Optional.ofNullable(exp.key()).orElse(formatAsKey(nameFor(exp)));
-    }
-
-    public static String formatAsKey(String name) {
-        return name.toLowerCase().replaceAll("_", "-").replaceAll("[ ,:;\\[\\(\\]\\)]+", " ").trim().replaceAll(" ",
-                ".") + ".[GENERATED]";
-    }
-
-    public String nameFor(Node exp) {
-        return repr.formulaLike().apply(exp);
     }
 
     public ResolvingContext context() {
@@ -87,7 +43,4 @@ public class ResolvedSnapshot<R, E extends Expression<R>> {
         return root;
     }
 
-    public AnalysisTreeRepresentation repr() {
-        return repr;
-    }
 }

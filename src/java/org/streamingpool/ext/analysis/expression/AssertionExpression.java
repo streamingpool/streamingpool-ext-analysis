@@ -33,7 +33,6 @@ import org.slf4j.LoggerFactory;
 import org.streamingpool.ext.analysis.AssertionBuilder;
 import org.streamingpool.ext.analysis.AssertionStatus;
 import org.streamingpool.ext.analysis.resolver.AssertionResolver;
-import org.tensorics.core.expressions.CombinedBooleanExpression;
 import org.tensorics.core.expressions.IterableResolvingExpression;
 import org.tensorics.core.tree.domain.AbstractDeferredExpression;
 import org.tensorics.core.tree.domain.ExceptionHandlingNode;
@@ -68,7 +67,7 @@ public class AssertionExpression extends AbstractDeferredExpression<AssertionSta
         this.name = builder.name();
         this.condition = builder.condition();
         this.key = builder.key();
-        this.preConditionsExpression = new CombinedBooleanExpression(builder.preConditionsReducer(),
+        this.preConditionsExpression = new PreconditionExpression(builder.preConditionsReducer(),
                 new IterableResolvingExpression<>(defaultPreconditionOnEmpty(builder.preConditions())));
     }
 
