@@ -34,6 +34,7 @@ import org.streamingpool.ext.analysis.AnalysisResult;
 import org.streamingpool.ext.analysis.AnalysisStreamId;
 import org.streamingpool.ext.analysis.AssertionStatus;
 import org.streamingpool.ext.analysis.expression.AssertionExpression;
+import org.streamingpool.ext.analysis.expression.AssertionGroupExpression;
 import org.streamingpool.ext.analysis.modules.AnalysisModule;
 import org.tensorics.core.expressions.EvaluationStatus;
 import org.tensorics.core.resolve.domain.DetailedExpressionResult;
@@ -54,15 +55,14 @@ public interface RxAnalysisSupport extends AnalysisTest, RxStreamSupport {
         return plug.onBackpressureBuffer();
     }
 
-    default List<EvaluationStatus> evaluationStatusesOf(
-            TestSubscriber<DetailedExpressionResult<EvaluationStatus, AnalysisExpression>> subscriber) {
+    default List<AssertionStatus> evaluationStatusesOf(
+            TestSubscriber<DetailedExpressionResult<AssertionStatus, AssertionGroupExpression>> subscriber) {
         return subscriber.values().stream().map(DetailedExpressionResult::value).collect(toList());
     }
 
-    default List<AssertionStatus> assertionsStatusesOf(
-            TestSubscriber<AnalysisResult> subscriber) {
+    default List<AssertionStatus> assertionsStatusesOf(TestSubscriber<AnalysisResult> subscriber) {
         return subscriber.values().stream()
-                .map(result -> result.resolvingContext().resolvedValueOf(result.analysisExpression().targetExpression()))
+                .map(result -> result.resolvingContext().resolvedValueOf(result.analysisExpression()))
                 .collect(toList());
     }
 
@@ -72,8 +72,8 @@ public interface RxAnalysisSupport extends AnalysisTest, RxStreamSupport {
     }
 
     default AssertionStatus statusOfAssertion(AnalysisResult result, String name) {
-        List<AssertionExpression> assertionsWithName = result.analysisExpression().targetExpression().getChildren()
-                .stream().filter(assertion -> assertion.name().equals(name)).collect(toList());
+        List<AssertionExpression> assertionsWithName = result.analysisExpression().getChildren().stream()
+                .filter(assertion -> assertion.name().equals(name)).collect(toList());
 
         if (assertionsWithName.size() != 1) {
             throw new IllegalArgumentException(

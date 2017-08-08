@@ -7,6 +7,7 @@ package org.streamingpool.ext.analysis;
 import java.io.Serializable;
 import java.util.List;
 
+import org.streamingpool.ext.analysis.expression.AssertionGroupExpression;
 import org.streamingpool.ext.tensorics.expression.BufferedStreamExpression;
 import org.tensorics.core.expressions.EvaluationStatus;
 import org.tensorics.core.resolve.domain.DetailedExpressionResult;
@@ -17,17 +18,18 @@ public class AnalysisResult implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private final DetailedExpressionResult<EvaluationStatus, AnalysisExpression> detailedResult;
+    private final DetailedExpressionResult<AssertionStatus, AssertionGroupExpression> detailedResult;
 
-    private AnalysisResult(DetailedExpressionResult<EvaluationStatus, AnalysisExpression> result) {
+    private AnalysisResult(DetailedExpressionResult<AssertionStatus, AssertionGroupExpression> result) {
         this.detailedResult = result;
     }
 
-    public static AnalysisResult fromResult(DetailedExpressionResult<EvaluationStatus, AnalysisExpression> result) {
+    public static AnalysisResult fromResult(
+            DetailedExpressionResult<AssertionStatus, AssertionGroupExpression> result) {
         return new AnalysisResult(result);
     }
 
-    public AnalysisExpression analysisExpression() {
+    public AssertionGroupExpression analysisExpression() {
         return detailedResult.rootExpression();
     }
 
@@ -35,7 +37,7 @@ public class AnalysisResult implements Serializable {
         return detailedResult.context();
     }
 
-    public EvaluationStatus evaluationStatus() {
+    public AssertionStatus evaluationStatus() {
         return detailedResult.value();
     }
 
@@ -70,7 +72,7 @@ public class AnalysisResult implements Serializable {
     }
 
     public AssertionStatus overallStatus() {
-        return resolvingContext().resolvedValueOf(analysisExpression().targetExpression());
+        return resolvingContext().resolvedValueOf(analysisExpression());
     }
 
     public <T> T resolvedValueOf(Expression<T> exp) {

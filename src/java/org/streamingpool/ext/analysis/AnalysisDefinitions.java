@@ -10,7 +10,6 @@ import static java.util.stream.Collectors.toList;
 import org.streamingpool.ext.analysis.expression.AssertionExpression;
 import org.streamingpool.ext.analysis.expression.AssertionGroupExpression;
 import org.streamingpool.ext.analysis.modules.AnalysisModule;
-import org.tensorics.core.tree.domain.Expression;
 
 public final class AnalysisDefinitions {
 
@@ -23,12 +22,10 @@ public final class AnalysisDefinitions {
         AnalysisDefinition analysisDefinition = AnalysisDefinitions.process(analysisModule);
         return new AnalysisStreamId(analysisDefinition);
     }
-    
+
     public static AnalysisDefinition process(AnalysisModule<?> module) {
         AssertionGroupExpression assertionSet = assertionSetFrom(module);
-        Expression<Boolean> enablerExpression = enablerExpressionFrom(module);
-        return new AnalysisDefinition(AnalysisExpression.of(assertionSet, enablerExpression),
-                module.evaluationStrategy());
+        return new AnalysisDefinition(assertionSet, module.evaluationStrategy());
     }
 
     private static AssertionGroupExpression assertionSetFrom(AnalysisModule<?> module) {
@@ -36,7 +33,4 @@ public final class AnalysisDefinitions {
                 .collect(collectingAndThen(toList(), AssertionGroupExpression::new));
     }
 
-    private static Expression<Boolean> enablerExpressionFrom(AnalysisModule<?> module) {
-        return module.enablingBuilder().build();
-    }
 }

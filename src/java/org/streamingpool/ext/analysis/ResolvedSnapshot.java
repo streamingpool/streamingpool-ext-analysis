@@ -25,7 +25,7 @@ package org.streamingpool.ext.analysis;
 import org.tensorics.core.tree.domain.Expression;
 import org.tensorics.core.tree.domain.ResolvingContext;
 
-@Deprecated
+/* Not sure yet if to deprecate this one! */
 public class ResolvedSnapshot<R, E extends Expression<R>> {
 
     private final ResolvingContext context;

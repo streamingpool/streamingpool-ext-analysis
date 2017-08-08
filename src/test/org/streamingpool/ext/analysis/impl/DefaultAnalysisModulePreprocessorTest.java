@@ -48,16 +48,10 @@ public class DefaultAnalysisModulePreprocessorTest {
 
     @Test
     public void emptyModuleIsCorrectlyProcessed() {
-        AnalysisExpression result = processor.process(EMPTY_MODULE).expression();
-        assertThat(result.targetExpression()).isInstanceOf(AssertionGroupExpression.class);
-        assertThat(result.targetExpression().getChildren()).isEmpty();
+        AssertionGroupExpression result = processor.process(EMPTY_MODULE).expression();
+        assertThat(result).isInstanceOf(AssertionGroupExpression.class);
+        assertThat(result.getChildren()).isEmpty();
     }
 
-    @Test
-    public void emptyModuleIsEnabledByDefault() {
-        AnalysisExpression result = processor.process(EMPTY_MODULE).expression();
-        assertThat(result.enablingExpression()).isInstanceOf(ResolvedExpression.class);
-        assertThat(result.enablingExpression().get()).isTrue();
-    }
-
+    
 }

@@ -26,6 +26,7 @@ import org.streamingpool.ext.analysis.expression.AssertionGroupExpression;
 import org.tensorics.core.expressions.WindowedExpression;
 import org.tensorics.core.tree.domain.Expression;
 
+@Deprecated
 public class AnalysisExpression extends WindowedExpression<AssertionGroupExpression> {
     private static final long serialVersionUID = 1L;
 
