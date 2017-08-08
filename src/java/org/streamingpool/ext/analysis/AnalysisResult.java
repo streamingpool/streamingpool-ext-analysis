@@ -5,15 +5,18 @@
 package org.streamingpool.ext.analysis;
 
 import java.io.Serializable;
+import java.util.List;
 
+import org.streamingpool.ext.tensorics.expression.BufferedStreamExpression;
 import org.tensorics.core.expressions.EvaluationStatus;
 import org.tensorics.core.resolve.domain.DetailedExpressionResult;
+import org.tensorics.core.tree.domain.Expression;
 import org.tensorics.core.tree.domain.ResolvingContext;
 
 public class AnalysisResult implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     private final DetailedExpressionResult<EvaluationStatus, AnalysisExpression> detailedResult;
 
     private AnalysisResult(DetailedExpressionResult<EvaluationStatus, AnalysisExpression> result) {
@@ -23,15 +26,15 @@ public class AnalysisResult implements Serializable {
     public static AnalysisResult fromResult(DetailedExpressionResult<EvaluationStatus, AnalysisExpression> result) {
         return new AnalysisResult(result);
     }
-    
+
     public AnalysisExpression analysisExpression() {
         return detailedResult.rootExpression();
     }
-    
+
     public ResolvingContext resolvingContext() {
         return detailedResult.context();
     }
-    
+
     public EvaluationStatus evaluationStatus() {
         return detailedResult.value();
     }
@@ -64,6 +67,14 @@ public class AnalysisResult implements Serializable {
         } else if (!detailedResult.equals(other.detailedResult))
             return false;
         return true;
+    }
+
+    public AssertionStatus overallStatus() {
+        return resolvingContext().resolvedValueOf(analysisExpression().targetExpression());
+    }
+
+    public <T> T resolvedValueOf(Expression<T> exp) {
+        return resolvingContext().resolvedValueOf(exp);
     }
 
 }

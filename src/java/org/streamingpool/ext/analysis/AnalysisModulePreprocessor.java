@@ -30,6 +30,7 @@ import org.tensorics.core.expressions.WindowedExpression;
  * 
  * @author acalia, caguiler, kfuchsbe
  */
+@Deprecated
 public interface AnalysisModulePreprocessor {
 
     /**

@@ -25,7 +25,10 @@ package org.streamingpool.ext.analysis.impl;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 
+import java.util.stream.Collectors;
+
 import org.streamingpool.ext.analysis.AnalysisDefinition;
+import org.streamingpool.ext.analysis.AnalysisDefinitions;
 import org.streamingpool.ext.analysis.AnalysisExpression;
 import org.streamingpool.ext.analysis.AnalysisModulePreprocessor;
 import org.streamingpool.ext.analysis.expression.AssertionExpression;
@@ -33,22 +36,12 @@ import org.streamingpool.ext.analysis.expression.AssertionGroupExpression;
 import org.streamingpool.ext.analysis.modules.AnalysisModule;
 import org.tensorics.core.tree.domain.Expression;
 
+@Deprecated
 public class DefaultAnalysisModulePreprocessor implements AnalysisModulePreprocessor {
 
     @Override
     public AnalysisDefinition process(AnalysisModule module) {
-        AssertionGroupExpression assertionSet = assertionSetFrom(module);
-        Expression<Boolean> enablerExpression = enablerExpressionFrom(module);
-        return new AnalysisDefinition(AnalysisExpression.of(assertionSet, enablerExpression),
-                module.evaluationStrategy());
+        return AnalysisDefinitions.process(module);
     }
 
-    private AssertionGroupExpression assertionSetFrom(AnalysisModule<?> module) {
-        return module.assertionBuilders().stream().map(AssertionExpression::new)
-                .collect(collectingAndThen(toList(), AssertionGroupExpression::new));
-    }
-
-    private Expression<Boolean> enablerExpressionFrom(AnalysisModule<?> module) {
-        return module.enablingBuilder().build();
-    }
 }
