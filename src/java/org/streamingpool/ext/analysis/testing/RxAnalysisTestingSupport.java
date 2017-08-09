@@ -32,9 +32,9 @@ import org.streamingpool.core.support.RxStreamSupport;
 import org.streamingpool.ext.analysis.AnalysisResult;
 import org.streamingpool.ext.analysis.AnalysisStreamId;
 import org.streamingpool.ext.analysis.AssertionStatus;
-import org.streamingpool.ext.analysis.expression.AssertionExpression;
 import org.streamingpool.ext.analysis.expression.AnalysisExpression;
-import org.streamingpool.ext.analysis.modules.AnalysisModule;
+import org.streamingpool.ext.analysis.expression.AssertionExpression;
+import org.streamingpool.ext.analysis.modules.StreamBaseAnalysisModule;
 import org.tensorics.core.resolve.domain.DetailedExpressionResult;
 
 import io.reactivex.Flowable;
@@ -43,7 +43,7 @@ import io.reactivex.subscribers.TestSubscriber;
 
 public interface RxAnalysisTestingSupport extends AnalysisTest, RxStreamSupport {
 
-    default Flowable<AnalysisResult> rxFrom(AnalysisModule<?> analysisModule) {
+    default Flowable<AnalysisResult> rxFrom(StreamBaseAnalysisModule<?> analysisModule) {
         AnalysisStreamId analysisId = analysisIdOf(analysisModule);
         PublishProcessor<AnalysisResult> plug = PublishProcessor.create();
 
@@ -59,8 +59,7 @@ public interface RxAnalysisTestingSupport extends AnalysisTest, RxStreamSupport 
     }
 
     default List<AssertionStatus> assertionsStatusesOf(TestSubscriber<AnalysisResult> subscriber) {
-        return subscriber.values().stream()
-                .map(result -> result.resolvedValueOf(result.analysisExpression()))
+        return subscriber.values().stream().map(result -> result.resolvedValueOf(result.analysisExpression()))
                 .collect(toList());
     }
 

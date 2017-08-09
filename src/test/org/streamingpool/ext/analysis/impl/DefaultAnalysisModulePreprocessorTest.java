@@ -27,12 +27,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Test;
 import org.streamingpool.ext.analysis.AnalysisDefinitions;
 import org.streamingpool.ext.analysis.expression.AnalysisExpression;
-import org.streamingpool.ext.analysis.modules.AnalysisModule;
 import org.streamingpool.ext.analysis.modules.ContinuousAnalysisModule;
+import org.streamingpool.ext.analysis.modules.StreamBaseAnalysisModule;
 
 public class DefaultAnalysisModulePreprocessorTest {
 
-    private static final AnalysisModule<?> EMPTY_MODULE = new ContinuousAnalysisModule() {
+    private static final StreamBaseAnalysisModule<?> EMPTY_MODULE = new ContinuousAnalysisModule() {
         /* empty on purpose */
     };
 
@@ -43,5 +43,4 @@ public class DefaultAnalysisModulePreprocessorTest {
         assertThat(result.getChildren()).isEmpty();
     }
 
-    
 }

@@ -32,7 +32,7 @@ import org.streamingpool.ext.analysis.AnalysisStreamId;
 import org.streamingpool.ext.analysis.conf.AnalysisConfiguration;
 import org.streamingpool.ext.analysis.conf.AnalysisResolvingEngineConfiguration;
 import org.streamingpool.ext.analysis.expression.AnalysisExpression;
-import org.streamingpool.ext.analysis.modules.AnalysisModule;
+import org.streamingpool.ext.analysis.modules.StreamBaseAnalysisModule;
 import org.streamingpool.ext.tensorics.conf.DefaultResolvingEngineConfiguration;
 import org.tensorics.core.resolve.engine.ResolvingEngine;
 
@@ -44,12 +44,12 @@ public abstract class AbstractAnalysisTest extends AbstractStreamTest implements
     private ResolvingEngine engine;
 
     @Override
-    public AnalysisStreamId analysisIdOf(AnalysisModule<?> analysisModule) {
+    public AnalysisStreamId analysisIdOf(StreamBaseAnalysisModule<?> analysisModule) {
         return AnalysisDefinitions.streamIdFor(analysisModule);
     }
 
     @Override
-    public AnalysisResult resolveAnalysisModule(AnalysisModule<?> analysisModule) {
+    public AnalysisResult resolveAnalysisModule(StreamBaseAnalysisModule<?> analysisModule) {
         AnalysisDefinition definition = AnalysisDefinitions.process(analysisModule);
         AnalysisExpression rootExpression = definition.expression();
         return AnalysisResult.fromResult(engine.resolveDetailed(rootExpression));

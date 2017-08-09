@@ -30,7 +30,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.streamingpool.core.service.StreamId;
-import org.streamingpool.ext.analysis.modules.AnalysisModule;
 import org.streamingpool.ext.analysis.modules.BufferedAnalysisModule;
 import org.streamingpool.ext.analysis.modules.ContinuousAnalysisModule;
 import org.streamingpool.ext.analysis.modules.TriggeredAnalysisModule;
@@ -53,7 +52,7 @@ public class AnalysisModuleTest {
 
     @Test
     public void specifyEnablingDoesNotThrow() {
-        AnalysisModule<?> module = new ContinuousAnalysisModule() {
+        ContinuousAnalysisModule module = new ContinuousAnalysisModule() {
             {
                 enabled().always();
             }
@@ -66,7 +65,7 @@ public class AnalysisModuleTest {
         thrown.expect(IllegalStateException.class);
         thrown.expectMessage("enabling");
         @SuppressWarnings("unused")
-        AnalysisModule<?> module = new ContinuousAnalysisModule() {
+        ContinuousAnalysisModule module = new ContinuousAnalysisModule() {
             {
                 enabled().always();
                 enabled().always();
@@ -78,7 +77,7 @@ public class AnalysisModuleTest {
     public void incompleteEnablingClauseThrows() {
         thrown.expect(IllegalStateException.class);
         thrown.expectMessage("enabled()");
-        AnalysisModule<?> module = new ContinuousAnalysisModule() {
+        ContinuousAnalysisModule module = new ContinuousAnalysisModule() {
             {
                 enabled();
             }
@@ -104,7 +103,7 @@ public class AnalysisModuleTest {
 
     @Test
     public void specifyingBufferedDoesNotThrow() {
-        AnalysisModule<?> module = new BufferedAnalysisModule() {
+        BufferedAnalysisModule module = new BufferedAnalysisModule() {
             {
                 buffered().startedBy(ANY_STREAM_ID).endedOnEvery(ANY_STREAM_ID);
             }
@@ -116,7 +115,7 @@ public class AnalysisModuleTest {
     public void specifyingTwoBufferedClausesThrows() {
         expectTriggeredOrBufferedException();
         @SuppressWarnings("unused")
-        AnalysisModule<?> module = new BufferedAnalysisModule() {
+        BufferedAnalysisModule module = new BufferedAnalysisModule() {
             {
                 buffered().startedBy(ANY_STREAM_ID).endedOnEvery(ANY_STREAM_ID);
                 buffered().startedBy(ANY_STREAM_ID).endedOnEvery(ANY_STREAM_ID);
@@ -128,7 +127,7 @@ public class AnalysisModuleTest {
     public void specifyinTwoTriggeredClausesThrows() {
         expectTriggeredOrBufferedException();
         @SuppressWarnings("unused")
-        AnalysisModule<?> module = new TriggeredAnalysisModule() {
+        TriggeredAnalysisModule module = new TriggeredAnalysisModule() {
             {
                 triggered().by(ANY_STREAM_ID);
                 triggered().by(ANY_STREAM_ID);
@@ -140,7 +139,7 @@ public class AnalysisModuleTest {
     public void incompleteTriggerClauseThrowsWhenBuilding() {
         thrown.expect(NullPointerException.class);
         thrown.expectMessage("triggeringStreamId");
-        AnalysisModule<?> module = new TriggeredAnalysisModule() {
+        TriggeredAnalysisModule module = new TriggeredAnalysisModule() {
             {
                 triggered();
             }
@@ -152,7 +151,7 @@ public class AnalysisModuleTest {
     public void incompleteBufferedClauseThrowsWhenBuilding() {
         thrown.expect(NullPointerException.class);
         thrown.expectMessage("startStreamId");
-        AnalysisModule<?> module = new BufferedAnalysisModule() {
+        BufferedAnalysisModule module = new BufferedAnalysisModule() {
             {
                 buffered();
             }
@@ -162,7 +161,7 @@ public class AnalysisModuleTest {
 
     @Test
     public void specifyingTriggeredDoesNotThrow() {
-        AnalysisModule<?> module = new TriggeredAnalysisModule() {
+        TriggeredAnalysisModule module = new TriggeredAnalysisModule() {
             {
                 triggered().by(ANY_STREAM_ID);
             }
@@ -175,7 +174,7 @@ public class AnalysisModuleTest {
         thrown.expectMessage("triggered() or buffered()");
     }
 
-    private static final AnalysisModule<?> emptyModule() {
+    private static final ContinuousAnalysisModule emptyModule() {
         return new ContinuousAnalysisModule() {
             /* empty on purpose */
         };

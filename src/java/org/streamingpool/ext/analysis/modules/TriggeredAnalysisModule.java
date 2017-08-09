@@ -8,11 +8,10 @@ import org.streamingpool.ext.analysis.dsl.OngoingTriggeredStrategy;
 import org.streamingpool.ext.tensorics.evaluation.TriggeredEvaluation;
 import org.streamingpool.ext.tensorics.evaluation.TriggeredEvaluation.Builder;
 
-public abstract class TriggeredAnalysisModule extends AnalysisModule<Builder> {
+public abstract class TriggeredAnalysisModule extends StreamBaseAnalysisModule<Builder> {
 
-    @Override
-    public void specifyEvaluationStartegyBuilder() {
-        setEvaluationStrategyBuilder(TriggeredEvaluation.builder());
+    public TriggeredAnalysisModule() {
+        super(TriggeredEvaluation.builder());
     }
 
     public OngoingTriggeredStrategy triggered() {

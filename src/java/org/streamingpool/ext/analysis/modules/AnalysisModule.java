@@ -38,8 +38,6 @@ import org.streamingpool.ext.analysis.dsl.OngoingAnyBooleanCondition;
 import org.streamingpool.ext.analysis.dsl.OngoingBooleanCondition;
 import org.streamingpool.ext.analysis.dsl.OngoingCondition;
 import org.streamingpool.ext.analysis.dsl.OngoingPrecondition;
-import org.streamingpool.ext.tensorics.evaluation.EvaluationStrategy;
-import org.streamingpool.ext.tensorics.evaluation.EvaluationStrategyBuilder;
 import org.tensorics.core.expressions.LatestOfExpression;
 import org.tensorics.core.iterable.expressions.IterableExpressionToIterable;
 import org.tensorics.core.iterable.expressions.IterableOperationExpression;
@@ -53,22 +51,12 @@ import org.tensorics.core.tree.domain.ResolvedExpression;
  * 
  * @author acalia, caguiler, kfuchsbe, mhruska
  */
-public abstract class AnalysisModule<T extends EvaluationStrategyBuilder> {
+public abstract class AnalysisModule {
 
     private final List<AssertionBuilder> assertionBuilders = new ArrayList<>();
 
-    private T evaluationStrategyBuilder;
     private final AtomicBoolean enablingSpecified = new AtomicBoolean(false);
     private EnablingConditionBuilder enablerBuilder;
-
-    private final AtomicBoolean strategySpecified = new AtomicBoolean(false);
-    private EvaluationStrategy evaluationStrategy = null;
-
-    protected AnalysisModule() {
-        specifyEvaluationStartegyBuilder();
-    }
-
-    protected abstract void specifyEvaluationStartegyBuilder();
 
     protected final OngoingAnalysisEnabler enabled() {
         throwIfEnablingSpecifiedTwice();
@@ -154,13 +142,6 @@ public abstract class AnalysisModule<T extends EvaluationStrategyBuilder> {
         return Optional.ofNullable(enablerBuilder).orElse(defaultEnablingConditionBuilder());
     }
 
-    public EvaluationStrategy evaluationStrategy() {
-        if (evaluationStrategy == null) {
-            evaluationStrategy = getEvaluationStrategyBuilder().build();
-        }
-        return evaluationStrategy;
-    }
-
     protected void throwIfEnablingSpecifiedTwice() {
         if (enablingSpecified.getAndSet(true)) {
             throw new IllegalStateException("Only one fluent clause specifying the enabling condition is allowed. "
@@ -168,23 +149,8 @@ public abstract class AnalysisModule<T extends EvaluationStrategyBuilder> {
         }
     }
 
-    protected void throwIfStrategySpecifiedTwice() {
-        if (strategySpecified.getAndSet(true)) {
-            throw new IllegalStateException(
-                    "It is only allowed to specify once either triggered() or buffered() within the same analysis module. "
-                            + "It seems that you tried to specify both or one twice.");
-        }
-    }
-
     private static final EnablingConditionBuilder defaultEnablingConditionBuilder() {
         return new EnablingConditionBuilder().withCondition(ResolvedExpression.of(true));
     }
 
-    protected T getEvaluationStrategyBuilder() {
-        return evaluationStrategyBuilder;
-    }
-
-    protected void setEvaluationStrategyBuilder(T builder) {
-        this.evaluationStrategyBuilder = builder;
-    }
 }

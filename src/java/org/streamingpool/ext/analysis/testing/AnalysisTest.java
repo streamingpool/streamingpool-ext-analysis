@@ -24,12 +24,12 @@ package org.streamingpool.ext.analysis.testing;
 
 import org.streamingpool.ext.analysis.AnalysisResult;
 import org.streamingpool.ext.analysis.AnalysisStreamId;
-import org.streamingpool.ext.analysis.modules.AnalysisModule;
+import org.streamingpool.ext.analysis.modules.StreamBaseAnalysisModule;
 
 public interface AnalysisTest {
 
-    AnalysisStreamId analysisIdOf(AnalysisModule<?> analysisModule);
+    AnalysisStreamId analysisIdOf(StreamBaseAnalysisModule<?> analysisModule);
 
-    AnalysisResult resolveAnalysisModule(AnalysisModule<?> analysisModule);
-    
+    AnalysisResult resolveAnalysisModule(StreamBaseAnalysisModule<?> analysisModule);
+
 }

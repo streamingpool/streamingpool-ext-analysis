@@ -29,7 +29,6 @@ import static org.streamingpool.ext.analysis.AssertionStatus.FAILURE;
 import static org.streamingpool.ext.analysis.AssertionStatus.SUCCESSFUL;
 
 import org.junit.Test;
-import org.streamingpool.ext.analysis.modules.AnalysisModule;
 import org.streamingpool.ext.analysis.modules.ContinuousAnalysisModule;
 import org.streamingpool.ext.analysis.testing.AbstractAnalysisTest;
 import org.streamingpool.ext.analysis.testing.RxAnalysisTestingSupport;
@@ -45,7 +44,7 @@ public class AssertBooleanAnalysisTest extends AbstractAnalysisTest implements R
 
     @Test
     public void testAllBooleanAreTrueSuccess() {
-        AnalysisModule<?> analysisModule = new ContinuousAnalysisModule() {
+        ContinuousAnalysisModule analysisModule = new ContinuousAnalysisModule() {
             {
                 assertAllBoolean(ResolvedExpression.of(asList(true, true))).areTrue().withName(AN_ASSERTION_NAME);
             }
@@ -57,9 +56,10 @@ public class AssertBooleanAnalysisTest extends AbstractAnalysisTest implements R
 
     @Test
     public void testAllBooleanAreTrueFailure() {
-        AnalysisModule<?> analysisModule = new ContinuousAnalysisModule() {
+        ContinuousAnalysisModule analysisModule = new ContinuousAnalysisModule() {
             {
-                assertAllBoolean(ResolvedExpression.of(asList(true, false, false))).areTrue().withName(AN_ASSERTION_NAME);
+                assertAllBoolean(ResolvedExpression.of(asList(true, false, false))).areTrue()
+                        .withName(AN_ASSERTION_NAME);
             }
         };
 
@@ -69,7 +69,7 @@ public class AssertBooleanAnalysisTest extends AbstractAnalysisTest implements R
 
     @Test
     public void testAtLeastOneBooleanIsTrueSuccess() {
-        AnalysisModule<?> analysisModule = new ContinuousAnalysisModule() {
+        ContinuousAnalysisModule analysisModule = new ContinuousAnalysisModule() {
             {
                 assertAtLeastOneBooleanOf(ResolvedExpression.of(asList(false, false, true))).isTrue()
                         .withName(AN_ASSERTION_NAME);
@@ -82,13 +82,13 @@ public class AssertBooleanAnalysisTest extends AbstractAnalysisTest implements R
 
     @Test
     public void testAtLeastOneBooleanIsTrueFailure() {
-        AnalysisModule<?> analysisModule = new ContinuousAnalysisModule() {
+        ContinuousAnalysisModule analysisModule = new ContinuousAnalysisModule() {
             {
                 assertAtLeastOneBooleanOf(ResolvedExpression.of(asList(false, false, false))).isTrue()
-                .withName(AN_ASSERTION_NAME);
+                        .withName(AN_ASSERTION_NAME);
             }
         };
-        
+
         AnalysisResult result = resolveAnalysisModule(analysisModule);
         assertThat(statusOfAssertion(result, AN_ASSERTION_NAME)).isEqualTo(FAILURE);
     }
@@ -99,13 +99,13 @@ public class AssertBooleanAnalysisTest extends AbstractAnalysisTest implements R
         Expression<Boolean> booleanSource2Id = ResolvedExpression.of(true);
         Expression<Boolean> booleanSource3Id = ResolvedExpression.of(false);
 
-        AnalysisModule<?> analysisModule = new ContinuousAnalysisModule() {
+        ContinuousAnalysisModule analysisModule = new ContinuousAnalysisModule() {
             {
                 assertAllBoolean(of(booleanSource1Id, booleanSource2Id, booleanSource3Id)).excluding(booleanSource3Id)
                         .areTrue().withName(AN_ASSERTION_NAME);
             }
         };
-        
+
         AnalysisResult result = resolveAnalysisModule(analysisModule);
         assertThat(statusOfAssertion(result, AN_ASSERTION_NAME)).isEqualTo(SUCCESSFUL);
     }
