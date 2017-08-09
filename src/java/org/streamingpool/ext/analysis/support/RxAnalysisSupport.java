@@ -7,7 +7,7 @@ package org.streamingpool.ext.analysis.support;
 import static org.streamingpool.ext.analysis.AnalysisDefinitions.streamIdFor;
 
 import org.streamingpool.core.support.RxStreamSupport;
-import org.streamingpool.ext.analysis.AssertionStatus;
+import org.streamingpool.ext.analysis.AnalysisResult;
 import org.streamingpool.ext.analysis.DeprecatedAnalysisResult;
 import org.streamingpool.ext.analysis.expression.AnalysisExpression;
 import org.streamingpool.ext.analysis.modules.AnalysisModule;
@@ -46,7 +46,7 @@ public interface RxAnalysisSupport extends RxStreamSupport {
     }
 
     /* AssertionStatus should become AnalysisResult */
-    default Flowable<DetailedExpressionResult<AssertionStatus, AnalysisExpression>> rxDetailedFrom(
+    default Flowable<DetailedExpressionResult<AnalysisResult, AnalysisExpression>> rxDetailedFrom(
             AnalysisModule bufferedAnalysisModule) {
         throw new UnsupportedOperationException();
         // return rxFrom(DetailedExpressionStreamId.of(streamIdFor(bufferedAnalysisModule)));
@@ -60,7 +60,7 @@ public interface RxAnalysisSupport extends RxStreamSupport {
     }
 
     /* AssertionStatus should become AnalysisResult */
-    default Flowable<DetailedExpressionResult<AssertionStatus, AnalysisExpression>> rxDetailedFrom(
+    default Flowable<DetailedExpressionResult<AnalysisResult, AnalysisExpression>> rxDetailedFrom(
             AnalysisModule analysisModule, ResolvingContext prefilledContext) {
         throw new UnsupportedOperationException();
         // return rxFrom(DetailedExpressionStreamId.of(streamIdFor(bufferedAnalysisModule)));

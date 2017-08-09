@@ -15,13 +15,13 @@ public class DeprecatedAnalysisResult implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private final DetailedExpressionResult<AssertionStatus, AnalysisExpression> detailedResult;
+    private final DetailedExpressionResult<AnalysisResult, AnalysisExpression> detailedResult;
 
-    private DeprecatedAnalysisResult(DetailedExpressionResult<AssertionStatus, AnalysisExpression> result) {
+    private DeprecatedAnalysisResult(DetailedExpressionResult<AnalysisResult, AnalysisExpression> result) {
         this.detailedResult = result;
     }
 
-    public static DeprecatedAnalysisResult fromResult(DetailedExpressionResult<AssertionStatus, AnalysisExpression> result) {
+    public static DeprecatedAnalysisResult fromResult(DetailedExpressionResult<AnalysisResult, AnalysisExpression> result) {
         return new DeprecatedAnalysisResult(result);
     }
 
@@ -30,7 +30,7 @@ public class DeprecatedAnalysisResult implements Serializable {
     }
 
     public AssertionStatus evaluationStatus() {
-        return detailedResult.value();
+        return detailedResult.value().overallStatus();
     }
 
     @Override
@@ -64,7 +64,7 @@ public class DeprecatedAnalysisResult implements Serializable {
     }
 
     public AssertionStatus overallStatus() {
-        return detailedResult.context().resolvedValueOf(analysisExpression());
+        return detailedResult.value().overallStatus();
     }
 
     public <T> T resolvedValueOf(Expression<T> exp) {

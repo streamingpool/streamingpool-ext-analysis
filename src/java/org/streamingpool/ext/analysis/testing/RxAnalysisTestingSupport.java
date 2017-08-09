@@ -27,6 +27,7 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.List;
 
+import org.streamingpool.ext.analysis.AnalysisResult;
 import org.streamingpool.ext.analysis.AssertionStatus;
 import org.streamingpool.ext.analysis.DeprecatedAnalysisResult;
 import org.streamingpool.ext.analysis.expression.AnalysisExpression;
@@ -39,13 +40,12 @@ import io.reactivex.subscribers.TestSubscriber;
 public interface RxAnalysisTestingSupport extends AnalysisTest, RxAnalysisSupport {
 
     default List<AssertionStatus> evaluationStatusesOf(
-            TestSubscriber<DetailedExpressionResult<AssertionStatus, AnalysisExpression>> subscriber) {
-        return subscriber.values().stream().map(DetailedExpressionResult::value).collect(toList());
+            TestSubscriber<DetailedExpressionResult<AnalysisResult, AnalysisExpression>> subscriber) {
+        return subscriber.values().stream().map(r -> r.value().overallStatus()).collect(toList());
     }
 
     default List<AssertionStatus> assertionsStatusesOf(TestSubscriber<DeprecatedAnalysisResult> subscriber) {
-        return subscriber.values().stream().map(result -> result.resolvedValueOf(result.analysisExpression()))
-                .collect(toList());
+        return subscriber.values().stream().map(result -> result.overallStatus()).collect(toList());
     }
 
     default List<AssertionStatus> statusesOfAssertion(TestSubscriber<DeprecatedAnalysisResult> subscriber,

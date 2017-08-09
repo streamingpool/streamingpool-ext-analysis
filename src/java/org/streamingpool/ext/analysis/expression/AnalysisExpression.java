@@ -25,6 +25,7 @@ package org.streamingpool.ext.analysis.expression;
 import java.util.Collection;
 import java.util.List;
 
+import org.streamingpool.ext.analysis.AnalysisResult;
 import org.streamingpool.ext.analysis.AssertionStatus;
 import org.streamingpool.ext.analysis.resolver.AssertionGroupResolver;
 import org.tensorics.core.tree.domain.AbstractDeferredExpression;
@@ -37,7 +38,7 @@ import com.google.common.collect.ImmutableList;
  * @see AssertionGroupResolver
  * @author acalia, caguiler, kfuchsberger
  */
-public class AnalysisExpression extends AbstractDeferredExpression<AssertionStatus> {
+public class AnalysisExpression extends AbstractDeferredExpression<AnalysisResult> {
     private static final long serialVersionUID = 1L;
 
     private final List<AssertionExpression> assertions;

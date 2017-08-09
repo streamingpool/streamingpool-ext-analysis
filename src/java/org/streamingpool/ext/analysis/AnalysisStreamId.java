@@ -37,7 +37,7 @@ import org.tensorics.core.tree.domain.ResolvingContext;
  * @author acalia
  */
 public class AnalysisStreamId
-        extends DerivedStreamId<DetailedExpressionResult<AssertionStatus, AnalysisExpression>, DeprecatedAnalysisResult> {
+        extends DerivedStreamId<DetailedExpressionResult<AnalysisResult, AnalysisExpression>, DeprecatedAnalysisResult> {
     private static final long serialVersionUID = 1L;
 
     public AnalysisStreamId(AnalysisDefinition analysisDefinition) {
