@@ -38,7 +38,7 @@ public class DefaultAnalysisModulePreprocessorTest {
 
     @Test
     public void emptyModuleIsCorrectlyProcessed() {
-        AnalysisExpression result = AnalysisDefinitions.process(EMPTY_MODULE).expression();
+        AnalysisExpression result = AnalysisDefinitions.assertionSetFrom(EMPTY_MODULE);
         assertThat(result).isInstanceOf(AnalysisExpression.class);
         assertThat(result.getChildren()).isEmpty();
     }

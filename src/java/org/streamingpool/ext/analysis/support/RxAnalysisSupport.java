@@ -11,6 +11,7 @@ import org.streamingpool.ext.analysis.AssertionStatus;
 import org.streamingpool.ext.analysis.DeprecatedAnalysisResult;
 import org.streamingpool.ext.analysis.expression.AnalysisExpression;
 import org.streamingpool.ext.analysis.modules.AnalysisModule;
+import org.streamingpool.ext.analysis.modules.StreamBaseAnalysisModule;
 import org.streamingpool.ext.tensorics.streamid.DetailedExpressionStreamId;
 import org.streamingpool.ext.tensorics.streamid.ExpressionBasedStreamId;
 import org.tensorics.core.resolve.domain.DetailedExpressionResult;
@@ -40,19 +41,19 @@ public interface RxAnalysisSupport extends RxStreamSupport {
     }
 
     /* DeprecatedAnalysisResult should become AnalysisResult */
-    default Flowable<DeprecatedAnalysisResult> rxFrom(AnalysisModule<?> bufferedAnalysisModule) {
+    default Flowable<DeprecatedAnalysisResult> rxFrom(StreamBaseAnalysisModule<?> bufferedAnalysisModule) {
         return rxFrom(streamIdFor(bufferedAnalysisModule));
     }
 
     /* AssertionStatus should become AnalysisResult */
     default Flowable<DetailedExpressionResult<AssertionStatus, AnalysisExpression>> rxDetailedFrom(
-            AnalysisModule<?> bufferedAnalysisModule) {
+            AnalysisModule bufferedAnalysisModule) {
         throw new UnsupportedOperationException();
         // return rxFrom(DetailedExpressionStreamId.of(streamIdFor(bufferedAnalysisModule)));
     }
 
     /* DeprecatedAnalysisResult should become AnalysisResult */
-    default Flowable<DeprecatedAnalysisResult> rxFrom(AnalysisModule<?> bufferedAnalysisModule,
+    default Flowable<DeprecatedAnalysisResult> rxFrom(StreamBaseAnalysisModule<?> bufferedAnalysisModule,
             ResolvingContext prefilledContext) {
         throw new UnsupportedOperationException();
         // return rxFrom(streamIdFor(bufferedAnalysisModule));
@@ -60,7 +61,7 @@ public interface RxAnalysisSupport extends RxStreamSupport {
 
     /* AssertionStatus should become AnalysisResult */
     default Flowable<DetailedExpressionResult<AssertionStatus, AnalysisExpression>> rxDetailedFrom(
-            AnalysisModule<?> bufferedAnalysisModule, ResolvingContext prefilledContext) {
+            AnalysisModule analysisModule, ResolvingContext prefilledContext) {
         throw new UnsupportedOperationException();
         // return rxFrom(DetailedExpressionStreamId.of(streamIdFor(bufferedAnalysisModule)));
     }

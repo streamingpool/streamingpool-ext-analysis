@@ -50,8 +50,7 @@ public abstract class AbstractAnalysisTest extends AbstractStreamTest implements
 
     @Override
     public DeprecatedAnalysisResult  resolveAnalysisModule(StreamBaseAnalysisModule<?> analysisModule) {
-        AnalysisDefinition definition = AnalysisDefinitions.process(analysisModule);
-        AnalysisExpression rootExpression = definition.expression();
+        AnalysisExpression rootExpression = AnalysisDefinitions.assertionSetFrom(analysisModule);
         return DeprecatedAnalysisResult.fromResult(engine.resolveDetailed(rootExpression));
     }
 
