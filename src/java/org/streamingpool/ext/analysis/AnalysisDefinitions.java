@@ -11,11 +11,18 @@ import org.streamingpool.ext.analysis.expression.AnalysisExpression;
 import org.streamingpool.ext.analysis.expression.AssertionExpression;
 import org.streamingpool.ext.analysis.modules.AnalysisModule;
 import org.streamingpool.ext.analysis.modules.StreamBaseAnalysisModule;
+import org.streamingpool.ext.tensorics.streamid.DetailedExpressionStreamId;
 
 public final class AnalysisDefinitions {
 
     private AnalysisDefinitions() {
         /* Only static methods */
+    }
+
+    public static DetailedExpressionStreamId<AnalysisResult, AnalysisExpression> detailedStreamIdFor(
+            StreamBaseAnalysisModule<?> analysisModule) {
+        AnalysisDefinition analysisDefinition = process(analysisModule);
+        return DetailedExpressionStreamId.of(analysisDefinition.expression(), analysisDefinition.initalContext());
     }
 
     public static AnalysisStreamId streamIdFor(StreamBaseAnalysisModule<?> analysisModule) {

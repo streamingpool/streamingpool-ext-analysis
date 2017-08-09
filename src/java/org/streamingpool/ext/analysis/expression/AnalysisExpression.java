@@ -26,7 +26,6 @@ import java.util.Collection;
 import java.util.List;
 
 import org.streamingpool.ext.analysis.AnalysisResult;
-import org.streamingpool.ext.analysis.AssertionStatus;
 import org.streamingpool.ext.analysis.resolver.AssertionGroupResolver;
 import org.tensorics.core.tree.domain.AbstractDeferredExpression;
 

@@ -2,7 +2,7 @@
 /**
 *
 * This file is part of streaming pool (http://www.streamingpool.org).
-* 
+*
 * Copyright (c) 2017-present, CERN. All rights reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +16,7 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-* 
+*
 */
 // @formatter:on
 
@@ -66,7 +66,7 @@ public class PickFromIterablesAnalysisTest extends AbstractAnalysisTest implemen
     @Test
     public void testPickExpressionOfIterable() throws Exception {
         StreamId<? extends Iterable<Boolean>> sourceId = provide(just(asList(false, true, false))).withUniqueStreamId();
-        TestSubscriber<DeprecatedAnalysisResult> subscriber = new TestSubscriber<>();
+        TestSubscriber<AnalysisResult> subscriber = new TestSubscriber<>();
         rxFrom(new ContinuousAnalysisModule() {
             {
                 enabled().always();
@@ -85,7 +85,7 @@ public class PickFromIterablesAnalysisTest extends AbstractAnalysisTest implemen
         StreamId<Boolean> booleanData = provide(interval(1, SECONDS).map(v -> true)).withUniqueStreamId();
         String label = "any";
 
-        TestSubscriber<DeprecatedAnalysisResult> subscriber = new TestSubscriber<>();
+        TestSubscriber<AnalysisResult> subscriber = new TestSubscriber<>();
         rxFrom(new BufferedAnalysisModule() {
             {
                 enabled().always();
@@ -104,7 +104,7 @@ public class PickFromIterablesAnalysisTest extends AbstractAnalysisTest implemen
     public void testPickExpressionOutOfBound() throws Exception {
         StreamId<? extends Iterable<Boolean>> sourceId = provide(just(asList(false, true, false))).withUniqueStreamId();
         String label = "any";
-        TestSubscriber<DeprecatedAnalysisResult> subscriber = new TestSubscriber<>();
+        TestSubscriber<AnalysisResult> subscriber = new TestSubscriber<>();
         rxFrom(new ContinuousAnalysisModule() {
             {
                 enabled().always();

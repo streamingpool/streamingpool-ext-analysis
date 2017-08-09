@@ -25,10 +25,9 @@ package org.streamingpool.ext.analysis.testing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.streamingpool.core.testing.AbstractStreamTest;
-import org.streamingpool.ext.analysis.AnalysisDefinition;
 import org.streamingpool.ext.analysis.AnalysisDefinitions;
+import org.streamingpool.ext.analysis.AnalysisResult;
 import org.streamingpool.ext.analysis.AnalysisStreamId;
-import org.streamingpool.ext.analysis.DeprecatedAnalysisResult;
 import org.streamingpool.ext.analysis.conf.AnalysisConfiguration;
 import org.streamingpool.ext.analysis.conf.AnalysisResolvingEngineConfiguration;
 import org.streamingpool.ext.analysis.expression.AnalysisExpression;
@@ -49,9 +48,9 @@ public abstract class AbstractAnalysisTest extends AbstractStreamTest implements
     }
 
     @Override
-    public DeprecatedAnalysisResult  resolveAnalysisModule(StreamBaseAnalysisModule<?> analysisModule) {
+    public AnalysisResult resolveAnalysisModule(StreamBaseAnalysisModule<?> analysisModule) {
         AnalysisExpression rootExpression = AnalysisDefinitions.assertionSetFrom(analysisModule);
-        return DeprecatedAnalysisResult.fromResult(engine.resolveDetailed(rootExpression));
+        return engine.resolve(rootExpression);
     }
 
 }

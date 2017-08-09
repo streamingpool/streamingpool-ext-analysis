@@ -8,10 +8,12 @@ import static java.util.Objects.requireNonNull;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Set;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
+
+import org.streamingpool.ext.analysis.expression.AssertionExpression;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 
 public class AnalysisResult implements Serializable {
 
@@ -89,7 +91,20 @@ public class AnalysisResult implements Serializable {
     }
 
     public List<AssertionResult> assertionResults() {
-        return assertionResults;
+        return this.assertionResults;
+    }
+
+    public List<AssertionExpression> assertions() {
+        return this.assertionResults.stream().map(a -> a.assertion()).collect(Collectors.toList());
+    }
+
+    public AssertionStatus statusFor(AssertionExpression assertion) {
+        for (AssertionResult assertionResult : this.assertionResults) {
+            if (assertion.equals(assertionResult.assertion())) {
+                return assertionResult.status();
+            }
+        }
+        throw new NoSuchElementException("No result available for assertion'" + assertion + "'.");
     }
 
     public AssertionStatus overallStatus() {

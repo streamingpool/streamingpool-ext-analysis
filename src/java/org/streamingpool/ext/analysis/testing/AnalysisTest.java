@@ -2,7 +2,7 @@
 /**
 *
 * This file is part of streaming pool (http://www.streamingpool.org).
-* 
+*
 * Copyright (c) 2017-present, CERN. All rights reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,20 +16,20 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-* 
+*
 */
 // @formatter:on
 
 package org.streamingpool.ext.analysis.testing;
 
+import org.streamingpool.ext.analysis.AnalysisResult;
 import org.streamingpool.ext.analysis.AnalysisStreamId;
-import org.streamingpool.ext.analysis.DeprecatedAnalysisResult;
 import org.streamingpool.ext.analysis.modules.StreamBaseAnalysisModule;
 
 public interface AnalysisTest {
 
     AnalysisStreamId analysisIdOf(StreamBaseAnalysisModule<?> analysisModule);
 
-    DeprecatedAnalysisResult resolveAnalysisModule(StreamBaseAnalysisModule<?> analysisModule);
+    AnalysisResult resolveAnalysisModule(StreamBaseAnalysisModule<?> analysisModule);
 
 }

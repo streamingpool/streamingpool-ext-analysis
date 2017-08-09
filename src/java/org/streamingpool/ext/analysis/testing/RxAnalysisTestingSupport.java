@@ -29,7 +29,6 @@ import java.util.List;
 
 import org.streamingpool.ext.analysis.AnalysisResult;
 import org.streamingpool.ext.analysis.AssertionStatus;
-import org.streamingpool.ext.analysis.DeprecatedAnalysisResult;
 import org.streamingpool.ext.analysis.expression.AnalysisExpression;
 import org.streamingpool.ext.analysis.expression.AssertionExpression;
 import org.streamingpool.ext.analysis.support.RxAnalysisSupport;
@@ -44,18 +43,22 @@ public interface RxAnalysisTestingSupport extends AnalysisTest, RxAnalysisSuppor
         return subscriber.values().stream().map(r -> r.value().overallStatus()).collect(toList());
     }
 
-    default List<AssertionStatus> assertionsStatusesOf(TestSubscriber<DeprecatedAnalysisResult> subscriber) {
+    default List<AssertionStatus> assertionsStatusesOf(TestSubscriber<AnalysisResult> subscriber) {
         return subscriber.values().stream().map(result -> result.overallStatus()).collect(toList());
     }
 
-    default List<AssertionStatus> statusesOfAssertion(TestSubscriber<DeprecatedAnalysisResult> subscriber,
-            String name) {
+    default List<AssertionStatus> statusesOfAssertion(TestSubscriber<AnalysisResult> subscriber, String name) {
         return subscriber.values().stream().map(detailedResult -> statusOfAssertion(detailedResult, name))
                 .collect(toList());
     }
 
-    default AssertionStatus statusOfAssertion(DeprecatedAnalysisResult result, String name) {
-        List<AssertionExpression> assertionsWithName = result.analysisExpression().getChildren().stream()
+    default AssertionStatus statusOfAssertion(DetailedExpressionResult<AnalysisResult, AnalysisExpression> result,
+            String name) {
+        return statusOfAssertion(result.value(), name);
+    }
+
+    default AssertionStatus statusOfAssertion(AnalysisResult result, String name) {
+        List<AssertionExpression> assertionsWithName = result.assertions().stream()
                 .filter(assertion -> assertion.name().equals(name)).collect(toList());
 
         if (assertionsWithName.size() != 1) {
@@ -63,6 +66,6 @@ public interface RxAnalysisTestingSupport extends AnalysisTest, RxAnalysisSuppor
                     format("%s assertions match the name %s. Name should be unique", assertionsWithName.size(), name));
         }
 
-        return result.resolvedValueOf(assertionsWithName.get(0));
+        return result.statusFor(assertionsWithName.get(0));
     }
 }

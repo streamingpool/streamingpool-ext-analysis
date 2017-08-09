@@ -36,18 +36,18 @@ import org.tensorics.core.tree.domain.ResolvingContext;
  *
  * @author acalia
  */
+@Deprecated
 public class AnalysisStreamId
-        extends DerivedStreamId<DetailedExpressionResult<AnalysisResult, AnalysisExpression>, DeprecatedAnalysisResult> {
+        extends DerivedStreamId<DetailedExpressionResult<AnalysisResult, AnalysisExpression>, AnalysisResult> {
     private static final long serialVersionUID = 1L;
 
     public AnalysisStreamId(AnalysisDefinition analysisDefinition) {
         super(DetailedExpressionStreamId.of(analysisDefinition.expression(), analysisDefinition.initalContext()),
-                DeprecatedAnalysisResult::fromResult);
+                d -> d.value());
     }
 
     public AnalysisStreamId(AnalysisDefinition analysisDefinition, ResolvingContext initialContext) {
         super(DetailedExpressionStreamId.of(analysisDefinition.expression(),
-                mergeContextsOrdered(asList(initialContext, analysisDefinition.initalContext()))),
-                DeprecatedAnalysisResult::fromResult);
+                mergeContextsOrdered(asList(initialContext, analysisDefinition.initalContext()))), d -> d.value());
     }
 }
