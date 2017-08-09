@@ -22,14 +22,14 @@
 
 package org.streamingpool.ext.analysis.testing;
 
-import org.streamingpool.ext.analysis.AnalysisResult;
 import org.streamingpool.ext.analysis.AnalysisStreamId;
+import org.streamingpool.ext.analysis.DeprecatedAnalysisResult;
 import org.streamingpool.ext.analysis.modules.StreamBaseAnalysisModule;
 
 public interface AnalysisTest {
 
     AnalysisStreamId analysisIdOf(StreamBaseAnalysisModule<?> analysisModule);
 
-    AnalysisResult resolveAnalysisModule(StreamBaseAnalysisModule<?> analysisModule);
+    DeprecatedAnalysisResult resolveAnalysisModule(StreamBaseAnalysisModule<?> analysisModule);
 
 }

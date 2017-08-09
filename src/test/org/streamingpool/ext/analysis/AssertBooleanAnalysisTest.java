@@ -50,7 +50,7 @@ public class AssertBooleanAnalysisTest extends AbstractAnalysisTest implements R
             }
         };
 
-        AnalysisResult result = resolveAnalysisModule(analysisModule);
+        DeprecatedAnalysisResult result = resolveAnalysisModule(analysisModule);
         assertThat(statusOfAssertion(result, AN_ASSERTION_NAME)).isEqualTo(SUCCESSFUL);
     }
 
@@ -63,7 +63,7 @@ public class AssertBooleanAnalysisTest extends AbstractAnalysisTest implements R
             }
         };
 
-        AnalysisResult result = resolveAnalysisModule(analysisModule);
+        DeprecatedAnalysisResult result = resolveAnalysisModule(analysisModule);
         assertThat(statusOfAssertion(result, AN_ASSERTION_NAME)).isEqualTo(FAILURE);
     }
 
@@ -76,7 +76,7 @@ public class AssertBooleanAnalysisTest extends AbstractAnalysisTest implements R
             }
         };
 
-        AnalysisResult result = resolveAnalysisModule(analysisModule);
+        DeprecatedAnalysisResult result = resolveAnalysisModule(analysisModule);
         assertThat(statusOfAssertion(result, AN_ASSERTION_NAME)).isEqualTo(SUCCESSFUL);
     }
 
@@ -89,7 +89,7 @@ public class AssertBooleanAnalysisTest extends AbstractAnalysisTest implements R
             }
         };
 
-        AnalysisResult result = resolveAnalysisModule(analysisModule);
+        DeprecatedAnalysisResult result = resolveAnalysisModule(analysisModule);
         assertThat(statusOfAssertion(result, AN_ASSERTION_NAME)).isEqualTo(FAILURE);
     }
 
@@ -106,7 +106,7 @@ public class AssertBooleanAnalysisTest extends AbstractAnalysisTest implements R
             }
         };
 
-        AnalysisResult result = resolveAnalysisModule(analysisModule);
+        DeprecatedAnalysisResult result = resolveAnalysisModule(analysisModule);
         assertThat(statusOfAssertion(result, AN_ASSERTION_NAME)).isEqualTo(SUCCESSFUL);
     }
 
