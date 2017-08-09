@@ -73,7 +73,7 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
         final String ASSERTION_NAME = "name";
         final BufferedStreamExpression<Boolean> BUFFERED_SOURCE = BufferedStreamExpression.buffer(sourceStreamId);
 
-        Flowable<AnalysisResult> resultStream = rxFrom(new BufferedAnalysisModule() {
+        Flowable<DeprecatedAnalysisResult> resultStream = rxFrom(new BufferedAnalysisModule() {
             {
                 enabled().always();
                 buffered().startedBy(startStreamId).endedOnMatch(endStreamId);
@@ -81,7 +81,7 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
             }
         });
 
-        TestSubscriber<AnalysisResult> testSubscriber = resultStream.test();
+        TestSubscriber<DeprecatedAnalysisResult> testSubscriber = resultStream.test();
 
         startStream.onNext("A");
         await();
@@ -93,7 +93,7 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
         await();
         endStream.onNext("A");
 
-        AnalysisResult analysisResult = testSubscriber.awaitCount(1).assertValueCount(1).values().get(0);
+        DeprecatedAnalysisResult analysisResult = testSubscriber.awaitCount(1).assertValueCount(1).values().get(0);
 
         assertThat(statusOfAssertion(analysisResult, ASSERTION_NAME)).isEqualTo(AssertionStatus.FAILURE);
         assertThat(analysisResult.resolvedValueOf(BUFFERED_SOURCE)).containsExactly(true, false,
@@ -112,7 +112,7 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
         final String ASSERTION_NAME = "name";
         final BufferedStreamExpression<String> BUFFERED_END = BufferedStreamExpression.buffer(endStreamId);
 
-        Flowable<AnalysisResult> resultStream = rxFrom(new BufferedAnalysisModule() {
+        Flowable<DeprecatedAnalysisResult> resultStream = rxFrom(new BufferedAnalysisModule() {
             {
                 enabled().always();
                 buffered().startedBy(startStreamId)
@@ -121,7 +121,7 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
             }
         });
 
-        TestSubscriber<AnalysisResult> testSubscriber = resultStream.test();
+        TestSubscriber<DeprecatedAnalysisResult> testSubscriber = resultStream.test();
 
         startStream.onNext("any");
         await();
@@ -129,7 +129,7 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
         await();
         endStream.onNext(END_VALUE);
 
-        AnalysisResult analysisResult = testSubscriber.awaitCount(1).assertValueCount(1).values().get(0);
+        DeprecatedAnalysisResult analysisResult = testSubscriber.awaitCount(1).assertValueCount(1).values().get(0);
 
         assertThat(statusOfAssertion(analysisResult, ASSERTION_NAME)).isEqualTo(AssertionStatus.SUCCESSFUL);
         assertThat(analysisResult.resolvedValueOf(BUFFERED_END)).containsExactly(END_VALUE);
@@ -148,7 +148,7 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
         final String ASSERTION_NAME = "name";
         final BufferedStreamExpression<Boolean> BUFFERED_SOURCE = BufferedStreamExpression.buffer(sourceStreamId);
 
-        Flowable<AnalysisResult> resultStream = rxFrom(new BufferedAnalysisModule() {
+        Flowable<DeprecatedAnalysisResult> resultStream = rxFrom(new BufferedAnalysisModule() {
             {
                 enabled().always();
                 buffered().startedBy(startStreamId).endedOnMatch(endStreamId);
@@ -156,7 +156,7 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
             }
         });
 
-        TestSubscriber<AnalysisResult> testSubscriber = resultStream.test();
+        TestSubscriber<DeprecatedAnalysisResult> testSubscriber = resultStream.test();
 
         startStream.onNext("A");
         await();
@@ -189,11 +189,11 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
         await();
         endStream.onNext("C");
 
-        List<AnalysisResult> analysisResults = testSubscriber.awaitCount(3).assertValueCount(3).values();
+        List<DeprecatedAnalysisResult> analysisResults = testSubscriber.awaitCount(3).assertValueCount(3).values();
 
-        AnalysisResult resultA = analysisResults.get(0);
-        AnalysisResult resultB = analysisResults.get(1);
-        AnalysisResult resultC = analysisResults.get(2);
+        DeprecatedAnalysisResult resultA = analysisResults.get(0);
+        DeprecatedAnalysisResult resultB = analysisResults.get(1);
+        DeprecatedAnalysisResult resultC = analysisResults.get(2);
         /* analysis A */
         assertThat(statusOfAssertion(resultA, ASSERTION_NAME)).isEqualTo(AssertionStatus.FAILURE);
         assertThat(resultA.resolvedValueOf(BUFFERED_SOURCE)).containsExactly(true, false, true);
@@ -230,7 +230,7 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
         final String ASSERTION_NAME = "any name";
         final int ANALYSIS_TIMEOUT_MS = 2_000;
 
-        TestSubscriber<AnalysisResult> subscriber = new TestSubscriber<>();
+        TestSubscriber<DeprecatedAnalysisResult> subscriber = new TestSubscriber<>();
         rxFrom(new BufferedAnalysisModule() {
             {
                 enabled().always();
@@ -247,7 +247,7 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
 
         await(ANALYSIS_TIMEOUT_MS);
 
-        AnalysisResult result = subscriber.awaitCount(1).assertValueCount(1).values().get(0);
+        DeprecatedAnalysisResult result = subscriber.awaitCount(1).assertValueCount(1).values().get(0);
 
         assertThat(result.resolvedValueOf(SOURCE_EXPRESSION)).containsExactly(true, true);
         assertThat(statusOfAssertion(result, ASSERTION_NAME)).isEqualTo(SUCCESSFUL);
@@ -268,7 +268,7 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
         final String ASSERTION_NAME = "name";
         final BufferedStreamExpression<Boolean> BUFFERED_SOURCE = BufferedStreamExpression.buffer(sourceStreamId);
 
-        TestSubscriber<AnalysisResult> testSubscriber = rxFrom(new BufferedAnalysisModule() {
+        TestSubscriber<DeprecatedAnalysisResult> testSubscriber = rxFrom(new BufferedAnalysisModule() {
             {
                 enabled().always();
                 buffered().startedBy(startStreamId).endedOnMatch(end1StreamId).or().endedOnMatch(end2StreamId);
@@ -291,7 +291,7 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
         await();
         end2Stream.onNext("A");
 
-        AnalysisResult analysisResult = testSubscriber.awaitCount(1).assertValueCount(1).values().get(0);
+        DeprecatedAnalysisResult analysisResult = testSubscriber.awaitCount(1).assertValueCount(1).values().get(0);
 
         assertThat(statusOfAssertion(analysisResult, ASSERTION_NAME)).isEqualTo(AssertionStatus.SUCCESSFUL);
         assertThat(analysisResult.resolvedValueOf(BUFFERED_SOURCE)).containsExactly(true, true);
@@ -305,7 +305,7 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
         StreamId<String> startStreamId = provide(startStream).withUniqueStreamId();
         StreamId<String> endStreamId = provide(endStream).withUniqueStreamId();
 
-        TestSubscriber<AnalysisResult> subscriber = new TestSubscriber<>();
+        TestSubscriber<DeprecatedAnalysisResult> subscriber = new TestSubscriber<>();
         rxFrom(new BufferedAnalysisModule() {
             {
                 buffered().startedBy(startStreamId).endedOnEvery(endStreamId);
@@ -328,7 +328,7 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
         StreamId<String> startStreamId = provide(startStream).withUniqueStreamId();
         StreamId<String> endStreamId = provide(endStream).withUniqueStreamId();
 
-        TestSubscriber<AnalysisResult> subscriber = new TestSubscriber<>();
+        TestSubscriber<DeprecatedAnalysisResult> subscriber = new TestSubscriber<>();
         rxFrom(new BufferedAnalysisModule() {
             {
                 buffered().startedBy(startStreamId).endedOnEvery(endStreamId);

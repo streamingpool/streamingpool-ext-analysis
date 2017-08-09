@@ -66,7 +66,7 @@ public class PickFromIterablesAnalysisTest extends AbstractAnalysisTest implemen
     @Test
     public void testPickExpressionOfIterable() throws Exception {
         StreamId<? extends Iterable<Boolean>> sourceId = provide(just(asList(false, true, false))).withUniqueStreamId();
-        TestSubscriber<AnalysisResult> subscriber = new TestSubscriber<>();
+        TestSubscriber<DeprecatedAnalysisResult> subscriber = new TestSubscriber<>();
         rxFrom(new ContinuousAnalysisModule() {
             {
                 enabled().always();
@@ -85,7 +85,7 @@ public class PickFromIterablesAnalysisTest extends AbstractAnalysisTest implemen
         StreamId<Boolean> booleanData = provide(interval(1, SECONDS).map(v -> true)).withUniqueStreamId();
         String label = "any";
 
-        TestSubscriber<AnalysisResult> subscriber = new TestSubscriber<>();
+        TestSubscriber<DeprecatedAnalysisResult> subscriber = new TestSubscriber<>();
         rxFrom(new BufferedAnalysisModule() {
             {
                 enabled().always();
@@ -104,7 +104,7 @@ public class PickFromIterablesAnalysisTest extends AbstractAnalysisTest implemen
     public void testPickExpressionOutOfBound() throws Exception {
         StreamId<? extends Iterable<Boolean>> sourceId = provide(just(asList(false, true, false))).withUniqueStreamId();
         String label = "any";
-        TestSubscriber<AnalysisResult> subscriber = new TestSubscriber<>();
+        TestSubscriber<DeprecatedAnalysisResult> subscriber = new TestSubscriber<>();
         rxFrom(new ContinuousAnalysisModule() {
             {
                 enabled().always();

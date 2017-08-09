@@ -27,7 +27,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.streamingpool.core.testing.AbstractStreamTest;
 import org.streamingpool.ext.analysis.AnalysisDefinition;
 import org.streamingpool.ext.analysis.AnalysisDefinitions;
-import org.streamingpool.ext.analysis.AnalysisResult;
+import org.streamingpool.ext.analysis.DeprecatedAnalysisResult;
 import org.streamingpool.ext.analysis.AnalysisStreamId;
 import org.streamingpool.ext.analysis.conf.AnalysisConfiguration;
 import org.streamingpool.ext.analysis.conf.AnalysisResolvingEngineConfiguration;
@@ -49,10 +49,10 @@ public abstract class AbstractAnalysisTest extends AbstractStreamTest implements
     }
 
     @Override
-    public AnalysisResult resolveAnalysisModule(AnalysisModule<?> analysisModule) {
+    public DeprecatedAnalysisResult resolveAnalysisModule(AnalysisModule<?> analysisModule) {
         AnalysisDefinition definition = AnalysisDefinitions.process(analysisModule);
         AnalysisExpression rootExpression = definition.expression();
-        return AnalysisResult.fromResult(engine.resolveDetailed(rootExpression));
+        return DeprecatedAnalysisResult.fromResult(engine.resolveDetailed(rootExpression));
     }
 
 }

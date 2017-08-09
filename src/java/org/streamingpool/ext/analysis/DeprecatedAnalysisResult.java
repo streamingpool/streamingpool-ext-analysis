@@ -5,33 +5,29 @@
 package org.streamingpool.ext.analysis;
 
 import java.io.Serializable;
-import java.util.Optional;
 
 import org.streamingpool.ext.analysis.expression.AnalysisExpression;
 import org.tensorics.core.resolve.domain.DetailedExpressionResult;
 import org.tensorics.core.tree.domain.Expression;
 
-public class AnalysisResult implements Serializable {
+@Deprecated
+public class DeprecatedAnalysisResult implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private final DetailedExpressionResult<AssertionStatus, AnalysisExpression> detailedResult;
 
-    private AnalysisResult(DetailedExpressionResult<AssertionStatus, AnalysisExpression> result) {
+    private DeprecatedAnalysisResult(DetailedExpressionResult<AssertionStatus, AnalysisExpression> result) {
         this.detailedResult = result;
     }
 
-    public static AnalysisResult fromResult(DetailedExpressionResult<AssertionStatus, AnalysisExpression> result) {
-        return new AnalysisResult(result);
+    public static DeprecatedAnalysisResult fromResult(DetailedExpressionResult<AssertionStatus, AnalysisExpression> result) {
+        return new DeprecatedAnalysisResult(result);
     }
 
     public AnalysisExpression analysisExpression() {
         return detailedResult.rootExpression();
     }
-
-    // public ResolvingContext resolvingContext() {
-    // return detailedResult.context();
-    // }
 
     public AssertionStatus evaluationStatus() {
         return detailedResult.value();
@@ -58,7 +54,7 @@ public class AnalysisResult implements Serializable {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        AnalysisResult other = (AnalysisResult) obj;
+        DeprecatedAnalysisResult other = (DeprecatedAnalysisResult) obj;
         if (detailedResult == null) {
             if (other.detailedResult != null)
                 return false;
@@ -78,4 +74,5 @@ public class AnalysisResult implements Serializable {
     public boolean resolves(Expression<?> exp) {
         return detailedResult.context().resolves(exp);
     }
+
 }

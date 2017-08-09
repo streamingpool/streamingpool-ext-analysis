@@ -37,17 +37,17 @@ import org.tensorics.core.tree.domain.ResolvingContext;
  * @author acalia
  */
 public class AnalysisStreamId
-        extends DerivedStreamId<DetailedExpressionResult<AssertionStatus, AnalysisExpression>, AnalysisResult> {
+        extends DerivedStreamId<DetailedExpressionResult<AssertionStatus, AnalysisExpression>, DeprecatedAnalysisResult> {
     private static final long serialVersionUID = 1L;
 
     public AnalysisStreamId(AnalysisDefinition analysisDefinition) {
         super(DetailedExpressionStreamId.of(analysisDefinition.expression(), analysisDefinition.initalContext()),
-                AnalysisResult::fromResult);
+                DeprecatedAnalysisResult::fromResult);
     }
 
     public AnalysisStreamId(AnalysisDefinition analysisDefinition, ResolvingContext initialContext) {
         super(DetailedExpressionStreamId.of(analysisDefinition.expression(),
                 mergeContextsOrdered(asList(initialContext, analysisDefinition.initalContext()))),
-                AnalysisResult::fromResult);
+                DeprecatedAnalysisResult::fromResult);
     }
 }

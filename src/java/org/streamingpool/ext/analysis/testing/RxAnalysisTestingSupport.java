@@ -29,7 +29,7 @@ import java.util.List;
 
 import org.streamingpool.core.service.diagnostic.ErrorStreamId;
 import org.streamingpool.core.support.RxStreamSupport;
-import org.streamingpool.ext.analysis.AnalysisResult;
+import org.streamingpool.ext.analysis.DeprecatedAnalysisResult;
 import org.streamingpool.ext.analysis.AnalysisStreamId;
 import org.streamingpool.ext.analysis.AssertionStatus;
 import org.streamingpool.ext.analysis.expression.AssertionExpression;
@@ -43,9 +43,9 @@ import io.reactivex.subscribers.TestSubscriber;
 
 public interface RxAnalysisTestingSupport extends AnalysisTest, RxStreamSupport {
 
-    default Flowable<AnalysisResult> rxFrom(AnalysisModule<?> analysisModule) {
+    default Flowable<DeprecatedAnalysisResult> rxFrom(AnalysisModule<?> analysisModule) {
         AnalysisStreamId analysisId = analysisIdOf(analysisModule);
-        PublishProcessor<AnalysisResult> plug = PublishProcessor.create();
+        PublishProcessor<DeprecatedAnalysisResult> plug = PublishProcessor.create();
 
         rxFrom(analysisId).subscribe(plug::onNext);
         rxFrom(ErrorStreamId.of(analysisId)).subscribe(plug::onError);
@@ -58,18 +58,18 @@ public interface RxAnalysisTestingSupport extends AnalysisTest, RxStreamSupport 
         return subscriber.values().stream().map(DetailedExpressionResult::value).collect(toList());
     }
 
-    default List<AssertionStatus> assertionsStatusesOf(TestSubscriber<AnalysisResult> subscriber) {
+    default List<AssertionStatus> assertionsStatusesOf(TestSubscriber<DeprecatedAnalysisResult> subscriber) {
         return subscriber.values().stream()
                 .map(result -> result.resolvedValueOf(result.analysisExpression()))
                 .collect(toList());
     }
 
-    default List<AssertionStatus> statusesOfAssertion(TestSubscriber<AnalysisResult> subscriber, String name) {
+    default List<AssertionStatus> statusesOfAssertion(TestSubscriber<DeprecatedAnalysisResult> subscriber, String name) {
         return subscriber.values().stream().map(detailedResult -> statusOfAssertion(detailedResult, name))
                 .collect(toList());
     }
 
-    default AssertionStatus statusOfAssertion(AnalysisResult result, String name) {
+    default AssertionStatus statusOfAssertion(DeprecatedAnalysisResult result, String name) {
         List<AssertionExpression> assertionsWithName = result.analysisExpression().getChildren().stream()
                 .filter(assertion -> assertion.name().equals(name)).collect(toList());
 
