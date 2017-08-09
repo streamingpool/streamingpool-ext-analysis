@@ -22,16 +22,12 @@
 
 package org.streamingpool.ext.analysis.conf;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.streamingpool.ext.analysis.impl.DefaultAnalysisModulePreprocessor;
+import org.springframework.context.annotation.Import;
+import org.streamingpool.ext.tensorics.conf.TensoricsStreamingConfiguration;
 
 @Configuration
+@Import({ TensoricsStreamingConfiguration.class })
 public class AnalysisConfiguration {
-    
-    @Bean
-    public DefaultAnalysisModulePreprocessor moduleProcessor() {
-        return new DefaultAnalysisModulePreprocessor();
-    }
-    
+    /* */
 }

@@ -5,11 +5,8 @@
 package org.streamingpool.ext.analysis;
 
 import java.io.Serializable;
-import java.util.List;
 
 import org.streamingpool.ext.analysis.expression.AssertionGroupExpression;
-import org.streamingpool.ext.tensorics.expression.BufferedStreamExpression;
-import org.tensorics.core.expressions.EvaluationStatus;
 import org.tensorics.core.resolve.domain.DetailedExpressionResult;
 import org.tensorics.core.tree.domain.Expression;
 import org.tensorics.core.tree.domain.ResolvingContext;

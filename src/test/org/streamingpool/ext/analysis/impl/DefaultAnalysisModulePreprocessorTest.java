@@ -24,14 +24,11 @@ package org.streamingpool.ext.analysis.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Before;
 import org.junit.Test;
-import org.streamingpool.ext.analysis.AnalysisExpression;
-import org.streamingpool.ext.analysis.AnalysisModulePreprocessor;
+import org.streamingpool.ext.analysis.AnalysisDefinitions;
 import org.streamingpool.ext.analysis.expression.AssertionGroupExpression;
 import org.streamingpool.ext.analysis.modules.AnalysisModule;
 import org.streamingpool.ext.analysis.modules.ContinuousAnalysisModule;
-import org.tensorics.core.tree.domain.ResolvedExpression;
 
 public class DefaultAnalysisModulePreprocessorTest {
 
@@ -39,16 +36,9 @@ public class DefaultAnalysisModulePreprocessorTest {
         /* empty on purpose */
     };
 
-    private AnalysisModulePreprocessor processor;
-
-    @Before
-    public void setUp() {
-        processor = new DefaultAnalysisModulePreprocessor();
-    }
-
     @Test
     public void emptyModuleIsCorrectlyProcessed() {
-        AssertionGroupExpression result = processor.process(EMPTY_MODULE).expression();
+        AssertionGroupExpression result = AnalysisDefinitions.process(EMPTY_MODULE).expression();
         assertThat(result).isInstanceOf(AssertionGroupExpression.class);
         assertThat(result.getChildren()).isEmpty();
     }

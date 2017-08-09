@@ -29,14 +29,12 @@ import java.util.List;
 
 import org.streamingpool.core.service.diagnostic.ErrorStreamId;
 import org.streamingpool.core.support.RxStreamSupport;
-import org.streamingpool.ext.analysis.AnalysisExpression;
 import org.streamingpool.ext.analysis.AnalysisResult;
 import org.streamingpool.ext.analysis.AnalysisStreamId;
 import org.streamingpool.ext.analysis.AssertionStatus;
 import org.streamingpool.ext.analysis.expression.AssertionExpression;
 import org.streamingpool.ext.analysis.expression.AssertionGroupExpression;
 import org.streamingpool.ext.analysis.modules.AnalysisModule;
-import org.tensorics.core.expressions.EvaluationStatus;
 import org.tensorics.core.resolve.domain.DetailedExpressionResult;
 
 import io.reactivex.Flowable;
@@ -45,12 +43,12 @@ import io.reactivex.subscribers.TestSubscriber;
 
 public interface RxAnalysisTestingSupport extends AnalysisTest, RxStreamSupport {
 
-    default Flowable<AnalysisResult> rxFrom(AnalysisModule analysisModule) {
+    default Flowable<AnalysisResult> rxFrom(AnalysisModule<?> analysisModule) {
         AnalysisStreamId analysisId = analysisIdOf(analysisModule);
         PublishProcessor<AnalysisResult> plug = PublishProcessor.create();
 
-        rxFrom(analysisId).subscribe(value -> plug.onNext(value));
-        rxFrom(ErrorStreamId.of(analysisId)).subscribe(err -> plug.onError(err));
+        rxFrom(analysisId).subscribe(plug::onNext);
+        rxFrom(ErrorStreamId.of(analysisId)).subscribe(plug::onError);
 
         return plug.onBackpressureBuffer();
     }

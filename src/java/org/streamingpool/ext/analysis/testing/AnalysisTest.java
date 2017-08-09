@@ -28,8 +28,8 @@ import org.streamingpool.ext.analysis.modules.AnalysisModule;
 
 public interface AnalysisTest {
 
-    AnalysisStreamId analysisIdOf(AnalysisModule analysisModule);
+    AnalysisStreamId analysisIdOf(AnalysisModule<?> analysisModule);
 
-    AnalysisResult resolveAnalysisModule(AnalysisModule analysisModule);
+    AnalysisResult resolveAnalysisModule(AnalysisModule<?> analysisModule);
     
 }

@@ -22,20 +22,24 @@
 
 package org.streamingpool.ext.analysis;
 
+import java.io.Serializable;
+
 import org.streamingpool.ext.analysis.expression.AssertionExpression;
+import org.tensorics.core.tree.domain.ResolvingContext;
 
-public class AssertionResult {
+public class AssertionResult implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     private final AssertionExpression assertion;
-    private final ResolvedSnapshot<?, ?> snapshot;
+    private final ResolvingContext resolvingCtx;
 
-    private AssertionResult(AssertionExpression assertion, ResolvedSnapshot<?, ?> snapshot) {
+    private AssertionResult(AssertionExpression assertion, ResolvingContext resolvingCtx) {
         this.assertion = assertion;
-        this.snapshot = snapshot;
+        this.resolvingCtx = resolvingCtx;
     }
 
-    public static AssertionResult of(AssertionExpression assertion, ResolvedSnapshot<?, ?> snapshot) {
-        return new AssertionResult(assertion, snapshot);
+    public static AssertionResult of(AssertionExpression assertion, ResolvingContext resolvingCtx) {
+        return new AssertionResult(assertion, resolvingCtx);
     }
 
     public String condition() {
@@ -43,19 +47,54 @@ public class AssertionResult {
     }
 
     public AssertionStatus status() {
-        return snapshot.context().resolvedValueOf(assertion);
+        return resolvingCtx.resolvedValueOf(assertion);
     }
 
     public AssertionExpression assertion() {
         return this.assertion;
     }
 
-    public ResolvedSnapshot<?, ?> snapshot() {
-        return this.snapshot;
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((assertion == null) ? 0 : assertion.hashCode());
+        result = prime * result + ((resolvingCtx == null) ? 0 : resolvingCtx.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        AssertionResult other = (AssertionResult) obj;
+        if (assertion == null) {
+            if (other.assertion != null) {
+                return false;
+            }
+        } else if (!assertion.equals(other.assertion)) {
+            return false;
+        }
+        if (resolvingCtx == null) {
+            if (other.resolvingCtx != null) {
+                return false;
+            }
+        } else if (!resolvingCtx.equals(other.resolvingCtx)) {
+            return false;
+        }
+        return true;
     }
 
     @Override
     public String toString() {
-        return "AssertionResult [assertion=" + assertion + ", snapshot=" + snapshot + "]";
+        return "AssertionResult [assertion=" + assertion + ", resolvingCtx=" + resolvingCtx + "]";
     }
+
 }

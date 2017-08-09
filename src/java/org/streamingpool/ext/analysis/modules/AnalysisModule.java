@@ -76,11 +76,11 @@ public abstract class AnalysisModule<T extends EvaluationStrategyBuilder> {
         return new OngoingAnalysisEnabler(enablerBuilder);
     }
 
-    protected final <T> OngoingCondition<T> assertThat(Expression<T> thatSource) {
+    protected final <T1> OngoingCondition<T1> assertThat(Expression<T1> thatSource) {
         return new OngoingCondition<>(newAssertionBuilder(), thatSource);
     }
 
-    protected final <T> OngoingCondition<T> assertThat(T thatSource) {
+    protected final <T1> OngoingCondition<T1> assertThat(T1 thatSource) {
         return assertThat(ResolvedExpression.of(thatSource));
     }
 
@@ -128,11 +128,11 @@ public abstract class AnalysisModule<T extends EvaluationStrategyBuilder> {
         return whenTrue(combined);
     }
 
-    protected final <T> OngoingPrecondition<T> when(Expression<T> whenSource) {
+    protected final <T1> OngoingPrecondition<T1> when(Expression<T1> whenSource) {
         return new OngoingPrecondition<>(newAssertionBuilder(), whenSource);
     }
 
-    protected final <T> OngoingPrecondition<T> when(T whenSource) {
+    protected final <T1> OngoingPrecondition<T1> when(T1 whenSource) {
         return when(ResolvedExpression.of(whenSource));
     }
 
