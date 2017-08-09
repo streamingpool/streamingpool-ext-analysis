@@ -32,14 +32,14 @@ import org.junit.Test;
 import org.streamingpool.ext.analysis.modules.AnalysisModule;
 import org.streamingpool.ext.analysis.modules.ContinuousAnalysisModule;
 import org.streamingpool.ext.analysis.testing.AbstractAnalysisTest;
-import org.streamingpool.ext.analysis.testing.RxAnalysisSupport;
+import org.streamingpool.ext.analysis.testing.RxAnalysisTestingSupport;
 import org.tensorics.core.tree.domain.Expression;
 import org.tensorics.core.tree.domain.ResolvedExpression;
 
 /**
  * Tests on boolean operations in the analysis
  */
-public class AssertBooleanAnalysisTest extends AbstractAnalysisTest implements RxAnalysisSupport {
+public class AssertBooleanAnalysisTest extends AbstractAnalysisTest implements RxAnalysisTestingSupport {
 
     private static final String AN_ASSERTION_NAME = "name";
 

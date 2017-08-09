@@ -2,7 +2,7 @@
 /**
 *
 * This file is part of streaming pool (http://www.streamingpool.org).
-* 
+*
 * Copyright (c) 2017-present, CERN. All rights reserved.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +16,7 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-* 
+*
 */
 // @formatter:on
 
@@ -43,7 +43,7 @@ import io.reactivex.Flowable;
 import io.reactivex.processors.PublishProcessor;
 import io.reactivex.subscribers.TestSubscriber;
 
-public interface RxAnalysisSupport extends AnalysisTest, RxStreamSupport {
+public interface RxAnalysisTestingSupport extends AnalysisTest, RxStreamSupport {
 
     default Flowable<AnalysisResult> rxFrom(AnalysisModule analysisModule) {
         AnalysisStreamId analysisId = analysisIdOf(analysisModule);

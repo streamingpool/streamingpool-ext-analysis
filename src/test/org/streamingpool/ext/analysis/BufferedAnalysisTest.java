@@ -38,7 +38,7 @@ import org.streamingpool.core.service.StreamId;
 import org.streamingpool.core.service.streamid.DelayedStreamId;
 import org.streamingpool.ext.analysis.modules.BufferedAnalysisModule;
 import org.streamingpool.ext.analysis.testing.AbstractAnalysisTest;
-import org.streamingpool.ext.analysis.testing.RxAnalysisSupport;
+import org.streamingpool.ext.analysis.testing.RxAnalysisTestingSupport;
 import org.streamingpool.ext.tensorics.expression.BufferedStreamExpression;
 import org.streamingpool.ext.tensorics.streamfactory.BufferedTensoricsExpressionStreamFactory;
 import org.tensorics.core.resolve.engine.ResolvingEngine;
@@ -47,7 +47,7 @@ import io.reactivex.Flowable;
 import io.reactivex.processors.PublishProcessor;
 import io.reactivex.subscribers.TestSubscriber;
 
-public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnalysisSupport {
+public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnalysisTestingSupport {
 
     @Autowired
     private StreamFactoryRegistry factoryRegistry;

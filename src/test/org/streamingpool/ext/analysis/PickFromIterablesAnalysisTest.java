@@ -42,7 +42,7 @@ import org.streamingpool.core.service.StreamId;
 import org.streamingpool.ext.analysis.modules.BufferedAnalysisModule;
 import org.streamingpool.ext.analysis.modules.ContinuousAnalysisModule;
 import org.streamingpool.ext.analysis.testing.AbstractAnalysisTest;
-import org.streamingpool.ext.analysis.testing.RxAnalysisSupport;
+import org.streamingpool.ext.analysis.testing.RxAnalysisTestingSupport;
 import org.streamingpool.ext.tensorics.expression.BufferedStreamExpression;
 import org.streamingpool.ext.tensorics.streamfactory.BufferedTensoricsExpressionStreamFactory;
 import org.tensorics.core.iterable.expressions.PickExpression;
@@ -50,7 +50,7 @@ import org.tensorics.core.resolve.engine.ResolvingEngine;
 
 import io.reactivex.subscribers.TestSubscriber;
 
-public class PickFromIterablesAnalysisTest extends AbstractAnalysisTest implements RxAnalysisSupport {
+public class PickFromIterablesAnalysisTest extends AbstractAnalysisTest implements RxAnalysisTestingSupport {
 
     @Autowired
     private StreamFactoryRegistry factoryRegistry;
