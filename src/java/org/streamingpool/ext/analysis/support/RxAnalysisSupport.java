@@ -9,7 +9,6 @@ import static org.streamingpool.ext.analysis.AnalysisDefinitions.streamIdFor;
 
 import org.streamingpool.core.support.RxStreamSupport;
 import org.streamingpool.ext.analysis.AnalysisResult;
-import org.streamingpool.ext.analysis.DeprecatedAnalysisResult;
 import org.streamingpool.ext.analysis.expression.AnalysisExpression;
 import org.streamingpool.ext.analysis.modules.AnalysisModule;
 import org.streamingpool.ext.analysis.modules.StreamBaseAnalysisModule;
@@ -53,7 +52,7 @@ public interface RxAnalysisSupport extends RxStreamSupport {
     }
 
     /* DeprecatedAnalysisResult should become AnalysisResult */
-    default Flowable<DeprecatedAnalysisResult> rxFrom(StreamBaseAnalysisModule<?> bufferedAnalysisModule,
+    default Flowable<AnalysisResult> rxFrom(StreamBaseAnalysisModule<?> bufferedAnalysisModule,
             ResolvingContext prefilledContext) {
         throw new UnsupportedOperationException();
         // return rxFrom(streamIdFor(bufferedAnalysisModule));
