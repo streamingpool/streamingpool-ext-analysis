@@ -29,28 +29,28 @@ import static org.streamingpool.ext.analysis.util.Predicates.not;
 import static org.tensorics.core.resolve.resolvers.Resolvers.contextResolvesAll;
 
 import org.streamingpool.ext.analysis.AssertionStatus;
-import org.streamingpool.ext.analysis.expression.AssertionGroupExpression;
+import org.streamingpool.ext.analysis.expression.AnalysisExpression;
 import org.tensorics.core.resolve.resolvers.AbstractResolver;
 import org.tensorics.core.tree.domain.ResolvingContext;
 
 /**
- * Resolves an {@link AssertionGroupExpression} into a {@link AssertionStatus}.
+ * Resolves an {@link AnalysisExpression} into a {@link AssertionStatus}.
  * <p>
  * The status will be {@link AssertionStatus#SUCCESSFUL} if only if all the assertions in the group are
  * {@link AssertionStatus#SUCCESSFUL}. Otherwise, the status will be {@link AssertionStatus#FAILURE}.
  * 
- * @see AssertionGroupExpression
+ * @see AnalysisExpression
  * @author acalia, caguiler, kfuchsberger
  */
-public class AssertionGroupResolver extends AbstractResolver<AssertionStatus, AssertionGroupExpression> {
+public class AssertionGroupResolver extends AbstractResolver<AssertionStatus, AnalysisExpression> {
 
     @Override
-    public boolean canResolve(AssertionGroupExpression assertionSet, ResolvingContext context) {
+    public boolean canResolve(AnalysisExpression assertionSet, ResolvingContext context) {
         return contextResolvesAll(assertionSet.getChildren(), context);
     }
 
     @Override
-    public AssertionStatus resolve(AssertionGroupExpression assertionSet, ResolvingContext context) {
+    public AssertionStatus resolve(AnalysisExpression assertionSet, ResolvingContext context) {
         return fromBooleanSuccessful(assertionSet.getChildren().stream().map(context::resolvedValueOf)
                 .filter(not(NONAPPLICABLE::equals)).allMatch(SUCCESSFUL::equals));
     }

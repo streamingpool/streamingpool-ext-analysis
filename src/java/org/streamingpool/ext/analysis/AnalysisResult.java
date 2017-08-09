@@ -6,7 +6,7 @@ package org.streamingpool.ext.analysis;
 
 import java.io.Serializable;
 
-import org.streamingpool.ext.analysis.expression.AssertionGroupExpression;
+import org.streamingpool.ext.analysis.expression.AnalysisExpression;
 import org.tensorics.core.resolve.domain.DetailedExpressionResult;
 import org.tensorics.core.tree.domain.Expression;
 import org.tensorics.core.tree.domain.ResolvingContext;
@@ -15,18 +15,18 @@ public class AnalysisResult implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private final DetailedExpressionResult<AssertionStatus, AssertionGroupExpression> detailedResult;
+    private final DetailedExpressionResult<AssertionStatus, AnalysisExpression> detailedResult;
 
-    private AnalysisResult(DetailedExpressionResult<AssertionStatus, AssertionGroupExpression> result) {
+    private AnalysisResult(DetailedExpressionResult<AssertionStatus, AnalysisExpression> result) {
         this.detailedResult = result;
     }
 
     public static AnalysisResult fromResult(
-            DetailedExpressionResult<AssertionStatus, AssertionGroupExpression> result) {
+            DetailedExpressionResult<AssertionStatus, AnalysisExpression> result) {
         return new AnalysisResult(result);
     }
 
-    public AssertionGroupExpression analysisExpression() {
+    public AnalysisExpression analysisExpression() {
         return detailedResult.rootExpression();
     }
 

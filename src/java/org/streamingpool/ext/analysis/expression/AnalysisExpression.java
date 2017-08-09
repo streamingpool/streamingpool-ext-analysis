@@ -37,12 +37,12 @@ import com.google.common.collect.ImmutableList;
  * @see AssertionGroupResolver
  * @author acalia, caguiler, kfuchsberger
  */
-public class AssertionGroupExpression extends AbstractDeferredExpression<AssertionStatus> {
+public class AnalysisExpression extends AbstractDeferredExpression<AssertionStatus> {
     private static final long serialVersionUID = 1L;
 
     private final List<AssertionExpression> assertions;
 
-    public AssertionGroupExpression(Collection<AssertionExpression> assertions) {
+    public AnalysisExpression(Collection<AssertionExpression> assertions) {
         this.assertions = ImmutableList.copyOf(assertions);
     }
 
@@ -70,7 +70,7 @@ public class AssertionGroupExpression extends AbstractDeferredExpression<Asserti
         if (getClass() != obj.getClass()) {
             return false;
         }
-        AssertionGroupExpression other = (AssertionGroupExpression) obj;
+        AnalysisExpression other = (AnalysisExpression) obj;
         if (assertions == null) {
             if (other.assertions != null) {
                 return false;

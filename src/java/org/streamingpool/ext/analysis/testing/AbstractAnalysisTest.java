@@ -31,7 +31,7 @@ import org.streamingpool.ext.analysis.AnalysisResult;
 import org.streamingpool.ext.analysis.AnalysisStreamId;
 import org.streamingpool.ext.analysis.conf.AnalysisConfiguration;
 import org.streamingpool.ext.analysis.conf.AnalysisResolvingEngineConfiguration;
-import org.streamingpool.ext.analysis.expression.AssertionGroupExpression;
+import org.streamingpool.ext.analysis.expression.AnalysisExpression;
 import org.streamingpool.ext.analysis.modules.AnalysisModule;
 import org.streamingpool.ext.tensorics.conf.DefaultResolvingEngineConfiguration;
 import org.tensorics.core.resolve.engine.ResolvingEngine;
@@ -51,7 +51,7 @@ public abstract class AbstractAnalysisTest extends AbstractStreamTest implements
     @Override
     public AnalysisResult resolveAnalysisModule(AnalysisModule<?> analysisModule) {
         AnalysisDefinition definition = AnalysisDefinitions.process(analysisModule);
-        AssertionGroupExpression rootExpression = definition.expression();
+        AnalysisExpression rootExpression = definition.expression();
         return AnalysisResult.fromResult(engine.resolveDetailed(rootExpression));
     }
 

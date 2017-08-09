@@ -26,7 +26,7 @@ import static java.util.Arrays.asList;
 import static org.tensorics.core.tree.domain.Contexts.mergeContextsOrdered;
 
 import org.streamingpool.core.service.streamid.DerivedStreamId;
-import org.streamingpool.ext.analysis.expression.AssertionGroupExpression;
+import org.streamingpool.ext.analysis.expression.AnalysisExpression;
 import org.streamingpool.ext.tensorics.streamid.DetailedExpressionStreamId;
 import org.tensorics.core.resolve.domain.DetailedExpressionResult;
 import org.tensorics.core.tree.domain.ResolvingContext;
@@ -37,7 +37,7 @@ import org.tensorics.core.tree.domain.ResolvingContext;
  * @author acalia
  */
 public class AnalysisStreamId
-        extends DerivedStreamId<DetailedExpressionResult<AssertionStatus, AssertionGroupExpression>, AnalysisResult> {
+        extends DerivedStreamId<DetailedExpressionResult<AssertionStatus, AnalysisExpression>, AnalysisResult> {
     private static final long serialVersionUID = 1L;
 
     public AnalysisStreamId(AnalysisDefinition analysisDefinition) {

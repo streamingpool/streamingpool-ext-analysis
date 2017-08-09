@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 import org.streamingpool.ext.analysis.AnalysisDefinitions;
-import org.streamingpool.ext.analysis.expression.AssertionGroupExpression;
+import org.streamingpool.ext.analysis.expression.AnalysisExpression;
 import org.streamingpool.ext.analysis.modules.AnalysisModule;
 import org.streamingpool.ext.analysis.modules.ContinuousAnalysisModule;
 
@@ -38,8 +38,8 @@ public class DefaultAnalysisModulePreprocessorTest {
 
     @Test
     public void emptyModuleIsCorrectlyProcessed() {
-        AssertionGroupExpression result = AnalysisDefinitions.process(EMPTY_MODULE).expression();
-        assertThat(result).isInstanceOf(AssertionGroupExpression.class);
+        AnalysisExpression result = AnalysisDefinitions.process(EMPTY_MODULE).expression();
+        assertThat(result).isInstanceOf(AnalysisExpression.class);
         assertThat(result.getChildren()).isEmpty();
     }
 

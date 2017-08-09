@@ -11,7 +11,7 @@ import java.util.function.Function;
 import org.streamingpool.core.service.streamid.DerivedStreamId;
 import org.streamingpool.core.service.streamid.OverlapBufferStreamId;
 import org.streamingpool.ext.analysis.expression.AssertionExpression;
-import org.streamingpool.ext.analysis.expression.AssertionGroupExpression;
+import org.streamingpool.ext.analysis.expression.AnalysisExpression;
 import org.streamingpool.ext.tensorics.expression.BufferedStreamExpression;
 import org.streamingpool.ext.tensorics.expression.UnresolvedStreamIdBasedExpression;
 import org.streamingpool.ext.tensorics.streamid.ExpressionBasedStreamId;
@@ -49,7 +49,7 @@ public class ExpressionTreeFormulaCaseMatching extends AbstractRecursiveRepresen
     // return "Analysis: " + recurse(ae.targetExpression());
     // }
 
-    public String repr(AssertionGroupExpression ag) {
+    public String repr(AnalysisExpression ag) {
         return "AssertionGroup: " + recurse(ag.getChildren());
     }
 

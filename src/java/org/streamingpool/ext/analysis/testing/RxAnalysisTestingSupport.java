@@ -33,7 +33,7 @@ import org.streamingpool.ext.analysis.AnalysisResult;
 import org.streamingpool.ext.analysis.AnalysisStreamId;
 import org.streamingpool.ext.analysis.AssertionStatus;
 import org.streamingpool.ext.analysis.expression.AssertionExpression;
-import org.streamingpool.ext.analysis.expression.AssertionGroupExpression;
+import org.streamingpool.ext.analysis.expression.AnalysisExpression;
 import org.streamingpool.ext.analysis.modules.AnalysisModule;
 import org.tensorics.core.resolve.domain.DetailedExpressionResult;
 
@@ -54,7 +54,7 @@ public interface RxAnalysisTestingSupport extends AnalysisTest, RxStreamSupport 
     }
 
     default List<AssertionStatus> evaluationStatusesOf(
-            TestSubscriber<DetailedExpressionResult<AssertionStatus, AssertionGroupExpression>> subscriber) {
+            TestSubscriber<DetailedExpressionResult<AssertionStatus, AnalysisExpression>> subscriber) {
         return subscriber.values().stream().map(DetailedExpressionResult::value).collect(toList());
     }
 

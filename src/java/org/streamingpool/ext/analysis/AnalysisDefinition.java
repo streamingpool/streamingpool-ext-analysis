@@ -24,7 +24,7 @@ package org.streamingpool.ext.analysis;
 
 import static java.util.Objects.requireNonNull;
 
-import org.streamingpool.ext.analysis.expression.AssertionGroupExpression;
+import org.streamingpool.ext.analysis.expression.AnalysisExpression;
 import org.streamingpool.ext.analysis.modules.AnalysisModule;
 import org.streamingpool.ext.tensorics.evaluation.EvaluationStrategy;
 import org.tensorics.core.expressions.Placeholder;
@@ -39,10 +39,10 @@ import org.tensorics.core.tree.domain.ResolvingContext;
  */
 public class AnalysisDefinition {
 
-    private final AssertionGroupExpression expression;
+    private final AnalysisExpression expression;
     private final EditableResolvingContext initalContext;
 
-    public AnalysisDefinition(AssertionGroupExpression expression, EvaluationStrategy evaluationStrategy) {
+    public AnalysisDefinition(AnalysisExpression expression, EvaluationStrategy evaluationStrategy) {
         requireNonNull(evaluationStrategy, "evaluationStrategy must not be null");
 
         this.expression = requireNonNull(expression, "expression must not be null");
@@ -50,7 +50,7 @@ public class AnalysisDefinition {
         this.initalContext.put(Placeholder.ofClass(EvaluationStrategy.class), evaluationStrategy);
     }
 
-    public AssertionGroupExpression expression() {
+    public AnalysisExpression expression() {
         return expression;
     }
 
