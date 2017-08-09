@@ -23,6 +23,7 @@
 package org.streamingpool.ext.analysis;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.streamingpool.ext.analysis.AnalysisDefinitions.streamIdFor;
 import static org.streamingpool.ext.analysis.AssertionStatus.SUCCESSFUL;
 import static org.streamingpool.ext.tensorics.expression.BufferedStreamExpression.buffer;
 
@@ -73,13 +74,13 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
         final String ASSERTION_NAME = "name";
         final BufferedStreamExpression<Boolean> BUFFERED_SOURCE = BufferedStreamExpression.buffer(sourceStreamId);
 
-        Flowable<DeprecatedAnalysisResult> resultStream = rxFrom(new BufferedAnalysisModule() {
+        Flowable<DeprecatedAnalysisResult> resultStream = rxFrom(streamIdFor(new BufferedAnalysisModule() {
             {
                 enabled().always();
                 buffered().startedBy(startStreamId).endedOnMatch(endStreamId);
                 assertAllBoolean(BUFFERED_SOURCE).areTrue().withName(ASSERTION_NAME);
             }
-        });
+        }));
 
         TestSubscriber<DeprecatedAnalysisResult> testSubscriber = resultStream.test();
 
@@ -112,14 +113,14 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
         final String ASSERTION_NAME = "name";
         final BufferedStreamExpression<String> BUFFERED_END = BufferedStreamExpression.buffer(endStreamId);
 
-        Flowable<DeprecatedAnalysisResult> resultStream = rxFrom(new BufferedAnalysisModule() {
+        Flowable<DeprecatedAnalysisResult> resultStream = rxFrom(streamIdFor(new BufferedAnalysisModule() {
             {
                 enabled().always();
                 buffered().startedBy(startStreamId)
                         .endedOnEvery(DelayedStreamId.delayBy(endStreamId, Duration.ofSeconds(1)));
                 assertThat(BUFFERED_END).is(buffer -> buffer.contains(END_VALUE)).withName(ASSERTION_NAME);
             }
-        });
+        }));
 
         TestSubscriber<DeprecatedAnalysisResult> testSubscriber = resultStream.test();
 
@@ -148,13 +149,13 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
         final String ASSERTION_NAME = "name";
         final BufferedStreamExpression<Boolean> BUFFERED_SOURCE = BufferedStreamExpression.buffer(sourceStreamId);
 
-        Flowable<DeprecatedAnalysisResult> resultStream = rxFrom(new BufferedAnalysisModule() {
+        Flowable<DeprecatedAnalysisResult> resultStream = rxFrom(streamIdFor(new BufferedAnalysisModule() {
             {
                 enabled().always();
                 buffered().startedBy(startStreamId).endedOnMatch(endStreamId);
                 assertAllBoolean(BUFFERED_SOURCE).areTrue().withName(ASSERTION_NAME);
             }
-        });
+        }));
 
         TestSubscriber<DeprecatedAnalysisResult> testSubscriber = resultStream.test();
 
@@ -231,13 +232,13 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
         final int ANALYSIS_TIMEOUT_MS = 2_000;
 
         TestSubscriber<DeprecatedAnalysisResult> subscriber = new TestSubscriber<>();
-        rxFrom(new BufferedAnalysisModule() {
+        rxFrom(streamIdFor(new BufferedAnalysisModule() {
             {
                 enabled().always();
                 buffered().startedBy(startStreamId).endedAfter(Duration.ofMillis(ANALYSIS_TIMEOUT_MS));
                 assertAllBoolean(SOURCE_EXPRESSION).areTrue().withName(ASSERTION_NAME);
             }
-        }).subscribe(subscriber);
+        })).subscribe(subscriber);
 
         startStream.onNext("A");
         await();
@@ -268,13 +269,13 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
         final String ASSERTION_NAME = "name";
         final BufferedStreamExpression<Boolean> BUFFERED_SOURCE = BufferedStreamExpression.buffer(sourceStreamId);
 
-        TestSubscriber<DeprecatedAnalysisResult> testSubscriber = rxFrom(new BufferedAnalysisModule() {
+        TestSubscriber<DeprecatedAnalysisResult> testSubscriber = rxFrom(streamIdFor(new BufferedAnalysisModule() {
             {
                 enabled().always();
                 buffered().startedBy(startStreamId).endedOnMatch(end1StreamId).or().endedOnMatch(end2StreamId);
                 assertAllBoolean(BUFFERED_SOURCE).areTrue().withName(ASSERTION_NAME);
             }
-        }).test();
+        })).test();
 
         startStream.onNext("A");
         await();
@@ -306,12 +307,12 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
         StreamId<String> endStreamId = provide(endStream).withUniqueStreamId();
 
         TestSubscriber<DeprecatedAnalysisResult> subscriber = new TestSubscriber<>();
-        rxFrom(new BufferedAnalysisModule() {
+        rxFrom(streamIdFor(new BufferedAnalysisModule() {
             {
                 buffered().startedBy(startStreamId).endedOnEvery(endStreamId);
                 assertAllBoolean(buffer(provide(Flowable.<Boolean> never()).withUniqueStreamId())).areTrue();
             }
-        }).take(1).subscribe(subscriber);
+        })).take(1).subscribe(subscriber);
 
         startStream.onNext("A");
         await();
@@ -344,4 +345,5 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
         subscriber.assertNotTerminated();
     }
 
+   
 }

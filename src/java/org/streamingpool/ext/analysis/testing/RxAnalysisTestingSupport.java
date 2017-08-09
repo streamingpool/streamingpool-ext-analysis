@@ -27,31 +27,16 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.List;
 
-import org.streamingpool.core.service.diagnostic.ErrorStreamId;
-import org.streamingpool.core.support.RxStreamSupport;
-import org.streamingpool.ext.analysis.AnalysisStreamId;
 import org.streamingpool.ext.analysis.AssertionStatus;
 import org.streamingpool.ext.analysis.DeprecatedAnalysisResult;
 import org.streamingpool.ext.analysis.expression.AnalysisExpression;
 import org.streamingpool.ext.analysis.expression.AssertionExpression;
-import org.streamingpool.ext.analysis.modules.StreamBaseAnalysisModule;
+import org.streamingpool.ext.analysis.support.RxAnalysisSupport;
 import org.tensorics.core.resolve.domain.DetailedExpressionResult;
 
-import io.reactivex.Flowable;
-import io.reactivex.processors.PublishProcessor;
 import io.reactivex.subscribers.TestSubscriber;
 
-public interface RxAnalysisTestingSupport extends AnalysisTest, RxStreamSupport {
-
-    default Flowable<DeprecatedAnalysisResult> rxFrom(StreamBaseAnalysisModule<?> analysisModule) {
-        AnalysisStreamId analysisId = analysisIdOf(analysisModule);
-        PublishProcessor<DeprecatedAnalysisResult> plug = PublishProcessor.create();
-
-        rxFrom(analysisId).subscribe(plug::onNext);
-        rxFrom(ErrorStreamId.of(analysisId)).subscribe(plug::onError);
-
-        return plug.onBackpressureBuffer();
-    }
+public interface RxAnalysisTestingSupport extends AnalysisTest, RxAnalysisSupport {
 
     default List<AssertionStatus> evaluationStatusesOf(
             TestSubscriber<DetailedExpressionResult<AssertionStatus, AnalysisExpression>> subscriber) {
