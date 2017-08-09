@@ -5,11 +5,11 @@
 package org.streamingpool.ext.analysis;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 import org.streamingpool.ext.analysis.expression.AnalysisExpression;
 import org.tensorics.core.resolve.domain.DetailedExpressionResult;
 import org.tensorics.core.tree.domain.Expression;
-import org.tensorics.core.tree.domain.ResolvingContext;
 
 public class AnalysisResult implements Serializable {
 
@@ -21,8 +21,7 @@ public class AnalysisResult implements Serializable {
         this.detailedResult = result;
     }
 
-    public static AnalysisResult fromResult(
-            DetailedExpressionResult<AssertionStatus, AnalysisExpression> result) {
+    public static AnalysisResult fromResult(DetailedExpressionResult<AssertionStatus, AnalysisExpression> result) {
         return new AnalysisResult(result);
     }
 
@@ -30,9 +29,9 @@ public class AnalysisResult implements Serializable {
         return detailedResult.rootExpression();
     }
 
-    public ResolvingContext resolvingContext() {
-        return detailedResult.context();
-    }
+    // public ResolvingContext resolvingContext() {
+    // return detailedResult.context();
+    // }
 
     public AssertionStatus evaluationStatus() {
         return detailedResult.value();
@@ -69,11 +68,14 @@ public class AnalysisResult implements Serializable {
     }
 
     public AssertionStatus overallStatus() {
-        return resolvingContext().resolvedValueOf(analysisExpression());
+        return detailedResult.context().resolvedValueOf(analysisExpression());
     }
 
     public <T> T resolvedValueOf(Expression<T> exp) {
-        return resolvingContext().resolvedValueOf(exp);
+        return detailedResult.context().resolvedValueOf(exp);
     }
 
+    public boolean resolves(Expression<?> exp) {
+        return detailedResult.context().resolves(exp);
+    }
 }

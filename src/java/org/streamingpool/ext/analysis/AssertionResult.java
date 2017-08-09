@@ -25,21 +25,20 @@ package org.streamingpool.ext.analysis;
 import java.io.Serializable;
 
 import org.streamingpool.ext.analysis.expression.AssertionExpression;
-import org.tensorics.core.tree.domain.ResolvingContext;
 
 public class AssertionResult implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private final AssertionExpression assertion;
-    private final ResolvingContext resolvingCtx;
+    private final AssertionStatus status;
 
-    private AssertionResult(AssertionExpression assertion, ResolvingContext resolvingCtx) {
+    private AssertionResult(AssertionExpression assertion, AssertionStatus status) {
         this.assertion = assertion;
-        this.resolvingCtx = resolvingCtx;
+        this.status = status;
     }
 
-    public static AssertionResult of(AssertionExpression assertion, ResolvingContext resolvingCtx) {
-        return new AssertionResult(assertion, resolvingCtx);
+    public static AssertionResult of(AssertionExpression assertion, AssertionStatus status) {
+        return new AssertionResult(assertion, status);
     }
 
     public String condition() {
@@ -47,7 +46,7 @@ public class AssertionResult implements Serializable {
     }
 
     public AssertionStatus status() {
-        return resolvingCtx.resolvedValueOf(assertion);
+        return status;
     }
 
     public AssertionExpression assertion() {
@@ -59,7 +58,7 @@ public class AssertionResult implements Serializable {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((assertion == null) ? 0 : assertion.hashCode());
-        result = prime * result + ((resolvingCtx == null) ? 0 : resolvingCtx.hashCode());
+        result = prime * result + ((status == null) ? 0 : status.hashCode());
         return result;
     }
 
@@ -82,11 +81,7 @@ public class AssertionResult implements Serializable {
         } else if (!assertion.equals(other.assertion)) {
             return false;
         }
-        if (resolvingCtx == null) {
-            if (other.resolvingCtx != null) {
-                return false;
-            }
-        } else if (!resolvingCtx.equals(other.resolvingCtx)) {
+        if (status != other.status) {
             return false;
         }
         return true;
@@ -94,7 +89,7 @@ public class AssertionResult implements Serializable {
 
     @Override
     public String toString() {
-        return "AssertionResult [assertion=" + assertion + ", resolvingCtx=" + resolvingCtx + "]";
+        return "AssertionResult [assertion=" + assertion + ", status=" + status + "]";
     }
 
 }

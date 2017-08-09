@@ -60,7 +60,7 @@ public interface RxAnalysisTestingSupport extends AnalysisTest, RxStreamSupport 
 
     default List<AssertionStatus> assertionsStatusesOf(TestSubscriber<AnalysisResult> subscriber) {
         return subscriber.values().stream()
-                .map(result -> result.resolvingContext().resolvedValueOf(result.analysisExpression()))
+                .map(result -> result.resolvedValueOf(result.analysisExpression()))
                 .collect(toList());
     }
 
@@ -78,6 +78,6 @@ public interface RxAnalysisTestingSupport extends AnalysisTest, RxStreamSupport 
                     format("%s assertions match the name %s. Name should be unique", assertionsWithName.size(), name));
         }
 
-        return result.resolvingContext().resolvedValueOf(assertionsWithName.get(0));
+        return result.resolvedValueOf(assertionsWithName.get(0));
     }
 }
