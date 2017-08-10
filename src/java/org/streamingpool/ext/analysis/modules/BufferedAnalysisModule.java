@@ -8,7 +8,7 @@ import org.streamingpool.ext.analysis.dsl.OngoingBufferedStrategy;
 import org.streamingpool.ext.tensorics.evaluation.BufferedEvaluation;
 import org.streamingpool.ext.tensorics.evaluation.BufferedEvaluation.Builder;
 
-public abstract class BufferedAnalysisModule extends StreamBaseAnalysisModule<Builder> {
+public abstract class BufferedAnalysisModule extends StreamBasedAnalysisModule<Builder> {
 
     public BufferedAnalysisModule() {
         super(BufferedEvaluation.builder());

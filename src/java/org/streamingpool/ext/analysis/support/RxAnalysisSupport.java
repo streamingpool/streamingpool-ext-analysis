@@ -8,7 +8,7 @@ import static org.streamingpool.ext.analysis.AnalysisDefinitions.detailedStreamI
 import static org.streamingpool.ext.analysis.AnalysisDefinitions.streamIdFor;
 
 import org.streamingpool.core.support.RxStreamSupport;
-import org.streamingpool.ext.analysis.modules.StreamBaseAnalysisModule;
+import org.streamingpool.ext.analysis.modules.StreamBasedAnalysisModule;
 import org.tensorics.core.analysis.AnalysisResult;
 import org.tensorics.core.analysis.expression.AnalysisExpression;
 import org.tensorics.core.resolve.domain.DetailedExpressionResult;
@@ -36,22 +36,22 @@ public interface RxAnalysisSupport extends RxStreamSupport {
         return rxFrom(detailedStreamIdFor(expression, prefilledContext));
     }
 
-    default Flowable<AnalysisResult> rxFrom(StreamBaseAnalysisModule<?> bufferedAnalysisModule) {
+    default Flowable<AnalysisResult> rxFrom(StreamBasedAnalysisModule<?> bufferedAnalysisModule) {
         return rxFrom(streamIdFor(bufferedAnalysisModule));
     }
 
     default Flowable<DetailedExpressionResult<AnalysisResult, AnalysisExpression>> rxDetailedFrom(
-            StreamBaseAnalysisModule<?> analysisModule) {
+            StreamBasedAnalysisModule<?> analysisModule) {
         return rxFrom(detailedStreamIdFor(analysisModule));
     }
 
-    default Flowable<AnalysisResult> rxFrom(StreamBaseAnalysisModule<?> bufferedAnalysisModule,
+    default Flowable<AnalysisResult> rxFrom(StreamBasedAnalysisModule<?> bufferedAnalysisModule,
             ResolvingContext prefilledContext) {
         return rxFrom(streamIdFor(bufferedAnalysisModule, prefilledContext));
     }
 
     default Flowable<DetailedExpressionResult<AnalysisResult, AnalysisExpression>> rxDetailedFrom(
-            StreamBaseAnalysisModule<?> analysisModule, ResolvingContext prefilledContext) {
+            StreamBasedAnalysisModule<?> analysisModule, ResolvingContext prefilledContext) {
         return rxFrom(detailedStreamIdFor(analysisModule, prefilledContext));
     }
 

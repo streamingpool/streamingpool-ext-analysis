@@ -23,13 +23,13 @@
 package org.streamingpool.ext.analysis.testing;
 
 import org.streamingpool.core.service.StreamId;
-import org.streamingpool.ext.analysis.modules.StreamBaseAnalysisModule;
+import org.streamingpool.ext.analysis.modules.StreamBasedAnalysisModule;
 import org.tensorics.core.analysis.AnalysisResult;
 
 public interface AnalysisTest {
 
-    StreamId<AnalysisResult> analysisIdOf(StreamBaseAnalysisModule<?> analysisModule);
+    StreamId<AnalysisResult> analysisIdOf(StreamBasedAnalysisModule<?> analysisModule);
 
-    AnalysisResult resolveAnalysisModule(StreamBaseAnalysisModule<?> analysisModule);
+    AnalysisResult resolveAnalysisModule(StreamBasedAnalysisModule<?> analysisModule);
 
 }

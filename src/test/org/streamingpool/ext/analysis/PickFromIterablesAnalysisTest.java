@@ -70,7 +70,6 @@ public class PickFromIterablesAnalysisTest extends AbstractAnalysisTest implemen
         TestSubscriber<AnalysisResult> subscriber = new TestSubscriber<>();
         rxFrom(new ContinuousAnalysisModule() {
             {
-                enabled().always();
                 assertBoolean(true).isEqualTo(PickExpression.fromFirst(of(sourceId), 1));
             }
         }).take(1).subscribe(subscriber);
@@ -89,7 +88,6 @@ public class PickFromIterablesAnalysisTest extends AbstractAnalysisTest implemen
         TestSubscriber<AnalysisResult> subscriber = new TestSubscriber<>();
         rxFrom(new BufferedAnalysisModule() {
             {
-                enabled().always();
                 buffered().startedBy(startBuffer).endedAfter(Duration.ofSeconds(4));
                 assertBoolean(true).isEqualTo(PickExpression.fromFirst(BufferedStreamExpression.buffer(booleanData), 2))
                         .withName(label);
@@ -108,7 +106,6 @@ public class PickFromIterablesAnalysisTest extends AbstractAnalysisTest implemen
         TestSubscriber<AnalysisResult> subscriber = new TestSubscriber<>();
         rxFrom(new ContinuousAnalysisModule() {
             {
-                enabled().always();
                 assertBoolean(true).isEqualTo(PickExpression.fromFirst(of(sourceId), MIN_VALUE)).withName(label);
             }
         }).take(1).subscribe(subscriber);

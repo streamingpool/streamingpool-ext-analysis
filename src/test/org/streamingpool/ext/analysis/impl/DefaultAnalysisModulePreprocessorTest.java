@@ -25,20 +25,19 @@ package org.streamingpool.ext.analysis.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
-import org.streamingpool.ext.analysis.AnalysisDefinitions;
 import org.streamingpool.ext.analysis.modules.ContinuousAnalysisModule;
-import org.streamingpool.ext.analysis.modules.StreamBaseAnalysisModule;
+import org.streamingpool.ext.analysis.modules.StreamBasedAnalysisModule;
 import org.tensorics.core.analysis.expression.AnalysisExpression;
 
 public class DefaultAnalysisModulePreprocessorTest {
 
-    private static final StreamBaseAnalysisModule<?> EMPTY_MODULE = new ContinuousAnalysisModule() {
+    private static final StreamBasedAnalysisModule<?> EMPTY_MODULE = new ContinuousAnalysisModule() {
         /* empty on purpose */
     };
 
     @Test
     public void emptyModuleIsCorrectlyProcessed() {
-        AnalysisExpression result = AnalysisDefinitions.expressionFrom(EMPTY_MODULE);
+        AnalysisExpression result = EMPTY_MODULE.buildExpression();
         assertThat(result).isInstanceOf(AnalysisExpression.class);
         assertThat(result.getChildren()).isEmpty();
     }

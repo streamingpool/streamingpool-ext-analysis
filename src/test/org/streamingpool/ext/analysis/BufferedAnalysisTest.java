@@ -81,7 +81,6 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
         Flowable<DetailedExpressionResult<AnalysisResult, AnalysisExpression>> resultStream = rxDetailedFrom(
                 new BufferedAnalysisModule() {
                     {
-                        enabled().always();
                         buffered().startedBy(startStreamId).endedOnMatch(endStreamId);
                         assertAllBoolean(BUFFERED_SOURCE).areTrue().withName(ASSERTION_NAME);
                     }
@@ -122,7 +121,6 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
         Flowable<DetailedExpressionResult<AnalysisResult, AnalysisExpression>> resultStream = rxDetailedFrom(
                 new BufferedAnalysisModule() {
                     {
-                        enabled().always();
                         buffered().startedBy(startStreamId)
                                 .endedOnEvery(DelayedStreamId.delayBy(endStreamId, Duration.ofSeconds(1)));
                         assertThat(BUFFERED_END).is(buffer -> buffer.contains(END_VALUE)).withName(ASSERTION_NAME);
@@ -161,7 +159,6 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
         Flowable<DetailedExpressionResult<AnalysisResult, AnalysisExpression>> resultStream = rxDetailedFrom(
                 new BufferedAnalysisModule() {
                     {
-                        enabled().always();
                         buffered().startedBy(startStreamId).endedOnMatch(endStreamId);
                         assertAllBoolean(BUFFERED_SOURCE).areTrue().withName(ASSERTION_NAME);
                     }
@@ -246,7 +243,6 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
         TestSubscriber<DetailedExpressionResult<AnalysisResult, AnalysisExpression>> subscriber = new TestSubscriber<>();
         rxDetailedFrom(new BufferedAnalysisModule() {
             {
-                enabled().always();
                 buffered().startedBy(startStreamId).endedAfter(Duration.ofMillis(ANALYSIS_TIMEOUT_MS));
                 assertAllBoolean(SOURCE_EXPRESSION).areTrue().withName(ASSERTION_NAME);
             }
@@ -285,7 +281,6 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
         TestSubscriber<DetailedExpressionResult<AnalysisResult, AnalysisExpression>> testSubscriber = rxDetailedFrom(
                 new BufferedAnalysisModule() {
                     {
-                        enabled().always();
                         buffered().startedBy(startStreamId).endedOnMatch(end1StreamId).or().endedOnMatch(end2StreamId);
                         assertAllBoolean(BUFFERED_SOURCE).areTrue().withName(ASSERTION_NAME);
                     }

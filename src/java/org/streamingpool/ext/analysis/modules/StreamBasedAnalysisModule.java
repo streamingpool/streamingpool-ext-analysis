@@ -10,16 +10,16 @@ import org.streamingpool.ext.tensorics.evaluation.EvaluationStrategy;
 import org.streamingpool.ext.tensorics.evaluation.EvaluationStrategyBuilder;
 import org.tensorics.core.analysis.AnalysisModule;
 
-public abstract class StreamBaseAnalysisModule<T extends EvaluationStrategyBuilder> extends AnalysisModule{
+public abstract class StreamBasedAnalysisModule<T extends EvaluationStrategyBuilder> extends AnalysisModule{
 
     private final AtomicBoolean strategySpecified = new AtomicBoolean(false);
     private final T evaluationStrategyBuilder;
 
-    protected StreamBaseAnalysisModule(T evaluationStrategyBuilder) {
+    protected StreamBasedAnalysisModule(T evaluationStrategyBuilder) {
         this.evaluationStrategyBuilder = evaluationStrategyBuilder;
     }
 
-    public EvaluationStrategy evaluationStrategy() {
+    public EvaluationStrategy buildEvaluationStrategy() {
         return getEvaluationStrategyBuilder().build();
     }
 
