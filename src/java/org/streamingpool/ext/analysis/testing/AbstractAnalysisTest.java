@@ -28,14 +28,12 @@ import org.streamingpool.core.service.StreamId;
 import org.streamingpool.core.testing.AbstractStreamTest;
 import org.streamingpool.ext.analysis.AnalysisDefinitions;
 import org.streamingpool.ext.analysis.conf.AnalysisConfiguration;
-import org.streamingpool.ext.analysis.conf.AnalysisResolvingEngineConfiguration;
 import org.streamingpool.ext.analysis.modules.StreamBasedAnalysisModule;
 import org.streamingpool.ext.tensorics.conf.DefaultResolvingEngineConfiguration;
 import org.tensorics.core.analysis.AnalysisResult;
 import org.tensorics.core.resolve.engine.ResolvingEngine;
 
-@ContextConfiguration(classes = { AnalysisConfiguration.class, AnalysisResolvingEngineConfiguration.class,
-        DefaultResolvingEngineConfiguration.class })
+@ContextConfiguration(classes = { AnalysisConfiguration.class, DefaultResolvingEngineConfiguration.class })
 public abstract class AbstractAnalysisTest extends AbstractStreamTest implements AnalysisTest {
 
     @Autowired
