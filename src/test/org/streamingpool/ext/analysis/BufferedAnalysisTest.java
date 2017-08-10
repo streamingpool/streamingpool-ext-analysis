@@ -139,6 +139,7 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
         DetailedExpressionResult<AnalysisResult, AnalysisExpression> analysisResult = testSubscriber.awaitCount(1)
                 .assertValueCount(1).values().get(0);
 
+        assertThat(analysisResult.value().overallStatus()).isEqualTo(AssertionStatus.SUCCESSFUL);
         assertThat(statusOfAssertion(analysisResult, ASSERTION_NAME)).isEqualTo(AssertionStatus.SUCCESSFUL);
         assertThat(analysisResult.resolvedValueOf(BUFFERED_END).get()).containsExactly(END_VALUE);
     }

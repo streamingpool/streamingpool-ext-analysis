@@ -6,15 +6,15 @@ package org.streamingpool.ext.analysis.conf;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.tensorics.core.analysis.resolver.AssertionGroupResolver;
+import org.tensorics.core.analysis.resolver.AnalysisResolver;
 import org.tensorics.core.analysis.resolver.AssertionResolver;
 
 @Configuration
 public class AnalysisResolvingEngineConfiguration {
 
     @Bean
-    public AssertionGroupResolver assertionGroupResolver() {
-        return new AssertionGroupResolver();
+    public AnalysisResolver assertionGroupResolver() {
+        return new AnalysisResolver();
     }
 
     @Bean
