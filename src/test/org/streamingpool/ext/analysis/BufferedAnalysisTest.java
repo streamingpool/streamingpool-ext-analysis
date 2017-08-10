@@ -103,7 +103,7 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
                 .assertValueCount(1).values().get(0);
 
         assertThat(statusOfAssertion(analysisResult, ASSERTION_NAME)).isEqualTo(AssertionStatus.FAILURE);
-        assertThat(analysisResult.context().resolvedValueOf(BUFFERED_SOURCE)).containsExactly(true, false, true);
+        assertThat(analysisResult.resolvedValueOf(BUFFERED_SOURCE).get()).containsExactly(true, false, true);
     }
 
     @Test
@@ -140,7 +140,7 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
                 .assertValueCount(1).values().get(0);
 
         assertThat(statusOfAssertion(analysisResult, ASSERTION_NAME)).isEqualTo(AssertionStatus.SUCCESSFUL);
-        assertThat(analysisResult.context().resolvedValueOf(BUFFERED_END)).containsExactly(END_VALUE);
+        assertThat(analysisResult.resolvedValueOf(BUFFERED_END).get()).containsExactly(END_VALUE);
     }
 
     @Test
@@ -206,13 +206,13 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
         DetailedExpressionResult<AnalysisResult, AnalysisExpression> resultC = analysisResults.get(2);
         /* analysis A */
         assertThat(statusOfAssertion(resultA, ASSERTION_NAME)).isEqualTo(AssertionStatus.FAILURE);
-        assertThat(resultA.context().resolvedValueOf(BUFFERED_SOURCE)).containsExactly(true, false, true);
+        assertThat(resultA.resolvedValueOf(BUFFERED_SOURCE).get()).containsExactly(true, false, true);
         /* analysis B */
         assertThat(statusOfAssertion(resultB, ASSERTION_NAME)).isEqualTo(AssertionStatus.SUCCESSFUL);
-        assertThat(resultB.context().resolvedValueOf(BUFFERED_SOURCE)).containsExactly(true, true, true, true);
+        assertThat(resultB.resolvedValueOf(BUFFERED_SOURCE).get()).containsExactly(true, true, true, true);
         /* analysis C */
         assertThat(statusOfAssertion(resultC, ASSERTION_NAME)).isEqualTo(AssertionStatus.FAILURE);
-        assertThat(resultC.context().resolvedValueOf(BUFFERED_SOURCE)).containsExactly(true, false, true, true, true,
+        assertThat(resultC.resolvedValueOf(BUFFERED_SOURCE).get()).containsExactly(true, false, true, true, true,
                 true, true);
     }
 
@@ -259,7 +259,7 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
         DetailedExpressionResult<AnalysisResult, AnalysisExpression> result = subscriber.awaitCount(1)
                 .assertValueCount(1).values().get(0);
 
-        assertThat(result.context().resolvedValueOf(SOURCE_EXPRESSION)).containsExactly(true, true);
+        assertThat(result.resolvedValueOf(SOURCE_EXPRESSION).get()).containsExactly(true, true);
         assertThat(statusOfAssertion(result, ASSERTION_NAME)).isEqualTo(SUCCESSFUL);
     }
 
@@ -305,7 +305,7 @@ public class BufferedAnalysisTest extends AbstractAnalysisTest implements RxAnal
                 .assertValueCount(1).values().get(0);
 
         assertThat(statusOfAssertion(analysisResult, ASSERTION_NAME)).isEqualTo(AssertionStatus.SUCCESSFUL);
-        assertThat(analysisResult.context().resolvedValueOf(BUFFERED_SOURCE)).containsExactly(true, true);
+        assertThat(analysisResult.resolvedValueOf(BUFFERED_SOURCE).get()).containsExactly(true, true);
     }
 
     @Test
