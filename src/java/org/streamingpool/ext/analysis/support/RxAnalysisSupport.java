@@ -8,12 +8,12 @@ import static org.streamingpool.ext.analysis.AnalysisDefinitions.detailedStreamI
 import static org.streamingpool.ext.analysis.AnalysisDefinitions.streamIdFor;
 
 import org.streamingpool.core.support.RxStreamSupport;
-import org.streamingpool.ext.analysis.AnalysisResult;
-import org.streamingpool.ext.analysis.expression.AnalysisExpression;
-import org.streamingpool.ext.analysis.modules.AnalysisModule;
 import org.streamingpool.ext.analysis.modules.StreamBaseAnalysisModule;
 import org.streamingpool.ext.tensorics.streamid.DetailedExpressionStreamId;
 import org.streamingpool.ext.tensorics.streamid.ExpressionBasedStreamId;
+import org.tensorics.core.analysis.AnalysisModule;
+import org.tensorics.core.analysis.AnalysisResult;
+import org.tensorics.core.analysis.expression.AnalysisExpression;
 import org.tensorics.core.resolve.domain.DetailedExpressionResult;
 import org.tensorics.core.tree.domain.Expression;
 import org.tensorics.core.tree.domain.ResolvingContext;

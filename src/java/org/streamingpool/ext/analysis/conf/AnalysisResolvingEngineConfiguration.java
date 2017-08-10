@@ -6,8 +6,8 @@ package org.streamingpool.ext.analysis.conf;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.streamingpool.ext.analysis.resolver.AssertionGroupResolver;
-import org.streamingpool.ext.analysis.resolver.AssertionResolver;
+import org.tensorics.core.analysis.resolver.AssertionGroupResolver;
+import org.tensorics.core.analysis.resolver.AssertionResolver;
 
 @Configuration
 public class AnalysisResolvingEngineConfiguration {

@@ -7,11 +7,12 @@ package org.streamingpool.ext.analysis;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 
-import org.streamingpool.ext.analysis.expression.AnalysisExpression;
-import org.streamingpool.ext.analysis.expression.AssertionExpression;
-import org.streamingpool.ext.analysis.modules.AnalysisModule;
 import org.streamingpool.ext.analysis.modules.StreamBaseAnalysisModule;
 import org.streamingpool.ext.tensorics.streamid.DetailedExpressionStreamId;
+import org.tensorics.core.analysis.AnalysisModule;
+import org.tensorics.core.analysis.AnalysisResult;
+import org.tensorics.core.analysis.expression.AnalysisExpression;
+import org.tensorics.core.analysis.expression.AssertionExpression;
 
 public final class AnalysisDefinitions {
 

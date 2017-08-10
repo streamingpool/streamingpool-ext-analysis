@@ -25,13 +25,14 @@ package org.streamingpool.ext.analysis;
 import static com.google.common.collect.ImmutableSet.of;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.streamingpool.ext.analysis.AssertionStatus.FAILURE;
-import static org.streamingpool.ext.analysis.AssertionStatus.SUCCESSFUL;
+import static org.tensorics.core.analysis.AssertionStatus.FAILURE;
+import static org.tensorics.core.analysis.AssertionStatus.SUCCESSFUL;
 
 import org.junit.Test;
 import org.streamingpool.ext.analysis.modules.ContinuousAnalysisModule;
 import org.streamingpool.ext.analysis.testing.AbstractAnalysisTest;
 import org.streamingpool.ext.analysis.testing.RxAnalysisTestingSupport;
+import org.tensorics.core.analysis.AnalysisResult;
 import org.tensorics.core.tree.domain.Expression;
 import org.tensorics.core.tree.domain.ResolvedExpression;
 

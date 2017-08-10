@@ -27,11 +27,11 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.List;
 
-import org.streamingpool.ext.analysis.AnalysisResult;
-import org.streamingpool.ext.analysis.AssertionStatus;
-import org.streamingpool.ext.analysis.expression.AnalysisExpression;
-import org.streamingpool.ext.analysis.expression.AssertionExpression;
 import org.streamingpool.ext.analysis.support.RxAnalysisSupport;
+import org.tensorics.core.analysis.AnalysisResult;
+import org.tensorics.core.analysis.AssertionStatus;
+import org.tensorics.core.analysis.expression.AnalysisExpression;
+import org.tensorics.core.analysis.expression.AssertionExpression;
 import org.tensorics.core.resolve.domain.DetailedExpressionResult;
 
 import io.reactivex.subscribers.TestSubscriber;

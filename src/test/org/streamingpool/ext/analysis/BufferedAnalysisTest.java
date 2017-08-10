@@ -24,8 +24,8 @@ package org.streamingpool.ext.analysis;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.streamingpool.ext.analysis.AnalysisDefinitions.streamIdFor;
-import static org.streamingpool.ext.analysis.AssertionStatus.SUCCESSFUL;
 import static org.streamingpool.ext.tensorics.expression.BufferedStreamExpression.buffer;
+import static org.tensorics.core.analysis.AssertionStatus.SUCCESSFUL;
 
 import java.time.Duration;
 import java.util.List;
@@ -37,12 +37,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.streamingpool.core.service.StreamFactoryRegistry;
 import org.streamingpool.core.service.StreamId;
 import org.streamingpool.core.service.streamid.DelayedStreamId;
-import org.streamingpool.ext.analysis.expression.AnalysisExpression;
 import org.streamingpool.ext.analysis.modules.BufferedAnalysisModule;
 import org.streamingpool.ext.analysis.testing.AbstractAnalysisTest;
 import org.streamingpool.ext.analysis.testing.RxAnalysisTestingSupport;
 import org.streamingpool.ext.tensorics.expression.BufferedStreamExpression;
 import org.streamingpool.ext.tensorics.streamfactory.BufferedTensoricsExpressionStreamFactory;
+import org.tensorics.core.analysis.AnalysisResult;
+import org.tensorics.core.analysis.AssertionStatus;
+import org.tensorics.core.analysis.expression.AnalysisExpression;
 import org.tensorics.core.resolve.domain.DetailedExpressionResult;
 import org.tensorics.core.resolve.engine.ResolvingEngine;
 

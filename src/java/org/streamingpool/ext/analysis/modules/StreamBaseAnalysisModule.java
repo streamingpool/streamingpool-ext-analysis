@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.streamingpool.ext.tensorics.evaluation.EvaluationStrategy;
 import org.streamingpool.ext.tensorics.evaluation.EvaluationStrategyBuilder;
+import org.tensorics.core.analysis.AnalysisModule;
 
 public abstract class StreamBaseAnalysisModule<T extends EvaluationStrategyBuilder> extends AnalysisModule{
 

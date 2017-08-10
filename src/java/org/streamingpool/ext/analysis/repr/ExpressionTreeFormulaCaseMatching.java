@@ -10,11 +10,11 @@ import java.util.function.Function;
 
 import org.streamingpool.core.service.streamid.DerivedStreamId;
 import org.streamingpool.core.service.streamid.OverlapBufferStreamId;
-import org.streamingpool.ext.analysis.expression.AnalysisExpression;
-import org.streamingpool.ext.analysis.expression.AssertionExpression;
 import org.streamingpool.ext.tensorics.expression.BufferedStreamExpression;
 import org.streamingpool.ext.tensorics.expression.UnresolvedStreamIdBasedExpression;
 import org.streamingpool.ext.tensorics.streamid.ExpressionBasedStreamId;
+import org.tensorics.core.analysis.expression.AnalysisExpression;
+import org.tensorics.core.analysis.expression.AssertionExpression;
 import org.tensorics.core.expressions.BinaryPredicateExpression;
 import org.tensorics.core.expressions.ConversionOperationExpression;
 import org.tensorics.core.expressions.LatestOfExpression;

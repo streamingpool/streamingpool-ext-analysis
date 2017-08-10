@@ -26,8 +26,9 @@ import static java.util.Arrays.asList;
 import static org.tensorics.core.tree.domain.Contexts.mergeContextsOrdered;
 
 import org.streamingpool.core.service.streamid.DerivedStreamId;
-import org.streamingpool.ext.analysis.expression.AnalysisExpression;
 import org.streamingpool.ext.tensorics.streamid.DetailedExpressionStreamId;
+import org.tensorics.core.analysis.AnalysisResult;
+import org.tensorics.core.analysis.expression.AnalysisExpression;
 import org.tensorics.core.resolve.domain.DetailedExpressionResult;
 import org.tensorics.core.tree.domain.ResolvingContext;
 

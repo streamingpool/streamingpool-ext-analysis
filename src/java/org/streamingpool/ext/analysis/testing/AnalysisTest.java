@@ -22,9 +22,9 @@
 
 package org.streamingpool.ext.analysis.testing;
 
-import org.streamingpool.ext.analysis.AnalysisResult;
 import org.streamingpool.ext.analysis.AnalysisStreamId;
 import org.streamingpool.ext.analysis.modules.StreamBaseAnalysisModule;
+import org.tensorics.core.analysis.AnalysisResult;
 
 public interface AnalysisTest {
 

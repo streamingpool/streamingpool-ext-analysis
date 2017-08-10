@@ -26,13 +26,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.streamingpool.core.testing.AbstractStreamTest;
 import org.streamingpool.ext.analysis.AnalysisDefinitions;
-import org.streamingpool.ext.analysis.AnalysisResult;
 import org.streamingpool.ext.analysis.AnalysisStreamId;
 import org.streamingpool.ext.analysis.conf.AnalysisConfiguration;
 import org.streamingpool.ext.analysis.conf.AnalysisResolvingEngineConfiguration;
-import org.streamingpool.ext.analysis.expression.AnalysisExpression;
 import org.streamingpool.ext.analysis.modules.StreamBaseAnalysisModule;
 import org.streamingpool.ext.tensorics.conf.DefaultResolvingEngineConfiguration;
+import org.tensorics.core.analysis.AnalysisResult;
+import org.tensorics.core.analysis.expression.AnalysisExpression;
 import org.tensorics.core.resolve.engine.ResolvingEngine;
 
 @ContextConfiguration(classes = { AnalysisConfiguration.class, AnalysisResolvingEngineConfiguration.class,

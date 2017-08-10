@@ -26,9 +26,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 import org.streamingpool.ext.analysis.AnalysisDefinitions;
-import org.streamingpool.ext.analysis.expression.AnalysisExpression;
 import org.streamingpool.ext.analysis.modules.ContinuousAnalysisModule;
 import org.streamingpool.ext.analysis.modules.StreamBaseAnalysisModule;
+import org.tensorics.core.analysis.expression.AnalysisExpression;
 
 public class DefaultAnalysisModulePreprocessorTest {
 
