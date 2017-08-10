@@ -83,7 +83,7 @@ public class ExpressionTreeFormulaCaseMatching extends AbstractRecursiveRepresen
     }
 
     public String repr(ExpressionBasedStreamId<?> id) {
-        return recurse(id.getDetailedId());
+        return recurse(id.expression());
     }
 
     public String repr(DerivedStreamId<?, ?> id) {

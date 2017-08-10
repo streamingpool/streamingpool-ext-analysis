@@ -9,9 +9,6 @@ import static org.streamingpool.ext.analysis.AnalysisDefinitions.streamIdFor;
 
 import org.streamingpool.core.support.RxStreamSupport;
 import org.streamingpool.ext.analysis.modules.StreamBaseAnalysisModule;
-import org.streamingpool.ext.tensorics.streamid.DetailedExpressionStreamId;
-import org.streamingpool.ext.tensorics.streamid.ExpressionBasedStreamId;
-import org.tensorics.core.analysis.AnalysisModule;
 import org.tensorics.core.analysis.AnalysisResult;
 import org.tensorics.core.analysis.expression.AnalysisExpression;
 import org.tensorics.core.resolve.domain.DetailedExpressionResult;
@@ -23,46 +20,39 @@ import io.reactivex.Flowable;
 public interface RxAnalysisSupport extends RxStreamSupport {
 
     default <T> Flowable<T> rxFrom(Expression<T> expression) {
-        return rxFrom(ExpressionBasedStreamId.of(expression));
+        return rxFrom(streamIdFor(expression));
     }
 
     default <T, E extends Expression<T>> Flowable<DetailedExpressionResult<T, E>> rxDetailedFrom(E expression) {
-        return rxFrom(DetailedExpressionStreamId.of(expression));
+        return rxFrom(detailedStreamIdFor(expression));
     }
 
     default <T> Flowable<T> rxFrom(Expression<T> expression, ResolvingContext prefilledContext) {
-        throw new UnsupportedOperationException();
-        // return rxFrom(ExpressionBasedStreamId.of(expression, prefilledContext));
+        return rxFrom(streamIdFor(expression, prefilledContext));
     }
 
     default <T, E extends Expression<T>> Flowable<DetailedExpressionResult<T, E>> rxDetailedFrom(E expression,
             ResolvingContext prefilledContext) {
-        return rxFrom(DetailedExpressionStreamId.of(expression, prefilledContext));
+        return rxFrom(detailedStreamIdFor(expression, prefilledContext));
     }
 
-    /* DeprecatedAnalysisResult should become AnalysisResult */
     default Flowable<AnalysisResult> rxFrom(StreamBaseAnalysisModule<?> bufferedAnalysisModule) {
         return rxFrom(streamIdFor(bufferedAnalysisModule));
     }
 
-    /* AssertionStatus should become AnalysisResult */
     default Flowable<DetailedExpressionResult<AnalysisResult, AnalysisExpression>> rxDetailedFrom(
             StreamBaseAnalysisModule<?> analysisModule) {
         return rxFrom(detailedStreamIdFor(analysisModule));
     }
 
-    /* DeprecatedAnalysisResult should become AnalysisResult */
     default Flowable<AnalysisResult> rxFrom(StreamBaseAnalysisModule<?> bufferedAnalysisModule,
             ResolvingContext prefilledContext) {
-        throw new UnsupportedOperationException();
-        // return rxFrom(streamIdFor(bufferedAnalysisModule));
+        return rxFrom(streamIdFor(bufferedAnalysisModule, prefilledContext));
     }
 
-    /* AssertionStatus should become AnalysisResult */
     default Flowable<DetailedExpressionResult<AnalysisResult, AnalysisExpression>> rxDetailedFrom(
-            AnalysisModule analysisModule, ResolvingContext prefilledContext) {
-        throw new UnsupportedOperationException();
-        // return rxFrom(DetailedExpressionStreamId.of(streamIdFor(bufferedAnalysisModule)));
+            StreamBaseAnalysisModule<?> analysisModule, ResolvingContext prefilledContext) {
+        return rxFrom(detailedStreamIdFor(analysisModule, prefilledContext));
     }
 
 }

@@ -24,9 +24,9 @@ package org.streamingpool.ext.analysis.testing;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import org.streamingpool.core.service.StreamId;
 import org.streamingpool.core.testing.AbstractStreamTest;
 import org.streamingpool.ext.analysis.AnalysisDefinitions;
-import org.streamingpool.ext.analysis.AnalysisStreamId;
 import org.streamingpool.ext.analysis.conf.AnalysisConfiguration;
 import org.streamingpool.ext.analysis.conf.AnalysisResolvingEngineConfiguration;
 import org.streamingpool.ext.analysis.modules.StreamBaseAnalysisModule;
@@ -43,13 +43,13 @@ public abstract class AbstractAnalysisTest extends AbstractStreamTest implements
     private ResolvingEngine engine;
 
     @Override
-    public AnalysisStreamId analysisIdOf(StreamBaseAnalysisModule<?> analysisModule) {
+    public StreamId<AnalysisResult> analysisIdOf(StreamBaseAnalysisModule<?> analysisModule) {
         return AnalysisDefinitions.streamIdFor(analysisModule);
     }
 
     @Override
     public AnalysisResult resolveAnalysisModule(StreamBaseAnalysisModule<?> analysisModule) {
-        AnalysisExpression rootExpression = AnalysisDefinitions.assertionSetFrom(analysisModule);
+        AnalysisExpression rootExpression = AnalysisDefinitions.expressionFrom(analysisModule);
         return engine.resolve(rootExpression);
     }
 
