@@ -29,8 +29,14 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
+
+import org.tensorics.core.resolve.engine.ResolvingEngine;
+import org.tensorics.core.tree.domain.Contexts;
+
+import io.reactivex.Flowable;
+import io.reactivex.processors.PublishProcessor;
+import io.reactivex.subscribers.TestSubscriber;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.streamingpool.core.service.StreamFactoryRegistry;
 import org.streamingpool.core.service.StreamId;
@@ -43,12 +49,6 @@ import org.streamingpool.ext.tensorics.evaluation.EvaluationStrategy;
 import org.streamingpool.ext.tensorics.expression.BufferedStreamExpression;
 import org.streamingpool.ext.tensorics.streamfactory.BufferedTensoricsExpressionStreamFactory;
 import org.streamingpool.ext.tensorics.streamid.ExpressionBasedStreamId;
-import org.tensorics.core.resolve.engine.ResolvingEngine;
-import org.tensorics.core.tree.domain.Contexts;
-
-import io.reactivex.Flowable;
-import io.reactivex.processors.PublishProcessor;
-import io.reactivex.subscribers.TestSubscriber;
 
 public class BufferedTest extends AbstractAnalysisTest implements RxAnalysisTestingSupport {
 
@@ -103,23 +103,15 @@ public class BufferedTest extends AbstractAnalysisTest implements RxAnalysisTest
 
         assertThat(analysisResult).containsExactly(true, false, true);
 
-//        try {
-//            Thread.sleep(200000);
-//        } catch (InterruptedException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
     }
 
 
-    @Ignore("Does not work ... must be a combination of delay + buffer....?")
     @Test
     public void delayedIdWorks() {
         PublishProcessor<String> startStream = PublishProcessor.create();
         PublishProcessor<String> endStream = PublishProcessor.create();
-        PublishProcessor<Boolean> sourceStream = PublishProcessor.create();
 
-        StreamId<String> startStreamId = provide(startStream).withUniqueStreamId();
+        StreamId<String> startStreamId = provide(startStream.onBackpressureBuffer()).withUniqueStreamId();
         StreamId<String> endStreamId = provide(endStream).withUniqueStreamId();
         StreamId<String> delayedStreamId = DelayedStreamId.delayBy(startStreamId, Duration.ofMillis(200));
 
@@ -142,24 +134,18 @@ public class BufferedTest extends AbstractAnalysisTest implements RxAnalysisTest
 
 
         startStream.onNext("A");
-        await();
+        await(50);
 
         startStream.onNext("B");
         startStream.onNext("C");
 
-        await();
+        await(500);
         endStream.onNext("A");
 
-        List<String> analysisResult = testSubscriber.awaitCount(1).assertValueCount(1).values().get(0);
-
-        assertThat(analysisResult).containsExactly("A", "B", "C");
-
-//        try {
-//            Thread.sleep(200000);
-//        } catch (InterruptedException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
+        List<List<String>> bufferedResults = testSubscriber.awaitCount(3).assertValueCount(3).values();
+        bufferedResults.forEach(buffer -> {
+            assertThat(buffer).containsExactly("A", "B", "C");
+        });
     }
 
 
