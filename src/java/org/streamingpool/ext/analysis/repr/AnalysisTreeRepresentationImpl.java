@@ -96,6 +96,7 @@ public class AnalysisTreeRepresentationImpl implements AnalysisTreeRepresentatio
         return Chains.chainFor(String.class)
                 .endRecursionWith(endRecursion)
                 .endRecursionDefaultDepth(100)
+                .either(strictNaming())
                 .matchCasesFrom(ExpressionTreeFormulaCaseMatching.class, () ->  new ExpressionTreeFormulaCaseMatching(
                         strictNaming()))
                 .or(fallbackNaming())

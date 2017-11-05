@@ -15,6 +15,7 @@ import org.streamingpool.ext.tensorics.expression.UnresolvedStreamIdBasedExpress
 import org.streamingpool.ext.tensorics.streamid.ExpressionBasedStreamId;
 import org.tensorics.core.analysis.expression.AnalysisExpression;
 import org.tensorics.core.analysis.expression.AssertionExpression;
+import org.tensorics.core.expressions.BinaryOperationExpression;
 import org.tensorics.core.expressions.BinaryPredicateExpression;
 import org.tensorics.core.expressions.ConversionOperationExpression;
 import org.tensorics.core.expressions.LatestOfExpression;
@@ -38,12 +39,16 @@ public class ExpressionTreeFormulaCaseMatching extends AbstractRecursiveRepresen
 
     public String repr(FunctionalExpression<?> exp) {
         return strictNaming.apply(exp);
-        // return Names.fromOverriddenToString(exp);
     }
 
     public String repr(LatestOfExpression<?> exp) {
         return "latestOf(" + recurse(exp.iterableExpression()) + ")";
     }
+
+//    public String repr(Binary<?> exp) {
+//        return "latestOf(" + recurse(exp.iterableExpression()) + ")";
+//    }
+
 
     // public String repr(AnalysisExpression ae) {
     // return "Analysis: " + recurse(ae.targetExpression());
