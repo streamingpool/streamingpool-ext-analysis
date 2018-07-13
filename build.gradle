@@ -74,11 +74,11 @@ dependencies {
     compile 'org.streamingpool:streamingpool-core:1.+'
     compile 'org.streamingpool:streamingpool-ext-tensorics:1.+'
 
-    compile 'org.springframework:spring-core:4.3.9.RELEASE'
-    compile 'org.springframework:spring-context:4.3.9.RELEASE'
-    compile 'org.springframework:spring-test:4.3.9.RELEASE' // Testing utils in /src/java for the moment
+    compile 'org.springframework:spring-core:4.3.13.RELEASE'
+    compile 'org.springframework:spring-context:4.3.13.RELEASE'
+    compile 'org.springframework:spring-test:4.3.13.RELEASE' // Testing utils in /src/java for the moment
 
-    compile 'org.slf4j:slf4j-api:1.7.+'
+    compile 'org.slf4j:slf4j-api:1.7.25'
 
     compile 'com.google.guava:guava:22.0'
 
